@@ -344,7 +344,7 @@ One-to-one with the machines above.
 | `InspectionBloc` | M2 | Inspection flow |
 | `GpsStreamBloc` | M3 | App, active while running |
 | `BoardingCubit` | M4 | Stop / boarding screen |
-| `SosBloc` | M5 | App — must outlive its screen |
+| `SosService` | M5 | **Application service**, not a feature bloc. Registered beside the API client; initialised at app start; any code path may raise it. See Phase 11 |
 | `SyncQueueBloc` | M6 | App |
 | `ConnectivityCubit` | M7 | App |
 | `EvidenceBloc` | M8 | Evidence modal |

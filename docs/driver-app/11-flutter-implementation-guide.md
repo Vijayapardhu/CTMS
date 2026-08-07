@@ -236,7 +236,31 @@ class SosBloc extends Bloc<SosEvent, SosState> {
 }
 ```
 
-`SosBloc` is registered as a **singleton above the router**. It must outlive the screen that started it.
+### SOS is a service, not a screen
+
+`SosBloc` is registered as a **singleton above the router**, but that understates it. SOS is an **application service** with a screen as one of its entry points — not a feature that happens to be globally available.
+
+The distinction is architectural:
+
+```dart
+// Registered in DI alongside the API client and the sync queue, not
+// alongside the other feature blocs.
+@singleton
+class SosService {
+  Future<void> raise({String? tripId});   // callable from ANYWHERE
+  Stream<SosState> get state;             // observable from anywhere
+  Future<void> withdraw(String note);
+}
+```
+
+What follows from treating it that way:
+
+- **Any code path can raise it**, not only `C1`. A hardware button binding, a voice intent, an accessibility action, or a future wearable all call `SosService.raise()` without touching the UI layer.
+- **It is initialised at app start**, before any screen exists — so a queued SOS from a previous session resumes retrying the moment the app opens, whether or not the driver ever navigates to `P17`.
+- **`P17` observes it; it does not own it.** Popping `P17` does not stop retrying. Killing the app does not stop retrying.
+- **It has no dependency on `TripBloc`.** `tripId` is optional in the API precisely so an SOS can be raised with no trip running — a driver walking to a parked bus can still call for help.
+
+Everything else in the app is a feature. This one is infrastructure.
 
 ---
 
@@ -267,9 +291,9 @@ Each step is shippable and demonstrable before the next.
 
 | # | Slice | Delivers | Done when |
 |---|---|---|---|
-| 0 | **Skeleton** | project, DI, theme tokens, `AppIcon` registry, generated models | app builds, renders a themed empty shell |
+| 0 | **Foundation** | see the explicit scope below | app builds, four empty tabs render in both themes |
 | 1 | **Auth** | `SessionBloc`, secure storage, refresh interceptor, P1/P2/P4 | sign in, survive restart, silent refresh, expiry → login |
-| 2 | **Shell** | router, 4 tabs, banners, connectivity | navigation works offline |
+| 2 | **Connectivity** | `ConnectivityCubit`, offline banner, reachability probe | banner appears and clears correctly |
 | 3 | **Trip read** | `TripBloc`, R1 all states, readiness | every state renders from real data |
 | 4 | **Inspection** | P9/P10/P11, draft persistence | full checklist submits; drafts survive a kill |
 | 5 | **Evidence** | M1/M2, compression, upload | failing item attaches a real photograph |
@@ -284,6 +308,40 @@ Each step is shippable and demonstrable before the next.
 | 14 | **Polish** | a11y audit, goldens, tablet, dark mode | TalkBack completes J1→J13 |
 
 **Do not reorder 6 before 5** — the inspection cannot be submitted for a critical failure without evidence, so step 4 is only half-testable alone. **Do not start 7 before 6** — GPS refuses positions for a trip that is not RUNNING.
+
+### Slice 0 — the exact scope
+
+Deliberately narrow. The navigation shell sits here rather than after auth, because auth needs somewhere to land and a login screen with nowhere to go cannot be demonstrated.
+
+**In scope**
+
+| | |
+|---|---|
+| Flutter project, Android target, flavours | Design tokens (Phase 7) as a `ThemeExtension` |
+| Folder structure (four layers per feature) | Typography scale, tabular figures configured |
+| `get_it` + `injectable` wiring | Light and dark themes, both switchable |
+| `go_router` shell with four tabs | `AppIcon` registry (Phase 8), every entry resolving |
+| Generated OpenAPI models from `openapi-driver.json` | Structured logging with redaction |
+| Dio client with envelope + retry interceptors | Global error boundary |
+| Secure token storage (empty, not yet used) | Empty Trip, Map, Alerts, Me screens |
+
+**Explicitly out of scope**
+
+No business logic. No GPS. No inspection. No maps. No API calls. No `SessionBloc` — the token store exists but nothing writes to it yet.
+
+**Done when** the app builds, launches, renders four empty tabs, switches between light and dark correctly, every icon in the registry resolves to a real glyph, and `flutter analyze` is clean.
+
+> **Verify the icon registry in this slice.** It is the cheapest possible moment to discover that a Hugeicons name is wrong — before any screen depends on it. Every `?` in Phase 8 becomes a `✓` or a fallback here.
+
+### Slice 1 — the exact scope
+
+Authentication and nothing else.
+
+**In scope** — login screen, `POST /auth/login`, token persistence, the refresh interceptor, `POST /auth/logout`, `GET /auth/me`, session-expiry handling, P1 splash, P2 login, P4 session expired.
+
+**Out of scope** — trips, the dashboard's content, notifications, anything a signed-in driver would actually do. Landing on an empty Trip tab is the correct end state for this slice.
+
+**Done when** a driver signs in, the session survives an app restart, an expired access token refreshes silently exactly once, and a revoked token lands on P4 with the stack cleared.
 
 ---
 
