@@ -1,0 +1,56 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "CTMS Driver",
+  "@appTitle": { "description": "Application name shown in the task switcher" },
+
+  "tabTrip": "Trip",
+  "@tabTrip": { "description": "Bottom navigation label for the trip tab" },
+  "tabMap": "Map",
+  "@tabMap": { "description": "Bottom navigation label for the map tab" },
+  "tabAlerts": "Alerts",
+  "@tabAlerts": { "description": "Bottom navigation label for the alerts tab" },
+  "tabMe": "Me",
+  "@tabMe": { "description": "Bottom navigation label for the profile tab" },
+
+  "offlineBanner": "Offline — actions will be sent when you reconnect",
+  "@offlineBanner": { "description": "Persistent banner shown while the API is unreachable" },
+
+  "errorTitle": "Something went wrong",
+  "@errorTitle": { "description": "Title of the error boundary screen" },
+  "errorBody": "The screen could not be displayed. Your trip is not affected.",
+  "@errorBody": { "description": "Body of the error boundary screen" },
+  "errorRetry": "Try again",
+  "@errorRetry": { "description": "Button that rebuilds the failed screen" },
+
+  "notFoundTitle": "Screen not found",
+  "@notFoundTitle": { "description": "Shown when a route does not resolve" },
+  "notFoundBody": "That link does not lead anywhere in this app.",
+  "@notFoundBody": { "description": "Body of the unknown-route screen" },
+  "goToTrip": "Go to Trip",
+  "@goToTrip": { "description": "Returns the driver to the default tab" },
+
+  "comingSoon": "Not built yet",
+  "@comingSoon": { "description": "Placeholder title on a screen with no feature slice yet" },
+  "comingSoonBody": "This screen is part of a later slice.",
+  "@comingSoonBody": { "description": "Placeholder body on a screen with no feature slice yet" },
+
+  "settingsAppearance": "Appearance",
+  "@settingsAppearance": { "description": "Heading for the theme setting" },
+  "themeSystem": "Match device",
+  "@themeSystem": { "description": "Theme option that follows the device setting" },
+  "themeLight": "Light",
+  "@themeLight": { "description": "Light theme option" },
+  "themeDark": "Dark",
+  "@themeDark": { "description": "Dark theme option" },
+
+  "developerMode": "Developer mode",
+  "@developerMode": { "description": "Label of the diagnostics toggle" },
+  "developerModeHint": "Shows diagnostics. Unavailable in production builds.",
+  "@developerModeHint": { "description": "Explains what the developer toggle does" },
+
+  "cancel": "Cancel",
+  "@cancel": { "description": "Generic dismiss action" },
+  "retry": "Retry",
+  "@retry": { "description": "Generic retry action" }
+}
