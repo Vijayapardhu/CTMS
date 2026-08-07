@@ -1,0 +1,1141 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Cannot call method toIso8601String\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Events/Communication/AnnouncementPublished.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$registration_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Events/Fleet/DocumentExpiryWarning.php
+
+		-
+			message: '#^Cannot call method toDateString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Events/Fleet/DocumentExpiryWarning.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$registration_number\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Events/Fleet/InspectionFailed.php
+
+		-
+			message: '#^Cannot call method diffInMinutes\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Events/Incidents/IncidentEscalated.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$registration_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Events/Incidents/IncidentReported.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$route_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Events/Incidents/IncidentReported.php
+
+		-
+			message: '#^Parameter \#1 \$array \(array\{0\?\: App\\Notifications\\NotificationIntent\}\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: app/Events/Incidents/IncidentReported.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>registration_number" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Events/Incidents/IncidentReported.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$registration_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Events/Incidents/ReplacementDispatched.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$route_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Events/Incidents/ReplacementDispatched.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$registration_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Events/Maintenance/MaintenanceTicketOpened.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>registration_number" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Events/Maintenance/MaintenanceTicketOpened.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Events/Network/RouteChanged.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stop_name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Events/Tracking/BusApproachingStop.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:stops\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Events/Tracking/PassengerBoarded.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$route_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Events/Tracking/PassengersLeftBehind.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:stops\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Events/Tracking/PassengersLeftBehind.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>route_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Events/Tracking/PassengersLeftBehind.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stop_name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Events/Tracking/StopSkipped.php
+
+		-
+			message: '#^Cannot call method toIso8601String\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Events/Tracking/TripPositionUpdated.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$bus\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Events/Trips/ConsolidationExecuted.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$route\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Events/Trips/ConsolidationExecuted.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>route_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Events/Trips/ConsolidationExecuted.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$route\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Events/Trips/ConsolidationProposed.php
+
+		-
+			message: '#^Cannot call method toIso8601String\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Events/Trips/ConsolidationProposed.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type string\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Events/Trips/ConsolidationProposed.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>route_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Events/Trips/ConsolidationProposed.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$route_name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Events/Trips/TripCancelled.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:students\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Events/Trips/TripCancelled.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$route_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Events/Trips/TripCompleted.php
+
+		-
+			message: '#^Cannot call method toDateString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Events/Trips/TripCompleted.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>route_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Events/Trips/TripCompleted.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$route_name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Events/Trips/TripStarted.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:students\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Events/Trips/TripStarted.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany\:\:current\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Controllers/Api/BusDocumentController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$route_name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/Api/ConsolidationController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$seating_capacity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/ConsolidationController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$assigned_bus_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/MaintenanceController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isAvailable\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Controllers/Api/MaintenanceController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$priority\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/NotificationLogController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>muted" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/Api/NotificationPreferenceController.php
+
+		-
+			message: '#^Call to an undefined method App\\Http\\Controllers\\Api\\PreventiveMaintenanceController\:\:noContent\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Controllers/Api/PreventiveMaintenanceController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$pickup_stop_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/TrackingController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$seating_capacity\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Http/Controllers/Api/TrackingController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stop_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/TrackingController.php
+
+		-
+			message: '#^Cannot call method diffInSeconds\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Http/Controllers/Api/TrackingController.php
+
+		-
+			message: '#^Cannot call method toIso8601String\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: app/Http/Controllers/Api/TrackingController.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,App\\Models\\TripStopProgress\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Http/Controllers/Api/TrackingController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$route_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/TripController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>route_id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/Api/TripController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/VehicleInspectionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\VehicleInspectionController\:\:resolveInspectingDriver\(\) should return App\\Models\\Driver but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/VehicleInspectionController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>value" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Middleware/RequireAccessLevel.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$priority\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Jobs/DeliverNotification.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/DetectStalledTrips.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Admin\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Admin.php
+
+		-
+			message: '#^Cannot call method isPast\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Models/Announcement.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Announcement\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Announcement.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\AttendanceDiscrepancy\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/AttendanceDiscrepancy.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\AuditLog\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/AuditLog.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isExpired\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Models/Bus.php
+
+		-
+			message: '#^Method App\\Models\\Bus\:\:inspectionOn\(\) should return App\\Models\\VehicleInspection\|null but returns Illuminate\\Database\\Eloquent\\Model\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Bus.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Bus\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Bus.php
+
+		-
+			message: '#^Parameter \#1 \$keyBy of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:keyBy\(\) expects \(callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: \(''FITNESS''\|''INSURANCE''\|''PERMIT''\|''POLLUTION''\|''ROAD_TAX''\)\)\|list\<Closure\|string\>\|string, Closure\(App\\Models\\BusDocument\)\: \(''FITNESS''\|''INSURANCE''\|''PERMIT''\|''POLLUTION''\|''ROAD_TAX''\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Models/Bus.php
+
+		-
+			message: '#^Cannot call method isBefore\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Models/BusDocument.php
+
+		-
+			message: '#^Cannot call method startOfDay\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Models/BusDocument.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\BusDocument\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/BusDocument.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\DataAccessLog\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/DataAccessLog.php
+
+		-
+			message: '#^Cannot call method isAfter\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Models/Driver.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Driver\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Driver.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between string and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: app/Models/Driver.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\EvidenceFile\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/EvidenceFile.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\EvidenceFile\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/EvidenceFile.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\IncidentNote\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/IncidentNote.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\:\:open\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Models/MaintenanceTicket.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\MaintenanceTicket\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/MaintenanceTicket.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Notification\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Notification.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\NotificationDelivery\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/NotificationDelivery.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\NotificationDevice\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/NotificationDevice.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\NotificationDevice\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/NotificationDevice.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\NotificationPreference\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/NotificationPreference.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\PassengerLog\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/PassengerLog.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$current_odometer\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/PreventiveMaintenanceSchedule.php
+
+		-
+			message: '#^Cannot call method copy\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Models/PreventiveMaintenanceSchedule.php
+
+		-
+			message: '#^Cannot call method isPast\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Models/PreventiveMaintenanceSchedule.php
+
+		-
+			message: '#^Cannot call method isSameDay\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Models/PreventiveMaintenanceSchedule.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\PreventiveMaintenanceSchedule\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/PreventiveMaintenanceSchedule.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\ReplacementAssignment\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/ReplacementAssignment.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Route\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Route.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\RouteStop\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/RouteStop.php
+
+		-
+			message: '#^Cannot call method endOfDay\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Models/Schedule.php
+
+		-
+			message: '#^Cannot call method startOfDay\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Models/Schedule.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Schedule\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Schedule.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\ServiceCalendarDay\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/ServiceCalendarDay.php
+
+		-
+			message: '#^Cannot call method isFuture\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Models/Student.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Student\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Student.php
+
+		-
+			message: '#^Cannot call method copy\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: app/Models/Trip.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Trip\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Trip.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\:\:open\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Models/TripConsolidation.php
+
+		-
+			message: '#^Cannot call method isPast\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Models/TripConsolidation.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\TripConsolidation\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/TripConsolidation.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between string and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: app/Models/TripConsolidation.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\TripCorrection\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/TripCorrection.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\TripLocation\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/TripLocation.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\TripStopProgress\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/TripStopProgress.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$access_level\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Match arm comparison between App\\Enums\\UserRole\:\:STUDENT and App\\Enums\\UserRole\:\:STUDENT is always true\.$#'
+			identifier: match.alwaysTrue
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Cannot call method addMinutes\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Models/VehicleIncident.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\VehicleIncident\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/VehicleIncident.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\VehicleIncident\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/VehicleIncident.php
+
+		-
+			message: '#^Method App\\Models\\VehicleInspection\:\:failedItems\(\) should return Illuminate\\Support\\Collection\<int, App\\Models\\VehicleInspectionItem\> but returns Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/VehicleInspection.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\VehicleInspection\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/VehicleInspection.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\VehicleInspectionItem\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/VehicleInspectionItem.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\VehicleInspectionItem\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/VehicleInspectionItem.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$body\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Notifications/Channels/EmailChannelDriver.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Notifications/Channels/EmailChannelDriver.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Notifications/Channels/EmailChannelDriver.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Notifications/Channels/PushChannelDriver.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$body\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Notifications/Channels/SmsChannelDriver.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Notifications/Channels/SmsChannelDriver.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Notifications/Channels/SmsChannelDriver.php
+
+		-
+			message: '#^Instanceof between App\\Models\\User and App\\Models\\User will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: app/Notifications/NotificationIntent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$driver_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Policies/EvidenceFilePolicy.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$assigned_bus_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Policies/MaintenanceTicketPolicy.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$route_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Policies/TripPolicy.php
+
+		-
+			message: '#^Parameter \#3 \$fail \(Closure\(string\)\: void\) of method App\\Rules\\WithinServiceArea\:\:validate\(\) should be compatible with parameter \$fail \(Closure\(string, string\|null\=\)\: Illuminate\\Translation\\PotentiallyTranslatedString\) of method Illuminate\\Contracts\\Validation\\ValidationRule\:\:validate\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: app/Rules/WithinServiceArea.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Auth/AuthService.php
+
+		-
+			message: '#^Cannot call method toIso8601String\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Auth/AuthService.php
+
+		-
+			message: '#^Match arm comparison between App\\Enums\\UserRole\:\:ADMIN and App\\Enums\\UserRole\:\:ADMIN is always true\.$#'
+			identifier: match.alwaysTrue
+			count: 1
+			path: app/Services/Auth/AuthService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>password" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Auth/AuthService.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type App\\Enums\\UserRole\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Auth/AuthService.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type App\\Enums\\UserRole\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Auth/TokenService.php
+
+		-
+			message: '#^Cannot call method toDateString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Fleet/BusDocumentService.php
+
+		-
+			message: '#^Cannot call method copy\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Services/Fleet/DutyHoursService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$roll_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Governance/RetentionService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$route_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Governance/RetentionService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Governance/RetentionService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$assignedBus\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Incidents/IncidentService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Incidents/IncidentService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isOpen\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Incidents/IncidentService.php
+
+		-
+			message: '#^Cannot call method diffInSeconds\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Incidents/IncidentService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>bus" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Incidents/IncidentService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>occupied_seat_count" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Incidents/IncidentService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$occupied_seat_count\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Incidents/ReplacementService.php
+
+		-
+			message: '#^Parameter \#1 \$trip of method App\\Services\\Incidents\\ReplacementService\:\:bestCandidate\(\) expects App\\Models\\Trip, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Incidents/ReplacementService.php
+
+		-
+			message: '#^Parameter \#2 \$exclude of method App\\Services\\Incidents\\ReplacementService\:\:bestCandidate\(\) expects App\\Models\\Bus, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Incidents/ReplacementService.php
+
+		-
+			message: '#^Parameter \#2 \$trip of method App\\Services\\Incidents\\ReplacementService\:\:distanceToTrip\(\) expects App\\Models\\Trip, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Incidents/ReplacementService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$current_odometer\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Maintenance/MaintenanceService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:recordOdometer\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Maintenance/MaintenanceService.php
+
+		-
+			message: '#^Cannot call method toDateTimeString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Maintenance/MaintenanceService.php
+
+		-
+			message: '#^Parameter \#1 \$bus of method App\\Services\\Maintenance\\MaintenanceService\:\:open\(\) expects App\\Models\\Bus, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Maintenance/MaintenanceService.php
+
+		-
+			message: '#^Parameter \#1 \$bus of method App\\Services\\Maintenance\\MaintenanceService\:\:returnToServiceIfClear\(\) expects App\\Models\\Bus\|null, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/Maintenance/MaintenanceService.php
+
+		-
+			message: '#^Cannot call method gt\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Services/Network/ScheduleService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany\:\:active\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Notifications/PreferenceResolver.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>muted" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Notifications/PreferenceResolver.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Trip\:\:\$passengers\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Reports/ReportService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Trip\:\:\$route_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Reports/ReportService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Trip\:\:\$seats\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Reports/ReportService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Trip\:\:\$trips\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Reports/ReportService.php
+
+		-
+			message: '#^Cannot call method diffInSeconds\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: app/Services/Reports/ReportService.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,App\\Models\\Trip\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Services/Reports/ReportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$latitude\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Tracking/EtaService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$longitude\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Tracking/EtaService.php
+
+		-
+			message: '#^Cannot call method diffInSeconds\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Tracking/EtaService.php
+
+		-
+			message: '#^Cannot call method toIso8601String\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Services/Tracking/EtaService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isWithinGeofence\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Services/Tracking/GeofenceService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:stops\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Tracking/GeofenceService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:updateCurrentLocation\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Tracking/GpsIngestionService.php
+
+		-
+			message: '#^Cannot call method diffInSeconds\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Services/Tracking/GpsIngestionService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$seating_capacity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tracking/PassengerCountService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getFullName\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Tracking/PassengerCountService.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,App\\Models\\Student\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Services/Tracking/PassengerCountService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>seating_capacity" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Tracking/PassengerCountService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$occupied_seat_count\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Services/Trips/ConsolidationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$seating_capacity\.$#'
+			identifier: property.notFound
+			count: 7
+			path: app/Services/Trips/ConsolidationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$total_distance_km\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Trips/ConsolidationService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:stops\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Trips/ConsolidationService.php
+
+		-
+			message: '#^Cannot call method isSameDay\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Trips/ConsolidationService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>seating_capacity" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 4
+			path: app/Services/Trips/ConsolidationService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>total_distance_km" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Trips/ConsolidationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$registration_number\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Trips/TripGenerationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 5
+			path: app/Services/Trips/TripGenerationService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:assignedStudentCount\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Trips/TripGenerationService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isLicenseValid\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Trips/TripGenerationService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:missingOrExpiredDocuments\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Trips/TripGenerationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$route_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: routes/channels.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:canBoard\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: routes/channels.php

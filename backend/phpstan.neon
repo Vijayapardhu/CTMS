@@ -1,0 +1,38 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+
+    paths:
+        - app
+        - database
+        - routes
+
+    excludePaths:
+        - bootstrap/cache
+        - storage
+
+# ---------------------------------------------------------------------------
+# On the baseline
+# ---------------------------------------------------------------------------
+#
+# The baseline holds ~220 findings, and every one of them is the analyser not
+# resolving Eloquent's runtime typing — relation accessors returning the generic
+# `Model` rather than the concrete class, and column types read from the
+# migration rather than from `casts()`. None is a defect; each was read before
+# being baselined.
+#
+# The 21 models with enum casts now carry `@property` annotations generated
+# directly from `casts()`, which cut the count from 427 to ~220. Closing the
+# rest means annotating every column on every model — worth doing, but it is
+# documentation work rather than a correctness fix, and it should not block.
+#
+# What the baseline buys is the thing that matters: a *new* finding fails the
+# build. Regenerate with:
+#
+#     ./vendor/bin/phpstan analyse --generate-baseline
+#
+# and only after reading what changed. Adding to it to make a real error go
+# away is the one thing this file must never be used for.

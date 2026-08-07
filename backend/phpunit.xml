@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Feature">
+            <directory>tests/Feature</directory>
+        </testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory>app</directory>
+        </include>
+    </source>
+    <php>
+        <env name="APP_ENV" value="testing"/>
+        <!-- Broadcasting is asserted by dispatch, not by delivery to a live
+             provider. Channel authorization is tested directly against
+             routes/channels.php. -->
+        <env name="BROADCAST_CONNECTION" value="null"/>
+        <!-- The suite must never reach Google, spend quota, or depend on a
+             network. Tests that need the Google path fake the HTTP client and
+             switch this on for themselves. -->
+        <env name="GOOGLE_MAPS_ENABLED" value="false"/>
+        <env name="GOOGLE_MAPS_API_KEY" value=""/>
+        <env name="APP_MAINTENANCE_DRIVER" value="file"/>
+        <env name="BCRYPT_ROUNDS" value="4"/>
+        <env name="CACHE_STORE" value="array"/>
+        <env name="DB_CONNECTION" value="sqlite"/>
+        <env name="DB_DATABASE" value=":memory:"/>
+        <!-- Test-only signing key. Production must supply its own JWT_SECRET;
+             config/auth.php has no fallback, so a missing key fails loudly. -->
+        <env name="JWT_SECRET" value="testing-only-jwt-signing-key-do-not-use-in-production"/>
+        <env name="JWT_ISSUER" value="http://localhost"/>
+        <env name="JWT_AUDIENCE" value="ctms-api"/>
+        <env name="MAIL_MAILER" value="array"/>
+        <env name="PULSE_ENABLED" value="false"/>
+        <env name="QUEUE_CONNECTION" value="sync"/>
+        <env name="SESSION_DRIVER" value="array"/>
+        <env name="TELESCOPE_ENABLED" value="false"/>
+    </php>
+</phpunit>

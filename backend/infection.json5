@@ -1,0 +1,37 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+
+    // Scoped to the services that decide whether a bus carries children.
+    // A full-repo run takes hours; these are the files where a surviving
+    // mutant would matter most, so they are the honest place to start.
+    "source": {
+        "directories": [
+            "app/Services/Incidents",
+            "app/Services/Maintenance",
+            "app/Services/Trips",
+            "app/Enums"
+        ],
+        "excludes": [
+            "app/Enums/*Type.php"
+        ]
+    },
+
+    "logs": {
+        "text": "storage/infection.log",
+        "summary": "storage/infection-summary.log"
+    },
+
+    "mutators": {
+        "@default": true,
+
+        // Mutating a log message or an audit action string produces a mutant
+        // no behavioural test can kill, and drowns the real signal.
+        "StringLiteral": false,
+        "ArrayItemRemoval": false
+    },
+
+    "minMsi": 0,
+    "minCoveredMsi": 0,
+    "testFramework": "phpunit",
+    "timeout": 30
+}

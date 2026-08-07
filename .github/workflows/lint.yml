@@ -1,0 +1,28 @@
+name: Code Quality & Linting
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo, pdo_pgsql
+
+      - name: Install Dependencies
+        run: composer install --prefer-dist --no-interaction
+        working-directory: ./backend
+
+      - name: Check PHP Syntax
+        run: find app tests routes config database -name "*.php" -exec php -l {} \;
+        working-directory: ./backend

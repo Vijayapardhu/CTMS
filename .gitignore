@@ -1,0 +1,49 @@
+# ---------------------------------------------------------------------------
+# Secrets — never commit these
+# ---------------------------------------------------------------------------
+# backend/.gitignore already covers backend/.env; this is the second line, so
+# a new service added at the repo root cannot leak its credentials either.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*-service-account*.json
+google-services.json
+GoogleService-Info.plist
+
+# ---------------------------------------------------------------------------
+# Dependencies and build output
+# ---------------------------------------------------------------------------
+node_modules/
+vendor/
+/backend/public/build
+/backend/public/hot
+/backend/public/storage
+
+# ---------------------------------------------------------------------------
+# Runtime and local state
+# ---------------------------------------------------------------------------
+/backend/storage/*.sqlite
+/backend/storage/*.log
+/backend/storage/framework/cache/*
+/backend/storage/framework/sessions/*
+/backend/storage/framework/views/*
+/backend/storage/logs/*
+/backend/storage/evidence/*
+/backend/.phpunit.cache
+/backend/.phpactor.json
+
+# Uploaded evidence is operational data, not source. The directory is kept so
+# a fresh clone has somewhere to write.
+!/backend/storage/evidence/.gitkeep
+
+# ---------------------------------------------------------------------------
+# Editor and OS
+# ---------------------------------------------------------------------------
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp
