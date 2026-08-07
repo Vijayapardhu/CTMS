@@ -1,6 +1,6 @@
 # CTMS Driver App — Specification
 
-**Status:** specification complete for the critical path · built against `v1.0.0-backend-freeze`
+**Status:** all 11 phases complete · built against `v1.0.0-backend-freeze`
 **Platform:** Flutter, Material 3, Android-first, tablet-responsive
 **Contract:** the backend is frozen. Where this document and the API disagree, **the API is correct** and this document is the bug.
 
@@ -18,16 +18,24 @@ Anything that would make a driver look at the screen for longer than a glance wh
 
 ## Documents
 
+Written workflow-first: journeys, then structure, then visuals. The design
+system is Phase 7 rather than Phase 1 because it is sized to what the
+components actually needed, not invented up front.
+
 | # | Document | What it settles |
 |---|---|---|
 | 00 | This file | Information architecture, navigation, implementation order |
-| 01 | [API contract](01-api-contract.md) | The 68 endpoints a driver can actually reach, verified against the frozen backend |
-| 02 | [Design system](02-design-system.md) | Colour, type, spacing, radius, elevation, motion |
-| 03 | [Icon system](03-icon-system.md) | Hugeicons mapping, sizes, semantic colour rules |
-| 04 | [Component library](04-components.md) | Every reusable widget, with states and accessibility |
-| 05 | [Screen specifications](05-screens-critical-path.md) | Auth → Trip → Inspection → Evidence → Start → GPS → Boarding → SOS → Breakdown → End |
-| 06 | [Offline architecture](06-offline.md) | Queue, idempotency, conflict resolution, GPS buffering |
-| 07 | [States and error recovery](07-states-and-errors.md) | The thirteen states every screen must answer for |
+| 01 | [API contract](01-api-contract.md) | The 68 endpoints a driver can reach, verified against the frozen backend |
+| 02 | [User journeys](02-user-journeys.md) | 17 journeys, every fork a real API response |
+| 03 | [Screen inventory](03-screen-inventory.md) | 4 roots, 21 push, 4 modal, 7 sheet, 6 dialog, 5 chrome |
+| 04 | [State machines](04-state-machines.md) | 9 machines; these are the Bloc definitions |
+| 05 | [Wireframes](05-wireframes.md) | Structure and hierarchy, no colour |
+| 06 | [Component library](06-component-library.md) | 20 components, each demanded by ≥2 wireframes |
+| 07 | [Design system](07-design-system.md) | Tokens sized to those 20 components |
+| 08 | [Icon registry](08-icon-registry.md) | Hugeicons with verified Material fallbacks |
+| 09 | [Screen specifications](09-screen-specifications.md) | Frontend contract per screen |
+| 10 | [Interaction specifications](10-interaction-specifications.md) | Gestures, haptics, motion, a11y |
+| 11 | [Flutter implementation guide](11-flutter-implementation-guide.md) | Architecture, packages, sync queue, build order |
 
 ---
 
@@ -80,7 +88,7 @@ Four bottom-tab destinations. Not five, not three.
 ```
 Splash
   ├─ no token ─────────────────► Login
-  │                                ├─ Forgot password ─► (out-of-band; see 05)
+  │                                ├─ Forgot password ─► (out-of-band; see 09)
   │                                └─ success ─────────► Dashboard
   ├─ token, refresh fails ───────► Session expired ────► Login
   └─ token valid ────────────────► Dashboard
@@ -91,7 +99,7 @@ Dashboard (Trip tab)
   │
   ├─ trip SCHEDULED
   │     ├─ Service readiness card
-  │     │     ├─ not cleared ───► Blocked reasons (see 07)
+  │     │     ├─ not cleared ───► Blocked reasons (see 09)
   │     │     └─ no inspection ─► Pre-trip inspection
   │     │                            └─ item fails ──► Evidence capture
   │     │                                                 └─ Evidence preview
