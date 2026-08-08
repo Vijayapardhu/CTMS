@@ -39,7 +39,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup PHP ${{ env.PHP_VERSION }}
         uses: shivammathur/setup-php@v2
@@ -56,7 +56,7 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
 
       - name: Cache Composer downloads
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: composer-${{ runner.os }}-php${{ env.PHP_VERSION }}-${{ hashFiles('backend/composer.lock') }}
@@ -71,9 +71,19 @@ jobs:
         # the database, JWT and queue settings the suite needs; Laravel's Dotenv
         # does not overwrite variables that are already set, so nothing here can
         # move the suite off in-memory SQLite.
+        #
+        # The suite reads .env directly, so it cannot simply be omitted.
+        #
+        # BROADCAST_CONNECTION is overridden for key:generate alone. As shipped,
+        # .env.example selects `reverb` but defines no REVERB_APP_KEY, so
+        # routes/channels.php builds a Pusher client with a null key and *every*
+        # artisan command dies before it runs. `php artisan test` is unaffected
+        # because phpunit.xml already pins the connection to null. This override
+        # is a workaround for that defect, not a preference — delete it once
+        # .env.example can boot artisan on its own.
         run: |
           cp .env.example .env
-          php artisan key:generate
+          BROADCAST_CONNECTION=null php artisan key:generate
           chmod -R 777 storage bootstrap/cache
 
       - name: Unit and feature tests
@@ -91,7 +101,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup PHP ${{ env.PHP_VERSION }}
         uses: shivammathur/setup-php@v2
@@ -106,7 +116,7 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
 
       - name: Cache Composer downloads
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: composer-${{ runner.os }}-php${{ env.PHP_VERSION }}-${{ hashFiles('backend/composer.lock') }}

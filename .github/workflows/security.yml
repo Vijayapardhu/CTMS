@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -35,9 +35,12 @@ jobs:
           tools: composer:v2
 
       - name: Audit Composer dependencies
-        # Reads composer.lock directly — no install needed, so an advisory is
-        # reported in seconds rather than after a full dependency download.
-        run: composer audit
+        # --locked is load-bearing, not decoration. Plain `composer audit`
+        # audits the *installed* packages and fails outright when there is no
+        # vendor/ — this job deliberately skips `composer install`, because the
+        # lock file is the thing being audited and downloading it changes
+        # nothing about the answer.
+        run: composer audit --locked
         working-directory: backend
 
   secrets:
@@ -46,7 +49,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           # Full history: the question is not "is a secret in the working tree"
           # but "was one ever committed". A shallow clone cannot answer that.
