@@ -1,0 +1,125 @@
+name: Backend
+
+# No path filters on purpose. These jobs are intended to be required checks in
+# branch protection, and a required check that is *skipped* — which is what a
+# path filter produces — leaves a pull request permanently un-mergeable.
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+# Least privilege. Nothing here writes to the repository, comments on a pull
+# request, or publishes a package.
+permissions:
+  contents: read
+
+concurrency:
+  group: backend-${{ github.ref }}
+  # Superseded pull-request runs are wasted compute. A push to a long-lived
+  # branch is kept, so main always has a completed result rather than a
+  # cancelled one.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    working-directory: backend
+
+env:
+  # composer.json permits ^8.2. CI pins the single version the suite is
+  # actually verified against — the one in CLAUDE.md and on the development
+  # machine. Widening this to a matrix is a deliberate change that has to be
+  # verified first, not a default.
+  PHP_VERSION: '8.5'
+
+jobs:
+  tests:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP ${{ env.PHP_VERSION }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          # sqlite3/pdo_sqlite are the ones that matter: phpunit.xml pins the
+          # suite to an in-memory SQLite database.
+          extensions: mbstring, pdo, pdo_sqlite, sqlite3, bcmath, intl, curl, dom, xml, zip, fileinfo
+          coverage: none
+          tools: composer:v2
+
+      - name: Resolve Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Composer downloads
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-php${{ env.PHP_VERSION }}-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-php${{ env.PHP_VERSION }}-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Prepare the testing environment
+        # .env.example carries no secrets — every credential in it is a
+        # placeholder, and the real values never enter CI. phpunit.xml supplies
+        # the database, JWT and queue settings the suite needs; Laravel's Dotenv
+        # does not overwrite variables that are already set, so nothing here can
+        # move the suite off in-memory SQLite.
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          chmod -R 777 storage bootstrap/cache
+
+      - name: Unit and feature tests
+        run: php artisan test
+
+      - name: Mutation guard
+        # Injects eight deliberate defects into the safety-critical predicates
+        # and fails unless the suite goes red for every one. A suite that only
+        # passes is not evidence; a suite that notices is.
+        run: php tools/mutation-check.php
+
+  quality:
+    name: Backend Quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP ${{ env.PHP_VERSION }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: mbstring, pdo, pdo_sqlite, sqlite3, bcmath, intl, curl, dom, xml, zip, fileinfo
+          coverage: none
+          tools: composer:v2
+
+      - name: Resolve Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Composer downloads
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-php${{ env.PHP_VERSION }}-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-php${{ env.PHP_VERSION }}-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Code style (Pint)
+        run: ./vendor/bin/pint --test
+
+      - name: Static analysis (PHPStan)
+        # --memory-limit is required: the default 128M crashes a parallel
+        # worker part-way through, and a crashed worker reports an incomplete
+        # result that reads like a pass.
+        run: ./vendor/bin/phpstan analyse --no-progress --memory-limit=1G

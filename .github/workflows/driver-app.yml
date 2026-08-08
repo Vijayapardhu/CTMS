@@ -1,0 +1,150 @@
+name: Driver App
+
+# The Flutter project lives at driver_app/ (underscore — it is a Dart package
+# name, not a directory the repository chose freely).
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: driver-app-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    working-directory: driver_app
+
+env:
+  # Pinned, not `stable`. pubspec.yaml requires Dart ^3.8.1, which 3.32.4
+  # ships; letting the channel float would change the analyser and the test
+  # framework underneath a frozen specification without anyone asking for it.
+  FLUTTER_VERSION: '3.32.4'
+
+jobs:
+  analyze:
+    name: Driver Analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter ${{ env.FLUTTER_VERSION }}
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Static analysis
+        run: flutter analyze
+
+      - name: Verify generated localizations are current
+        # gen-l10n output is committed. If .arb and .dart have drifted, the
+        # analyser is reading a file nobody generated from the strings anyone
+        # edited, so it passes while the app shows the wrong words.
+        run: |
+          flutter gen-l10n
+          if ! git diff --quiet -- lib/l10n; then
+            echo "::error::lib/l10n is out of date. Run 'flutter gen-l10n' and commit the result."
+            git --no-pager diff --stat -- lib/l10n
+            exit 1
+          fi
+
+  test:
+    name: Driver Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter ${{ env.FLUTTER_VERSION }}
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Unit and widget tests
+        run: flutter test --reporter expanded
+
+  build:
+    name: Driver Android Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        # AGP 8.9.1 requires JDK 17 or newer; the app compiles to Java 11
+        # bytecode, which is a separate setting and is not affected by this.
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Flutter ${{ env.FLUTTER_VERSION }}
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install the pinned Android NDK
+        # android/app/build.gradle.kts pins ndkVersion. Read it rather than
+        # repeating it, so the two cannot drift apart silently.
+        run: |
+          NDK=$(sed -n 's/.*ndkVersion *= *"\([^"]*\)".*/\1/p' android/app/build.gradle.kts)
+          if [ -z "$NDK" ]; then
+            echo "::error::Could not read ndkVersion from android/app/build.gradle.kts"
+            exit 1
+          fi
+          echo "Installing NDK $NDK"
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;$NDK" > /dev/null
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          # Dependency and wrapper caches only. Build output is deliberately
+          # not cached: a cached build/ directory is how a compilation error
+          # gets skipped instead of reported.
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('driver_app/android/**/*.gradle*', 'driver_app/android/gradle/wrapper/gradle-wrapper.properties', 'driver_app/pubspec.lock') }}
+          restore-keys: gradle-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Android build (debug)
+        # The real thing. This is what validates Gradle, AGP, the plugin set,
+        # resource linking and the manifest merge — none of which `flutter
+        # analyze` can see.
+        run: flutter build apk --debug
+
+      - name: Upload build diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-build-reports
+          # Gradle's own reports only. No APK, no signing material, no
+          # local.properties, no environment file.
+          path: |
+            driver_app/build/app/reports/**
+            driver_app/build/app/outputs/logs/**
+          if-no-files-found: ignore
+          retention-days: 7

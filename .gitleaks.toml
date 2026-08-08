@@ -1,0 +1,35 @@
+# Secret-scanning configuration for CTMS.
+#
+# The default ruleset does the work. This file exists only to describe the
+# documentation placeholders that already live in the repository, and it does
+# so by *shape* rather than by path — excluding a whole file would blind the
+# scanner to a real credential landing in it tomorrow.
+#
+# Every entry below was verified by reading the flagged line. If you add one,
+# read the line first and say here why it is not a credential.
+
+title = "CTMS"
+
+[extend]
+# Keep every built-in rule. This file adds allowances, never removes coverage.
+useDefault = true
+
+[allowlist]
+description = "Documentation placeholders, verified by reading each occurrence"
+regexTarget = "match"
+
+regexes = [
+  # backend/AUTHENTICATION.md — `-H "Authorization: Bearer YOUR_JWT_TOKEN"` in
+  # the curl examples. The literal string, not a token.
+  '''YOUR_JWT_TOKEN''',
+
+  # backend/QUICK_START.md, backend/docs/API_ENDPOINTS.md — sample login
+  # responses showing `"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."`.
+  #
+  # That is the base64 of `{"alg":"HS256","typ":"JWT"}` — the *header* segment
+  # of any HS256 JWT ever issued — cut off with a literal ellipsis. Three
+  # consecutive dots cannot occur inside a real JWT, which is
+  # header.payload.signature with exactly one dot between non-empty segments,
+  # so this pattern cannot match a token that carries a payload or a signature.
+  '''eyJ[A-Za-z0-9_\-=]+\.\.\.''',
+]
