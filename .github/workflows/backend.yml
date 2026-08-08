@@ -37,27 +37,6 @@ jobs:
     name: Backend Tests
     runs-on: ubuntu-latest
 
-    env:
-      # ---------------------------------------------------------------------
-      # WORKAROUND for a defect in backend/.env.example. Delete this block the
-      # moment the template can boot artisan on its own.
-      # ---------------------------------------------------------------------
-      # .env.example selects BROADCAST_CONNECTION=reverb but defines no
-      # REVERB_APP_KEY / REVERB_APP_ID / REVERB_APP_SECRET. routes/channels.php
-      # calls Broadcast::channel() at boot, which builds a Pusher client with a
-      # null key, so *every* artisan command in an environment created from the
-      # template dies before it runs — `key:generate`, `migrate` and
-      # `test` alike.
-      #
-      # phpunit.xml's <env> block does not save `php artisan test`: artisan
-      # boots the application from .env first, and phpunit only applies its own
-      # variables afterwards.
-      #
-      # This never showed up on the development machine because its untracked
-      # .env carries BROADCAST_CONNECTION=null while the tracked template says
-      # reverb.
-      BROADCAST_CONNECTION: 'null'
-
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -95,8 +74,9 @@ jobs:
         #
         # The suite reads .env directly, so it cannot simply be omitted.
         #
-        # Broadcasting is switched off for this whole job — see the env block
-        # above for why that is a workaround rather than a preference.
+        # Nothing is overridden here. CI boots the tracked template exactly as
+        # a fresh clone would, so if .env.example ever stops being bootable
+        # again this job is what says so.
         run: |
           cp .env.example .env
           php artisan key:generate
