@@ -13,10 +13,20 @@ abstract final class Routes {
   static const alerts = '/alerts';
   static const me = '/me';
 
-  /// Where an unauthenticated launch lands. Wired in Slice 1.
+  /// Session routes. Outside the shell — none of them has a tab bar, because
+  /// there is nothing to navigate to until there is a session.
+  static const splash = '/splash';
   static const login = '/login';
+  static const sessionExpired = '/session-expired';
 
   static const List<String> tabs = [trip, map, alerts, me];
+
+  /// Routes reachable without a session. Everything not listed here requires
+  /// one; the redirect denies by default rather than listing what to guard.
+  static const Set<String> public = {splash, login, sessionExpired};
+
+  static bool isPublic(String location) =>
+      public.any((path) => location == path || location.startsWith('$path/'));
 
   /// The tab index owning [location], or 0 when it belongs to none.
   static int tabIndexOf(String location) {

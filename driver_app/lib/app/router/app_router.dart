@@ -1,14 +1,24 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/connectivity/connectivity_service.dart';
 import '../../core/services/analytics_service.dart';
+import '../../core/services/logger_service.dart';
 import '../../core/widgets/error_boundary.dart';
 import '../../features/alerts/presentation/alerts_screen.dart';
+import '../../features/auth/domain/session_state.dart';
+import '../../features/auth/presentation/bloc/session_bloc.dart';
+import '../../features/auth/presentation/login_screen.dart';
+import '../../features/auth/presentation/session_expired_screen.dart';
+import '../../features/auth/presentation/splash_screen.dart';
 import '../../features/map/presentation/map_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/trip/presentation/trip_screen.dart';
 import '../di/service_locator.dart';
 import 'app_shell.dart';
+import 'debug_navigation_observer.dart';
 import 'routes.dart';
 
 /// Builds the router.
@@ -17,17 +27,51 @@ import 'routes.dart';
 /// its own history, so a driver who checks the map mid-inspection returns to
 /// the same place rather than to the top.
 ///
-/// No redirect is installed in Slice 0. Authentication gating is a Slice 1
-/// concern, and a stub redirect here now would be a guess at its shape.
-GoRouter buildRouter({GlobalKey<NavigatorState>? navigatorKey}) {
+/// The session routes sit **outside** the shell. A driver being signed out
+/// mid-trip must not land on a login screen with a tab bar offering to take
+/// them back to a trip they can no longer load.
+GoRouter buildRouter({
+  required SessionBloc session,
+  GlobalKey<NavigatorState>? navigatorKey,
+}) {
   final analytics = sl<AnalyticsService>();
 
   return GoRouter(
     navigatorKey: navigatorKey ?? sl<GlobalKey<NavigatorState>>(),
-    initialLocation: Routes.trip,
-    observers: [_AnalyticsObserver(analytics)],
+    initialLocation: Routes.splash,
+    refreshListenable: _BlocRefresh(session),
+    redirect: (context, state) => _redirect(session.state, state.matchedLocation),
+    observers: [
+      _AnalyticsObserver(analytics),
+      ...DebugNavigationObserver.attachIfDebug(sl<LoggerService>()),
+    ],
     errorBuilder: (context, state) => const AppErrorView(),
     routes: [
+      GoRoute(
+        path: Routes.splash,
+        name: Routes.splash,
+        builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: Routes.login,
+        name: Routes.login,
+        builder: (context, state) =>
+            LoginScreen(connectivity: sl<ConnectivityService>()),
+      ),
+      GoRoute(
+        path: Routes.sessionExpired,
+        name: Routes.sessionExpired,
+        builder: (context, state) {
+          final current = session.state;
+
+          return SessionExpiredScreen(
+            reason: current is SessionExpired
+                ? current.reason
+                : SessionEndReason.refreshRefused,
+            serverMessage: current is SessionExpired ? current.message : null,
+          );
+        },
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
             AppShell(navigationShell: navigationShell),
@@ -42,16 +86,64 @@ GoRouter buildRouter({GlobalKey<NavigatorState>? navigatorKey}) {
   );
 }
 
+/// Where the driver belongs, given the session.
+///
+/// Deny by default: anything not in [Routes.public] needs a session. A new
+/// route added without thinking about auth lands behind the gate, which is the
+/// safe direction to be wrong in.
+///
+/// Returns null when the current location is already correct — returning a
+/// location unconditionally makes go_router loop.
+@visibleForTesting
+String? redirectFor(SessionState session, String location) =>
+    _redirect(session, location);
+
+String? _redirect(SessionState session, String location) {
+  final isPublic = Routes.isPublic(location);
+
+  return switch (session) {
+    // Still reading storage. Hold the splash rather than flashing a login
+    // screen at a driver who is in fact signed in.
+    SessionInitialising() =>
+      location == Routes.splash ? null : Routes.splash,
+
+    SessionExpired() =>
+      location == Routes.sessionExpired ? null : Routes.sessionExpired,
+
+    SessionUnauthenticated() ||
+    SessionAuthenticating() ||
+    SessionLoginFailed() =>
+      location == Routes.login ? null : Routes.login,
+
+    // Signed in — including from cache, and including mid-refresh. A refresh
+    // must never bounce a driver out of the screen they are working in.
+    SessionAuthenticated() || SessionOffline() || SessionRefreshing() =>
+      isPublic ? Routes.trip : null,
+  };
+}
+
 StatefulShellBranch _branch(String path, Widget screen) {
   return StatefulShellBranch(
     routes: [
-      GoRoute(
-        path: path,
-        name: path,
-        builder: (context, state) => screen,
-      ),
+      GoRoute(path: path, name: path, builder: (context, state) => screen),
     ],
   );
+}
+
+/// Bridges the bloc's stream to `refreshListenable`, so the redirect re-runs
+/// the moment the session changes rather than on the next navigation.
+class _BlocRefresh extends ChangeNotifier {
+  _BlocRefresh(SessionBloc bloc) {
+    _subscription = bloc.stream.listen((_) => notifyListeners());
+  }
+
+  late final StreamSubscription<SessionState> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
 }
 
 /// Reports screen views.

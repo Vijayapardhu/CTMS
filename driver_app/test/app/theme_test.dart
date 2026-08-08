@@ -1,4 +1,3 @@
-import 'package:ctms_driver/app/app.dart';
 import 'package:ctms_driver/app/theme/app_theme.dart';
 import 'package:ctms_driver/core/design_system/ctms_colors.dart';
 import 'package:ctms_driver/core/design_system/tokens.dart';
@@ -25,11 +24,10 @@ void main() {
     });
 
     testWidgets('a theme change repaints the app', (tester) async {
-      final connectivity = await registerTestDependencies();
-      addTearDown(connectivity.dispose);
+      final app = await registerTestDependencies(signedIn: true);
+      addTearDown(app.dispose);
 
-      await tester.pumpWidget(const CtmsDriverApp());
-      await settle(tester);
+      await pumpApp(tester);
 
       expect(
         tester.widget<MaterialApp>(find.byType(MaterialApp)).themeMode,

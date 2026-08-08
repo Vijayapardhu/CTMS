@@ -40,7 +40,10 @@ class FlutterSecureStore implements SecureStore {
 /// Keys used by the secure store. Declared here so no two features can invent
 /// competing spellings of the same key.
 abstract final class SecureKeys {
-  static const accessToken = 'access_token';
-  static const refreshToken = 'refresh_token';
-  static const userId = 'user_id';
+  /// The access/refresh pair and the access token's expiry, as one JSON blob.
+  /// One key rather than three, so a session can never be half-cleared.
+  static const tokens = 'session_tokens';
+
+  /// The cached identity from `/auth/me`.
+  static const user = 'session_user';
 }

@@ -225,6 +225,156 @@ abstract class AppStrings {
   /// In en, this message translates to:
   /// **'Retry'**
   String get retry;
+
+  /// Title of the login screen
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get loginTitle;
+
+  /// Sub-heading under the login title
+  ///
+  /// In en, this message translates to:
+  /// **'Use the account your transport office issued you.'**
+  String get loginSubtitle;
+
+  /// Label of the email field
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get loginEmail;
+
+  /// Label of the password field
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get loginPassword;
+
+  /// Reveals the typed password
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get loginShowPassword;
+
+  /// Conceals the typed password
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get loginHidePassword;
+
+  /// Submits the login form
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get loginSubmit;
+
+  /// Shown when the email field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get loginEmailRequired;
+
+  /// Shown when the email is malformed
+  ///
+  /// In en, this message translates to:
+  /// **'That does not look like an email address'**
+  String get loginEmailInvalid;
+
+  /// Shown when the password field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get loginPasswordRequired;
+
+  /// Explains that sign-in cannot be queued
+  ///
+  /// In en, this message translates to:
+  /// **'No connection. Sign-in needs a network.'**
+  String get loginOffline;
+
+  /// Title of the session-expired screen
+  ///
+  /// In en, this message translates to:
+  /// **'Signed out'**
+  String get expiredTitle;
+
+  /// Shown when the refresh token was refused
+  ///
+  /// In en, this message translates to:
+  /// **'Your session has ended. Sign in to continue.'**
+  String get expiredRefreshRefused;
+
+  /// Shown when the server refuses the account, which may mean deactivation
+  ///
+  /// In en, this message translates to:
+  /// **'This account can no longer be used on this device. Contact your transport office if that is unexpected.'**
+  String get expiredAccountUnavailable;
+
+  /// Acknowledges the expiry and returns to login
+  ///
+  /// In en, this message translates to:
+  /// **'Back to sign in'**
+  String get expiredContinue;
+
+  /// Signs out of this device
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get signOut;
+
+  /// Title of the sign-out confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out?'**
+  String get signOutConfirmTitle;
+
+  /// Body of the sign-out confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'You will need your password to sign in again.'**
+  String get signOutConfirmBody;
+
+  /// Revokes every token the driver holds
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out of all devices'**
+  String get signOutEverywhere;
+
+  /// Title of the sign-out-everywhere confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out everywhere?'**
+  String get signOutEverywhereConfirmTitle;
+
+  /// Body of the sign-out-everywhere confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Every device signed in as you will be signed out, including this one.'**
+  String get signOutEverywhereConfirmBody;
+
+  /// Shown when logout-all did not reach the server
+  ///
+  /// In en, this message translates to:
+  /// **'Could not sign out your other devices. You are still signed in here.'**
+  String get signOutEverywhereFailed;
+
+  /// Heading for the account section of the Me screen
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get settingsAccount;
+
+  /// Shows the driver's licence number
+  ///
+  /// In en, this message translates to:
+  /// **'Licence {number}'**
+  String accountLicence(String number);
+
+  /// Shown while the session is running from cache
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in from saved credentials — not yet confirmed with the server'**
+  String get accountUnconfirmed;
 }
 
 class _AppStringsDelegate extends LocalizationsDelegate<AppStrings> {

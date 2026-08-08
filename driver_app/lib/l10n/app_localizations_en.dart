@@ -76,4 +76,88 @@ class AppStringsEn extends AppStrings {
 
   @override
   String get retry => 'Retry';
+
+  @override
+  String get loginTitle => 'Sign in';
+
+  @override
+  String get loginSubtitle =>
+      'Use the account your transport office issued you.';
+
+  @override
+  String get loginEmail => 'Email';
+
+  @override
+  String get loginPassword => 'Password';
+
+  @override
+  String get loginShowPassword => 'Show password';
+
+  @override
+  String get loginHidePassword => 'Hide password';
+
+  @override
+  String get loginSubmit => 'Sign in';
+
+  @override
+  String get loginEmailRequired => 'Enter your email';
+
+  @override
+  String get loginEmailInvalid => 'That does not look like an email address';
+
+  @override
+  String get loginPasswordRequired => 'Enter your password';
+
+  @override
+  String get loginOffline => 'No connection. Sign-in needs a network.';
+
+  @override
+  String get expiredTitle => 'Signed out';
+
+  @override
+  String get expiredRefreshRefused =>
+      'Your session has ended. Sign in to continue.';
+
+  @override
+  String get expiredAccountUnavailable =>
+      'This account can no longer be used on this device. Contact your transport office if that is unexpected.';
+
+  @override
+  String get expiredContinue => 'Back to sign in';
+
+  @override
+  String get signOut => 'Sign out';
+
+  @override
+  String get signOutConfirmTitle => 'Sign out?';
+
+  @override
+  String get signOutConfirmBody =>
+      'You will need your password to sign in again.';
+
+  @override
+  String get signOutEverywhere => 'Sign out of all devices';
+
+  @override
+  String get signOutEverywhereConfirmTitle => 'Sign out everywhere?';
+
+  @override
+  String get signOutEverywhereConfirmBody =>
+      'Every device signed in as you will be signed out, including this one.';
+
+  @override
+  String get signOutEverywhereFailed =>
+      'Could not sign out your other devices. You are still signed in here.';
+
+  @override
+  String get settingsAccount => 'Account';
+
+  @override
+  String accountLicence(String number) {
+    return 'Licence $number';
+  }
+
+  @override
+  String get accountUnconfirmed =>
+      'Signed in from saved credentials — not yet confirmed with the server';
 }

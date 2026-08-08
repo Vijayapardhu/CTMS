@@ -11,6 +11,10 @@ import '../../core/services/crash_reporter.dart';
 import '../../core/services/logger_service.dart';
 import '../../core/services/ui_service.dart';
 import '../../core/storage/secure_store.dart';
+import '../../features/auth/data/auth_api.dart';
+import '../../features/auth/data/session_manager.dart';
+import '../../features/auth/data/session_store.dart';
+import '../../features/auth/presentation/bloc/session_bloc.dart';
 import '../config/app_config.dart';
 import '../lifecycle/app_lifecycle_observer.dart';
 import '../settings/app_preferences.dart';
@@ -24,10 +28,23 @@ final GetIt sl = GetIt.instance;
 
 /// Registers everything the application needs.
 ///
-/// Singletons only where the specification says the thing is application-wide.
-/// Feature blocs are constructed per route in later slices, so a screen cannot
-/// outlive its own state.
-Future<void> configureDependencies(AppConfig config) async {
+/// Singletons only where the thing is genuinely application-wide. Feature
+/// blocs are constructed per route in later slices; [SessionBloc] is the
+/// exception, because the session outlives every screen and the router itself
+/// depends on it.
+/// Names the unauthenticated client, so a test can reach it to install an
+/// adapter and a diagnostics screen can report which host it talks to.
+const authClientName = 'auth';
+
+/// [secureStore] and [connectivity] are the only two pieces backed by a
+/// platform channel. They are parameters rather than hard-wired so a test can
+/// substitute them at the composition root — which is what a composition root
+/// is for — without any other file knowing.
+Future<void> configureDependencies(
+  AppConfig config, {
+  SecureStore? secureStore,
+  ConnectivityService? connectivity,
+}) async {
   final prefs = await SharedPreferences.getInstance();
 
   sl
@@ -43,23 +60,51 @@ Future<void> configureDependencies(AppConfig config) async {
     ..registerSingleton<AnalyticsService>(const NoopAnalyticsService())
     ..registerSingleton<AppLifecycleObserver>(
         AppLifecycleObserver(sl<LoggerService>()))
-    ..registerSingleton<SecureStore>(const FlutterSecureStore(
-        FlutterSecureStorage(aOptions: FlutterSecureStore.androidOptions)))
+    ..registerSingleton<SecureStore>(secureStore ??
+        const FlutterSecureStore(
+            FlutterSecureStorage(aOptions: FlutterSecureStore.androidOptions)))
     ..registerSingleton<ConnectivityService>(
-        DefaultConnectivityService(Connectivity()))
+        connectivity ?? DefaultConnectivityService(Connectivity()))
     ..registerSingleton<UiService>(UiService(
       sl<GlobalKey<NavigatorState>>(),
       sl<GlobalKey<ScaffoldMessengerState>>(),
-    ))
+    ));
+
+  // The authentication layer gets its own client with **no** session attached,
+  // so `POST /auth/refresh` can never trigger a refresh of its own and a failed
+  // login can never be mistaken for an expiry.
+  final authClient = ApiClient(
+    baseUrl: config.apiBaseUrl,
+    logger: sl<LoggerService>(),
+  );
+
+  final manager = SessionManager(
+    api: AuthApi(authClient),
+    store: SessionStore(sl<SecureStore>(), sl<LoggerService>()),
+    logger: sl<LoggerService>(),
+  );
+
+  sl
+    ..registerSingleton<ApiClient>(authClient, instanceName: authClientName)
+    ..registerSingleton<SessionManager>(manager)
+    // The client every feature uses. It attaches the bearer and recovers once
+    // from a 401 by asking the manager to refresh.
     ..registerSingleton<ApiClient>(ApiClient(
       baseUrl: config.apiBaseUrl,
       logger: sl<LoggerService>(),
-      // Slice 1 replaces this with the live session's token. Until then the
-      // client is wired but unauthenticated, which is correct: nothing calls
-      // it, and no token has been issued.
-      tokenSupplier: () => sl<SecureStore>().read(SecureKeys.accessToken),
+      session: manager,
+    ))
+    ..registerSingleton<SessionBloc>(SessionBloc(
+      manager: manager,
+      crashReporter: sl<CrashReporter>(),
+      analytics: sl<AnalyticsService>(),
     ));
 }
 
-/// Clears every registration. Used between tests.
-Future<void> resetDependencies() => sl.reset();
+/// Clears every registration. Used between tests and on a full restart.
+Future<void> resetDependencies() async {
+  if (sl.isRegistered<SessionBloc>()) await sl<SessionBloc>().close();
+  if (sl.isRegistered<SessionManager>()) await sl<SessionManager>().dispose();
+
+  await sl.reset();
+}

@@ -187,6 +187,18 @@ class AppIcon {
   static const logout = AppIcon._(HugeIcons.strokeRoundedLogout03,
       Icons.logout_rounded, semanticLabel: 'Sign out');
 
+  // ── Session ────────────────────────────────────────────────────────────
+  static const login = AppIcon._(HugeIcons.strokeRoundedLogin03,
+      Icons.login_rounded, semanticLabel: 'Sign in');
+  static const passwordShow = AppIcon._(HugeIcons.strokeRoundedView,
+      Icons.visibility_rounded, semanticLabel: 'Show password');
+  static const passwordHide = AppIcon._(HugeIcons.strokeRoundedViewOff,
+      Icons.visibility_off_rounded, semanticLabel: 'Hide password');
+  static const sessionEnded = AppIcon._(HugeIcons.strokeRoundedSquareLock01,
+      Icons.lock_rounded, semanticLabel: 'Session ended');
+  static const account = AppIcon._(HugeIcons.strokeRoundedUserCircle,
+      Icons.account_circle_rounded, semanticLabel: 'Account');
+
   /// Every icon, for the registry integrity test.
   static const List<AppIcon> all = [
     trip, map, alerts, profile, settings, back, close, chevron,
@@ -198,6 +210,7 @@ class AppIcon {
     fuel, tyre,
     success, warning, error, info, pending, blocked,
     call, sms, retry, history, document, help, logout,
+    login, passwordShow, passwordHide, sessionEnded, account,
   ];
 }
 
