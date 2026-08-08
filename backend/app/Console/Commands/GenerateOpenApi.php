@@ -37,7 +37,15 @@ class GenerateOpenApi extends Command
         $paths = [];
         $counted = 0;
 
-        foreach (Route::getRoutes() as $route) {
+        // `->getRoutes()` rather than iterating the collection directly.
+        // `Router::getRoutes()` is typed as RouteCollectionInterface, which
+        // declares Countable and ArrayAccess but not IteratorAggregate — only
+        // the concrete AbstractRouteCollection does. The interface *does*
+        // declare `getRoutes(): Route[]`, and AbstractRouteCollection's
+        // iterator is `new ArrayIterator($this->getRoutes())`, so this walks
+        // the identical array in the identical order while giving every
+        // `$route` below a real type instead of an unchecked one.
+        foreach (Route::getRoutes()->getRoutes() as $route) {
             if (! str_starts_with($route->uri(), 'api/')) {
                 continue;
             }
@@ -187,8 +195,20 @@ class GenerateOpenApi extends Command
             return null;
         }
 
+        $request = new $formRequest;
+
+        // FormRequest itself declares no `rules()`; Laravel calls it only if
+        // the subclass defines one, and a request that exists purely to
+        // authorize has no rules to define. That case used to arrive here as
+        // an Error caught by the `\Throwable` below — using a fatal as control
+        // flow, and indistinguishable in the log from a rule set that genuinely
+        // failed to build. Asked directly instead.
+        if (! method_exists($request, 'rules')) {
+            return null;
+        }
+
         try {
-            $rules = (new $formRequest)->rules();
+            $rules = $request->rules();
         } catch (\Throwable) {
             // Some rule sets depend on the incoming payload. The endpoint is
             // still documented; only its schema is omitted, which is honest.
@@ -270,7 +290,15 @@ class GenerateOpenApi extends Command
     }
 
     /**
-     * @return array<string, mixed>
+     * The response set for one operation, keyed by HTTP status.
+     *
+     * `array<int, ...>` and not `array<string, ...>`: PHP coerces a numeric
+     * string array key to an integer, so `'200'` and `'401'` below are stored
+     * as 200 and 401 no matter how they are written. The JSON is unaffected —
+     * `json_encode` emits an object with `"200"` as the member name, because
+     * the keys are not a zero-based list.
+     *
+     * @return array<int, array<string, mixed>>
      */
     private function responses(string $method, string $middleware): array
     {
