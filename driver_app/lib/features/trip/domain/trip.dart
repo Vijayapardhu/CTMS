@@ -73,6 +73,7 @@ class TripBus {
     this.seatingCapacity,
     this.model,
     this.status,
+    this.currentOdometer,
   });
 
   final String id;
@@ -84,6 +85,10 @@ class TripBus {
   final String? model;
   final String? status;
 
+  /// The bus's recorded total. The floor for an inspection's odometer reading
+  /// (BR-061), stated to the driver before they can get it wrong.
+  final int? currentOdometer;
+
   static TripBus fromJson(Map<String, dynamic> json) {
     return TripBus(
       id: json['id'] as String? ?? '',
@@ -91,6 +96,7 @@ class TripBus {
       seatingCapacity: _int(json['seating_capacity']),
       model: json['model'] as String?,
       status: json['status'] as String?,
+      currentOdometer: _int(json['current_odometer']),
     );
   }
 }

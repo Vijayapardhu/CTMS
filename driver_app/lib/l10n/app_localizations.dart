@@ -507,6 +507,210 @@ abstract class AppStrings {
   /// In en, this message translates to:
   /// **'Start opens at {time}'**
   String tripStartWindowOpens(String time);
+
+  /// R1 blocked — the one reason a driver can act on
+  ///
+  /// In en, this message translates to:
+  /// **'Start inspection'**
+  String get tripStartInspection;
+
+  /// P9 title
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-trip inspection'**
+  String get inspectionTitle;
+
+  /// How many checklist items are answered
+  ///
+  /// In en, this message translates to:
+  /// **'{answered} of {total}'**
+  String inspectionProgress(int answered, int total);
+
+  /// Odometer field label
+  ///
+  /// In en, this message translates to:
+  /// **'Odometer reading (km)'**
+  String get inspectionOdometer;
+
+  /// Stated before any error, not after
+  ///
+  /// In en, this message translates to:
+  /// **'Must be at least {value} km'**
+  String inspectionOdometerMinimum(String value);
+
+  /// The reading the driver entered, shown on review
+  ///
+  /// In en, this message translates to:
+  /// **'Odometer: {value} km'**
+  String inspectionOdometerReading(String value);
+
+  /// Odometer missing
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the odometer reading'**
+  String get inspectionOdometerRequired;
+
+  /// Checklist verdict
+  ///
+  /// In en, this message translates to:
+  /// **'Pass'**
+  String get inspectionPass;
+
+  /// Checklist verdict
+  ///
+  /// In en, this message translates to:
+  /// **'Fail'**
+  String get inspectionFail;
+
+  /// Marker on items that ground the bus
+  ///
+  /// In en, this message translates to:
+  /// **'Safety critical'**
+  String get inspectionSafetyCritical;
+
+  /// Notes field on a failed item
+  ///
+  /// In en, this message translates to:
+  /// **'What did you find?'**
+  String get inspectionNotesLabel;
+
+  /// Notes missing or too short
+  ///
+  /// In en, this message translates to:
+  /// **'Describe what you found'**
+  String get inspectionNotesRequired;
+
+  /// Safety-critical failure needs evidence
+  ///
+  /// In en, this message translates to:
+  /// **'A photograph is required for {item}'**
+  String inspectionEvidenceRequired(String item);
+
+  /// Move to P10
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get inspectionReview;
+
+  /// Review is disabled and carries the remaining count
+  ///
+  /// In en, this message translates to:
+  /// **'Review ({count} left)'**
+  String inspectionReviewRemaining(int count);
+
+  /// P10 title
+  ///
+  /// In en, this message translates to:
+  /// **'Review and submit'**
+  String get inspectionReviewTitle;
+
+  /// P10 submit
+  ///
+  /// In en, this message translates to:
+  /// **'Submit inspection'**
+  String get inspectionSubmit;
+
+  /// P10 back to P9
+  ///
+  /// In en, this message translates to:
+  /// **'Back to checklist'**
+  String get inspectionBack;
+
+  /// Consequence panel title before submitting a critical failure
+  ///
+  /// In en, this message translates to:
+  /// **'This will take the bus out of service'**
+  String get inspectionGroundedTitle;
+
+  /// Consequence panel body
+  ///
+  /// In en, this message translates to:
+  /// **'A maintenance ticket will be opened. You will not be able to start this trip.'**
+  String get inspectionGroundedBody;
+
+  /// Summary line on the review screen
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing failed} =1{1 item failed} other{{count} items failed}}'**
+  String inspectionPassedSummary(int count);
+
+  /// D1 confirmation title
+  ///
+  /// In en, this message translates to:
+  /// **'Discard inspection?'**
+  String get inspectionDiscardTitle;
+
+  /// D1 confirmation body
+  ///
+  /// In en, this message translates to:
+  /// **'Everything you have entered will be lost.'**
+  String get inspectionDiscardBody;
+
+  /// D1 confirm
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get inspectionDiscard;
+
+  /// D1 cancel
+  ///
+  /// In en, this message translates to:
+  /// **'Keep editing'**
+  String get inspectionKeep;
+
+  /// P9 error card
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load the checklist'**
+  String get inspectionUnavailableTitle;
+
+  /// A checklist with no items is a server fault
+  ///
+  /// In en, this message translates to:
+  /// **'The server returned no checklist items. Contact the transport office — this inspection cannot be completed.'**
+  String get inspectionEmptyChecklist;
+
+  /// Offline submit outcome
+  ///
+  /// In en, this message translates to:
+  /// **'Saved — not yet submitted'**
+  String get inspectionSavedTitle;
+
+  /// States plainly that the bus is not cleared
+  ///
+  /// In en, this message translates to:
+  /// **'This inspection will submit when you have signal. The bus is not cleared until it does.'**
+  String get inspectionSavedBody;
+
+  /// P11 outcome PASSED
+  ///
+  /// In en, this message translates to:
+  /// **'Cleared'**
+  String get inspectionResultPassed;
+
+  /// P11 outcome PASSED_WITH_DEFECTS
+  ///
+  /// In en, this message translates to:
+  /// **'Passed with defects'**
+  String get inspectionResultDefects;
+
+  /// P11 outcome FAILED
+  ///
+  /// In en, this message translates to:
+  /// **'Bus out of service'**
+  String get inspectionResultFailed;
+
+  /// Shown when the outcome opened a ticket
+  ///
+  /// In en, this message translates to:
+  /// **'A maintenance ticket has been opened.'**
+  String get inspectionTicketOpened;
+
+  /// P11 exit
+  ///
+  /// In en, this message translates to:
+  /// **'Back to trip'**
+  String get inspectionDone;
 }
 
 class _AppStringsDelegate extends LocalizationsDelegate<AppStrings> {

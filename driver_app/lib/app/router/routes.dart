@@ -15,6 +15,11 @@ abstract final class Routes {
 
   /// Session routes. Outside the shell — none of them has a tab bar, because
   /// there is nothing to navigate to until there is a session.
+  /// Pushed over the trip tab, inside the shell — a driver mid-inspection
+  /// keeps the tab bar and can still check the map.
+  static const inspection = 'inspection';
+  static const inspectionPath = '$trip/inspection/:busId';
+
   static const splash = '/splash';
   static const login = '/login';
   static const sessionExpired = '/session-expired';

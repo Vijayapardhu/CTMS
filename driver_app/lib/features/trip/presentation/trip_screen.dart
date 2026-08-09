@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../app/router/routes.dart';
 
 import '../../../core/design_system/ctms_colors.dart';
 import '../../../core/design_system/tokens.dart';
@@ -247,9 +250,42 @@ class _Blocked extends StatelessWidget {
           const SizedBox(height: Spacing.sm),
           _CheckedAt(clearance.checkedAt!),
         ],
-        // "Start inspection" belongs to the inspection slice. Rendering it
-        // here without the flow behind it would be a button that lies.
+        // Offered only when something is actionable. A driver shown "Start
+        // inspection" against an expired insurance certificate does the work
+        // and is still blocked, with no idea why.
+        if (clearance.actionable.isNotEmpty) ...[
+          const SizedBox(height: Spacing.xl),
+          _StartInspection(trip: state.trip!),
+        ],
       ],
+    );
+  }
+}
+
+/// The one way out of `blocked` that belongs to the driver.
+class _StartInspection extends StatelessWidget {
+  const _StartInspection({required this.trip});
+
+  final Trip trip;
+
+  @override
+  Widget build(BuildContext context) {
+    final busId = trip.busId;
+    if (busId == null) return const SizedBox.shrink();
+
+    return SizedBox(
+      height: Sizes.buttonProminent,
+      child: FilledButton(
+        onPressed: () => context.goNamed(
+          Routes.inspection,
+          pathParameters: {'busId': busId},
+          queryParameters: {
+            if (trip.bus?.currentOdometer != null)
+              'min': '${trip.bus!.currentOdometer}',
+          },
+        ),
+        child: Text(AppStrings.of(context).tripStartInspection),
+      ),
     );
   }
 }

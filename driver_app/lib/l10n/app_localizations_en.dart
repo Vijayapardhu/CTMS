@@ -254,4 +254,129 @@ class AppStringsEn extends AppStrings {
   String tripStartWindowOpens(String time) {
     return 'Start opens at $time';
   }
+
+  @override
+  String get tripStartInspection => 'Start inspection';
+
+  @override
+  String get inspectionTitle => 'Pre-trip inspection';
+
+  @override
+  String inspectionProgress(int answered, int total) {
+    return '$answered of $total';
+  }
+
+  @override
+  String get inspectionOdometer => 'Odometer reading (km)';
+
+  @override
+  String inspectionOdometerMinimum(String value) {
+    return 'Must be at least $value km';
+  }
+
+  @override
+  String inspectionOdometerReading(String value) {
+    return 'Odometer: $value km';
+  }
+
+  @override
+  String get inspectionOdometerRequired => 'Enter the odometer reading';
+
+  @override
+  String get inspectionPass => 'Pass';
+
+  @override
+  String get inspectionFail => 'Fail';
+
+  @override
+  String get inspectionSafetyCritical => 'Safety critical';
+
+  @override
+  String get inspectionNotesLabel => 'What did you find?';
+
+  @override
+  String get inspectionNotesRequired => 'Describe what you found';
+
+  @override
+  String inspectionEvidenceRequired(String item) {
+    return 'A photograph is required for $item';
+  }
+
+  @override
+  String get inspectionReview => 'Review';
+
+  @override
+  String inspectionReviewRemaining(int count) {
+    return 'Review ($count left)';
+  }
+
+  @override
+  String get inspectionReviewTitle => 'Review and submit';
+
+  @override
+  String get inspectionSubmit => 'Submit inspection';
+
+  @override
+  String get inspectionBack => 'Back to checklist';
+
+  @override
+  String get inspectionGroundedTitle => 'This will take the bus out of service';
+
+  @override
+  String get inspectionGroundedBody =>
+      'A maintenance ticket will be opened. You will not be able to start this trip.';
+
+  @override
+  String inspectionPassedSummary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items failed',
+      one: '1 item failed',
+      zero: 'Nothing failed',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inspectionDiscardTitle => 'Discard inspection?';
+
+  @override
+  String get inspectionDiscardBody =>
+      'Everything you have entered will be lost.';
+
+  @override
+  String get inspectionDiscard => 'Discard';
+
+  @override
+  String get inspectionKeep => 'Keep editing';
+
+  @override
+  String get inspectionUnavailableTitle => 'Could not load the checklist';
+
+  @override
+  String get inspectionEmptyChecklist =>
+      'The server returned no checklist items. Contact the transport office — this inspection cannot be completed.';
+
+  @override
+  String get inspectionSavedTitle => 'Saved — not yet submitted';
+
+  @override
+  String get inspectionSavedBody =>
+      'This inspection will submit when you have signal. The bus is not cleared until it does.';
+
+  @override
+  String get inspectionResultPassed => 'Cleared';
+
+  @override
+  String get inspectionResultDefects => 'Passed with defects';
+
+  @override
+  String get inspectionResultFailed => 'Bus out of service';
+
+  @override
+  String get inspectionTicketOpened => 'A maintenance ticket has been opened.';
+
+  @override
+  String get inspectionDone => 'Back to trip';
 }

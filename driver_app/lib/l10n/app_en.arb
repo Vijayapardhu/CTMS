@@ -180,5 +180,93 @@
   "@tripStartWindowOpens": {
     "description": "Countdown target while waiting for the start window",
     "placeholders": { "time": { "type": "String" } }
-  }
+  },
+
+  "tripStartInspection": "Start inspection",
+  "@tripStartInspection": { "description": "R1 blocked — the one reason a driver can act on" },
+
+  "inspectionTitle": "Pre-trip inspection",
+  "@inspectionTitle": { "description": "P9 title" },
+  "inspectionProgress": "{answered} of {total}",
+  "@inspectionProgress": {
+    "description": "How many checklist items are answered",
+    "placeholders": { "answered": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "inspectionOdometer": "Odometer reading (km)",
+  "@inspectionOdometer": { "description": "Odometer field label" },
+  "inspectionOdometerMinimum": "Must be at least {value} km",
+  "@inspectionOdometerMinimum": {
+    "description": "Stated before any error, not after",
+    "placeholders": { "value": { "type": "String" } }
+  },
+  "inspectionOdometerReading": "Odometer: {value} km",
+  "@inspectionOdometerReading": {
+    "description": "The reading the driver entered, shown on review",
+    "placeholders": { "value": { "type": "String" } }
+  },
+  "inspectionOdometerRequired": "Enter the odometer reading",
+  "@inspectionOdometerRequired": { "description": "Odometer missing" },
+  "inspectionPass": "Pass",
+  "@inspectionPass": { "description": "Checklist verdict" },
+  "inspectionFail": "Fail",
+  "@inspectionFail": { "description": "Checklist verdict" },
+  "inspectionSafetyCritical": "Safety critical",
+  "@inspectionSafetyCritical": { "description": "Marker on items that ground the bus" },
+  "inspectionNotesLabel": "What did you find?",
+  "@inspectionNotesLabel": { "description": "Notes field on a failed item" },
+  "inspectionNotesRequired": "Describe what you found",
+  "@inspectionNotesRequired": { "description": "Notes missing or too short" },
+  "inspectionEvidenceRequired": "A photograph is required for {item}",
+  "@inspectionEvidenceRequired": {
+    "description": "Safety-critical failure needs evidence",
+    "placeholders": { "item": { "type": "String" } }
+  },
+  "inspectionReview": "Review",
+  "@inspectionReview": { "description": "Move to P10" },
+  "inspectionReviewRemaining": "Review ({count} left)",
+  "@inspectionReviewRemaining": {
+    "description": "Review is disabled and carries the remaining count",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "inspectionReviewTitle": "Review and submit",
+  "@inspectionReviewTitle": { "description": "P10 title" },
+  "inspectionSubmit": "Submit inspection",
+  "@inspectionSubmit": { "description": "P10 submit" },
+  "inspectionBack": "Back to checklist",
+  "@inspectionBack": { "description": "P10 back to P9" },
+  "inspectionGroundedTitle": "This will take the bus out of service",
+  "@inspectionGroundedTitle": { "description": "Consequence panel title before submitting a critical failure" },
+  "inspectionGroundedBody": "A maintenance ticket will be opened. You will not be able to start this trip.",
+  "@inspectionGroundedBody": { "description": "Consequence panel body" },
+  "inspectionPassedSummary": "{count, plural, =0{Nothing failed} =1{1 item failed} other{{count} items failed}}",
+  "@inspectionPassedSummary": {
+    "description": "Summary line on the review screen",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "inspectionDiscardTitle": "Discard inspection?",
+  "@inspectionDiscardTitle": { "description": "D1 confirmation title" },
+  "inspectionDiscardBody": "Everything you have entered will be lost.",
+  "@inspectionDiscardBody": { "description": "D1 confirmation body" },
+  "inspectionDiscard": "Discard",
+  "@inspectionDiscard": { "description": "D1 confirm" },
+  "inspectionKeep": "Keep editing",
+  "@inspectionKeep": { "description": "D1 cancel" },
+  "inspectionUnavailableTitle": "Could not load the checklist",
+  "@inspectionUnavailableTitle": { "description": "P9 error card" },
+  "inspectionEmptyChecklist": "The server returned no checklist items. Contact the transport office — this inspection cannot be completed.",
+  "@inspectionEmptyChecklist": { "description": "A checklist with no items is a server fault" },
+  "inspectionSavedTitle": "Saved — not yet submitted",
+  "@inspectionSavedTitle": { "description": "Offline submit outcome" },
+  "inspectionSavedBody": "This inspection will submit when you have signal. The bus is not cleared until it does.",
+  "@inspectionSavedBody": { "description": "States plainly that the bus is not cleared" },
+  "inspectionResultPassed": "Cleared",
+  "@inspectionResultPassed": { "description": "P11 outcome PASSED" },
+  "inspectionResultDefects": "Passed with defects",
+  "@inspectionResultDefects": { "description": "P11 outcome PASSED_WITH_DEFECTS" },
+  "inspectionResultFailed": "Bus out of service",
+  "@inspectionResultFailed": { "description": "P11 outcome FAILED" },
+  "inspectionTicketOpened": "A maintenance ticket has been opened.",
+  "@inspectionTicketOpened": { "description": "Shown when the outcome opened a ticket" },
+  "inspectionDone": "Back to trip",
+  "@inspectionDone": { "description": "P11 exit" }
 }

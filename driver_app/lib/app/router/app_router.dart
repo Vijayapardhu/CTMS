@@ -12,6 +12,7 @@ import '../../features/auth/presentation/bloc/session_bloc.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/session_expired_screen.dart';
 import '../../features/auth/presentation/splash_screen.dart';
+import '../../features/inspection/presentation/inspection_entry.dart';
 import '../../features/map/presentation/map_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/trip/presentation/trip_screen.dart';
@@ -74,7 +75,26 @@ GoRouter buildRouter({
         builder: (context, state, navigationShell) =>
             AppShell(navigationShell: navigationShell),
         branches: [
-          _branch(Routes.trip, const TripScreen()),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.trip,
+                name: Routes.trip,
+                builder: (context, state) => const TripScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'inspection/:busId',
+                    name: Routes.inspection,
+                    builder: (context, state) => InspectionEntry(
+                      busId: state.pathParameters['busId'] ?? '',
+                      minimumOdometer:
+                          int.tryParse(state.uri.queryParameters['min'] ?? ''),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
           _branch(Routes.map, const MapScreen()),
           _branch(Routes.alerts, const AlertsScreen()),
           _branch(Routes.me, const ProfileScreen()),

@@ -12,10 +12,14 @@ import 'package:ctms_driver/core/connectivity/connectivity_service.dart';
 import 'package:ctms_driver/core/storage/secure_store.dart';
 import 'package:ctms_driver/features/auth/domain/session_state.dart';
 import 'package:ctms_driver/features/auth/presentation/bloc/session_bloc.dart';
+import 'package:ctms_driver/features/inspection/domain/inspection_state.dart';
+import 'package:ctms_driver/features/inspection/presentation/bloc/inspection_bloc.dart';
+import 'package:ctms_driver/features/inspection/presentation/inspection_flow.dart';
 import 'package:ctms_driver/features/trip/domain/trip_state.dart';
 import 'package:ctms_driver/features/trip/presentation/bloc/trip_bloc.dart';
 import 'package:ctms_driver/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -209,6 +213,39 @@ Future<void> waitForTrip(
 
   fail('The trip never reached the expected state. It is ${bloc.state}.');
 }
+
+/// Drives the app until the inspection bloc satisfies [matches].
+///
+/// Read out of the widget tree rather than the locator: the inspection bloc is
+/// flow-scoped, created by the route that owns it, so there is no singleton to
+/// ask.
+Future<void> waitForInspection(
+  WidgetTester tester,
+  bool Function(InspectionState) matches, {
+  int turns = 120,
+}) async {
+  InspectionBloc bloc() =>
+      BlocProvider.of<InspectionBloc>(tester.element(find.byType(InspectionFlow)));
+
+  for (var turn = 0; turn < turns; turn++) {
+    if (matches(bloc().state)) {
+      await tester.pump();
+      return;
+    }
+
+    await tester.runAsync(() => Future<void>.delayed(_realTurn));
+    await tester.pump(_fakeTurn);
+  }
+
+  fail('The inspection never reached the expected state. '
+      'It is ${bloc().state}.');
+}
+
+/// The inspection bloc's current state, read out of the widget tree.
+InspectionState inspectionStateOf(WidgetTester tester) =>
+    BlocProvider.of<InspectionBloc>(
+      tester.element(find.byType(InspectionFlow)),
+    ).state;
 
 /// Long enough for the real event loop to deliver an HTTP response.
 const _realTurn = Duration(milliseconds: 5);
