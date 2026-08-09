@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/connectivity/connectivity_cubit.dart';
 import '../features/auth/presentation/bloc/session_bloc.dart';
 import '../l10n/app_localizations.dart';
 import 'di/service_locator.dart';
@@ -53,8 +54,14 @@ class _CtmsDriverAppState extends State<CtmsDriverApp> {
   Widget build(BuildContext context) {
     final prefs = sl<AppPreferences>();
 
-    return BlocProvider<SessionBloc>.value(
-      value: _session,
+    // Both are app-scoped and provided above the router, per the Bloc mapping
+    // in `docs/driver-app/04-state-machines.md`. A driver switching tabs must
+    // not restart either one.
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<SessionBloc>.value(value: _session),
+        BlocProvider<ConnectivityCubit>.value(value: sl<ConnectivityCubit>()),
+      ],
       child: ListenableBuilder(
         listenable: prefs,
         builder: (context, _) => MaterialApp.router(

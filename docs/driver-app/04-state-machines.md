@@ -309,6 +309,36 @@ Cross-cutting; every machine above subscribes to it.
 
 Distinguish **no connectivity** from **server unreachable**. A driver on hotel wi-fi with no route to the API is not offline in the OS sense, but is offline for our purposes. Treat any network error or 5xx on three consecutive calls as offline.
 
+### Reachability is derived from real traffic
+
+There is **no polling probe**. CTMS has no health endpoint, and its only
+unauthenticated routes are `login`, `register` and `refresh` — the first two
+share a 5/min limiter that a poll would spend on the driver's behalf, and the
+third consumes its token on every call. Turning an authentication endpoint into
+a health check would add an undocumented request against a frozen contract.
+
+Reachability is therefore decided in the API client, from calls the app was
+going to make anyway:
+
+| What happened | Counts as |
+|---|---|
+| 2xx | **reachable** — resets the counter |
+| 4xx | **reachable** — the server answered. A 403 or a 409 is a refusal, not an outage |
+| 5xx | failure |
+| Socket error, timeout, DNS failure | failure |
+| Three consecutive failures | **offline** |
+| Any later success | **online** |
+
+**Transport is evidence in one direction only.** Losing the radio proves
+unreachable — there is no route to anything. Getting it back proves nothing:
+four bars behind a captive portal is exactly the case this machine exists for.
+So a returning transport does not clear the state; the next real call does.
+
+> **Known and accepted limitation.** An app that is offline and makes no
+> requests cannot discover that the server recovered. `offline → no traffic →
+> offline` is correct behaviour. Showing the banner slightly longer is better
+> than inventing evidence of recovery that the app does not have.
+
 ---
 
 ## M8 · Evidence upload

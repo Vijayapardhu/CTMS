@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 
 /// Whether the app can reach the API.
 ///
@@ -27,12 +28,23 @@ abstract interface class ConnectivityService {
 }
 
 class DefaultConnectivityService implements ConnectivityService {
-  DefaultConnectivityService(this._connectivity) {
-    _subscription = _connectivity.onConnectivityChanged.listen(_onTransport);
+  DefaultConnectivityService(Connectivity connectivity) {
+    _subscription = connectivity.onConnectivityChanged.listen(
+      (results) => transportChanged(
+        hasTransport: results.any((r) => r != ConnectivityResult.none),
+      ),
+    );
   }
 
-  final Connectivity _connectivity;
-  late final StreamSubscription<List<ConnectivityResult>> _subscription;
+  /// The same service with no platform channel behind it.
+  ///
+  /// `connectivity_plus` needs a binding and an event channel that a plain
+  /// unit test does not have. The reachability rules are the part worth
+  /// testing, and they do not depend on where the transport signal came from.
+  @visibleForTesting
+  DefaultConnectivityService.forTest();
+
+  StreamSubscription<List<ConnectivityResult>>? _subscription;
   final _controller = StreamController<Reachability>.broadcast();
 
   /// Three consecutive API failures count as offline, matching
@@ -48,19 +60,26 @@ class DefaultConnectivityService implements ConnectivityService {
   @override
   Reachability get current => _current;
 
-  void _onTransport(List<ConnectivityResult> results) {
-    final hasTransport =
-        results.any((r) => r != ConnectivityResult.none);
-
+  /// Handles the device gaining or losing a transport.
+  @visibleForTesting
+  void transportChanged({required bool hasTransport}) {
     if (!hasTransport) {
+      // No radio at all is proof of unreachable. This direction is sound:
+      // there is no route to anything, let alone to the API.
       _emit(Reachability.offline);
       return;
     }
 
-    // A transport reappearing is not proof the API is reachable, but it is
-    // reason enough to stop assuming it is not and let the next call decide.
-    _consecutiveFailures = 0;
-    _emit(Reachability.online);
+    // The other direction is not sound, so nothing happens here.
+    //
+    // A transport reappearing says a radio associated, not that CTMS answers.
+    // The case this exists for is exactly the one where they differ: a driver
+    // on depot wi-fi with a captive portal has four bars and no route to the
+    // API. Declaring online here would clear the banner and tell them their
+    // boardings are being sent when they are not.
+    //
+    // The state is left alone. The next real call decides, which is the only
+    // evidence that actually means anything.
   }
 
   @override
@@ -85,7 +104,7 @@ class DefaultConnectivityService implements ConnectivityService {
   }
 
   Future<void> dispose() async {
-    await _subscription.cancel();
+    await _subscription?.cancel();
     await _controller.close();
   }
 }

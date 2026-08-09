@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../connectivity/connectivity_service.dart';
 import '../services/logger_service.dart';
 import 'api_envelope.dart';
 import 'api_failure.dart';
@@ -20,10 +21,12 @@ class ApiClient {
     required String baseUrl,
     required LoggerService logger,
     SessionDelegate? session,
+    ConnectivityService? connectivity,
     Dio? dio,
     List<Duration> retryDelays = _defaultRetryDelays,
   })  : _logger = logger,
         _session = session,
+        _connectivity = connectivity,
         _dio = dio ?? Dio() {
     _dio.options = BaseOptions(
       baseUrl: baseUrl,
@@ -48,6 +51,13 @@ class ApiClient {
   final Dio _dio;
   final LoggerService _logger;
   final SessionDelegate? _session;
+
+  /// Where reachability is decided.
+  ///
+  /// M7 defines offline as three consecutive network errors or 5xx, which can
+  /// only be counted here — this is the one place that sees every call the app
+  /// makes and how each one ended.
+  final ConnectivityService? _connectivity;
 
   late final List<Duration> _retryDelays;
 
@@ -127,6 +137,12 @@ class ApiClient {
           Options(headers: token == null ? null : {'Authorization': 'Bearer $token'}),
         );
       } on DioException catch (e) {
+        // Counted once per attempt, not once per call. Three retries of one
+        // request against a dead network is exactly the evidence M7 asks for,
+        // and waiting for three separate user actions would leave the driver
+        // without a banner through the whole of the first one.
+        _connectivity?.recordFailure();
+
         if (attempt < _retryDelays.length) {
           await Future<void>.delayed(_retryDelays[attempt]);
           attempt++;
@@ -141,6 +157,16 @@ class ApiClient {
       final body = response.data is Map<String, dynamic>
           ? response.data as Map<String, dynamic>
           : <String, dynamic>{};
+
+      // A 4xx is an answer, and an answer proves the server is there. Only a
+      // 5xx or a dead socket counts against reachability — telling a driver
+      // they are offline because they were refused a boarding would be a lie
+      // about the one thing the banner exists to report.
+      if (status >= 500) {
+        _connectivity?.recordFailure();
+      } else {
+        _connectivity?.recordSuccess();
+      }
 
       if (status >= 200 && status < 300) return body;
 

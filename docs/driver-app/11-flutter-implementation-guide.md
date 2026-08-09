@@ -64,7 +64,7 @@ Each feature carries its own four layers. A feature is deletable without touchin
 | Maps | `google_maps_flutter` | Backend already uses Google routing |
 | Camera | `image_picker` + `flutter_image_compress` | Compress before upload (Phase 9) |
 | Push | `firebase_messaging` | Backend expects FCM tokens |
-| Connectivity | `connectivity_plus` + reachability probe | OS connectivity is not server reachability |
+| Connectivity | `connectivity_plus` + API-reachability detection | OS connectivity is not server reachability |
 | Routing | `go_router` | Deep links from notification payloads |
 | Freezed | `freezed` | Sealed states without boilerplate |
 
@@ -293,7 +293,7 @@ Each step is shippable and demonstrable before the next.
 |---|---|---|---|
 | 0 | **Foundation** | see the explicit scope below | app builds, four empty tabs render in both themes |
 | 1 | **Auth** | `SessionBloc`, secure storage, refresh interceptor, P1/P2/P4 | sign in, survive restart, silent refresh, expiry → login |
-| 2 | **Connectivity** | `ConnectivityCubit`, offline banner, reachability probe | banner appears and clears correctly |
+| 2 | **Connectivity** | `ConnectivityCubit`, offline banner, API-reachability detection | banner appears on three consecutive failures and clears on the next success |
 | 3 | **Trip read** | `TripBloc`, R1 all states, readiness | every state renders from real data |
 | 4 | **Inspection** | P9/P10/P11, draft persistence | full checklist submits; drafts survive a kill |
 | 5 | **Evidence** | M1/M2, compression, upload | failing item attaches a real photograph |
@@ -308,6 +308,26 @@ Each step is shippable and demonstrable before the next.
 | 14 | **Polish** | a11y audit, goldens, tablet, dark mode | TalkBack completes J1→J13 |
 
 **Do not reorder 6 before 5** — the inspection cannot be submitted for a critical failure without evidence, so step 4 is only half-testable alone. **Do not start 7 before 6** — GPS refuses positions for a trip that is not RUNNING.
+
+### Slice 2 — the exact scope
+
+Connectivity and nothing else.
+
+**In scope** — `ConnectivityCubit` (M7) provided above the router, the
+`PersistentBanner` component, C2 wired to it, and the reporting inside the API
+client that decides what reachable means.
+
+**Out of scope** — the sync queue and its banner (C3). M7's `restored` edge
+triggers M6, but M6 arrives in slice 6; until then, restoring connectivity
+clears the banner and nothing more.
+
+**Done when** three consecutive failures raise the banner, the next successful
+call clears it, and a 4xx never raises it.
+
+> **There is no polling probe.** See M7 in Phase 4: reachability is derived
+> from traffic the app was going to make anyway. CTMS has no health endpoint,
+> and turning an authentication endpoint into one would add an undocumented
+> request against a frozen contract.
 
 ### Slice 0 — the exact scope
 

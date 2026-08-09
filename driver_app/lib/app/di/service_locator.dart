@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/api/api_client.dart';
+import '../../core/connectivity/connectivity_cubit.dart';
 import '../../core/connectivity/connectivity_service.dart';
 import '../../core/services/analytics_service.dart';
 import '../../core/services/crash_reporter.dart';
@@ -73,9 +74,14 @@ Future<void> configureDependencies(
   // The authentication layer gets its own client with **no** session attached,
   // so `POST /auth/refresh` can never trigger a refresh of its own and a failed
   // login can never be mistaken for an expiry.
+  //
+  // It still reports reachability. A driver who cannot sign in because the API
+  // is unreachable needs the banner as much as one mid-trip does — more, since
+  // sign-in is the one action that cannot be queued.
   final authClient = ApiClient(
     baseUrl: config.apiBaseUrl,
     logger: sl<LoggerService>(),
+    connectivity: sl<ConnectivityService>(),
   );
 
   final manager = SessionManager(
@@ -93,16 +99,24 @@ Future<void> configureDependencies(
       baseUrl: config.apiBaseUrl,
       logger: sl<LoggerService>(),
       session: manager,
+      connectivity: sl<ConnectivityService>(),
     ))
     ..registerSingleton<SessionBloc>(SessionBloc(
       manager: manager,
       crashReporter: sl<CrashReporter>(),
       analytics: sl<AnalyticsService>(),
-    ));
+    ))
+    // M7. App-scoped like the session, because every machine that follows
+    // subscribes to it and a driver switching tabs must not restart it.
+    ..registerSingleton<ConnectivityCubit>(
+        ConnectivityCubit(sl<ConnectivityService>()));
 }
 
 /// Clears every registration. Used between tests and on a full restart.
 Future<void> resetDependencies() async {
+  if (sl.isRegistered<ConnectivityCubit>()) {
+    await sl<ConnectivityCubit>().close();
+  }
   if (sl.isRegistered<SessionBloc>()) await sl<SessionBloc>().close();
   if (sl.isRegistered<SessionManager>()) await sl<SessionManager>().dispose();
 

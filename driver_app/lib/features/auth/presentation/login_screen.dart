@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/connectivity/connectivity_cubit.dart';
 import '../../../core/connectivity/connectivity_service.dart';
 import '../../../core/design_system/ctms_colors.dart';
 import '../../../core/design_system/tokens.dart';
@@ -14,9 +15,7 @@ import 'bloc/session_bloc.dart';
 /// The only screen a driver can reach without a session. Deliberately plain:
 /// two fields and one button, sized for a gloved thumb in a depot at 06:00.
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({required this.connectivity, super.key});
-
-  final ConnectivityService connectivity;
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -140,11 +139,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
 
-                        StreamBuilder<Reachability>(
-                          stream: widget.connectivity.changes,
-                          initialData: widget.connectivity.current,
-                          builder: (context, snapshot) {
-                            if (snapshot.data != Reachability.offline) {
+                        BlocBuilder<ConnectivityCubit, Reachability>(
+                          builder: (context, reachability) {
+                            if (reachability != Reachability.offline) {
                               return const SizedBox.shrink();
                             }
 

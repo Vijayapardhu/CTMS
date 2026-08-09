@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/connectivity/connectivity_cubit.dart';
 import '../../core/connectivity/connectivity_service.dart';
-import '../../core/design_system/ctms_colors.dart';
-import '../../core/design_system/tokens.dart';
 import '../../core/icons/app_icons.dart';
+import '../../core/widgets/persistent_banner.dart';
 import '../../l10n/app_localizations.dart';
-import '../di/service_locator.dart';
 
 /// The persistent chrome around the four tabs.
 ///
@@ -25,7 +25,10 @@ class AppShell extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          const _OfflineBanner(),
+          // Above the tabs rather than inside any one of them: connectivity is
+          // a property of the app, and a driver must see it from wherever they
+          // happen to be standing.
+          const OfflineBanner(),
           Expanded(child: navigationShell),
         ],
       ),
@@ -60,56 +63,28 @@ class AppShell extends StatelessWidget {
   }
 }
 
-/// Shown whenever the API is unreachable.
+/// C2 — the offline banner.
 ///
-/// Colour is never the only signal — the icon carries the same meaning, per
-/// `docs/driver-app/07-design-system.md`.
-class _OfflineBanner extends StatelessWidget {
-  const _OfflineBanner();
+/// Not dismissible, because dismissing it would not reconnect anything: the
+/// condition outlives the gesture, and hiding it would leave a driver queueing
+/// boardings with no sign of why.
+class OfflineBanner extends StatelessWidget {
+  const OfflineBanner({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final connectivity = sl<ConnectivityService>();
+    return BlocBuilder<ConnectivityCubit, Reachability>(
+      builder: (context, reachability) {
+        final offline = reachability == Reachability.offline;
 
-    return StreamBuilder<Reachability>(
-      stream: connectivity.changes,
-      initialData: connectivity.current,
-      builder: (context, snapshot) {
-        if (snapshot.data != Reachability.offline) {
-          return const SizedBox.shrink();
-        }
-
-        final colors = context.ctms;
-
-        return Material(
-          color: colors.caution,
-          child: SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Spacing.md,
-                vertical: Spacing.sm,
-              ),
-              child: Row(
-                children: [
-                  AppIconView(
-                    AppIcon.offline,
-                    size: IconSize.sm,
-                    color: colors.onCaution,
-                  ),
-                  const SizedBox(width: Spacing.sm),
-                  Expanded(
-                    child: Text(
-                      AppStrings.of(context).offlineBanner,
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelMedium
-                          ?.copyWith(color: colors.onCaution),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+        return AnimatedPersistentBanner(
+          visible: offline,
+          banner: PersistentBanner(
+            severity: BannerSeverity.caution,
+            // The registry's own glyph for this condition. A generic warning
+            // triangle would say "something is wrong"; this says what.
+            icon: AppIcon.offline,
+            message: AppStrings.of(context).offlineBanner,
           ),
         );
       },

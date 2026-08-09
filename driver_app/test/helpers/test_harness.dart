@@ -7,6 +7,7 @@ import 'package:ctms_driver/app/di/service_locator.dart';
 import 'package:ctms_driver/app/settings/app_preferences.dart';
 import 'package:ctms_driver/app/theme/app_theme.dart';
 import 'package:ctms_driver/core/api/api_client.dart';
+import 'package:ctms_driver/core/connectivity/connectivity_cubit.dart';
 import 'package:ctms_driver/core/connectivity/connectivity_service.dart';
 import 'package:ctms_driver/core/storage/secure_store.dart';
 import 'package:ctms_driver/features/auth/domain/session_state.dart';
@@ -65,6 +66,8 @@ class TestApp {
   final InMemorySecureStore store;
 
   SessionBloc get session => sl<SessionBloc>();
+
+  ConnectivityCubit get connectivityCubit => sl<ConnectivityCubit>();
 
   Future<void> dispose() async {
     await connectivity.dispose();
@@ -195,8 +198,18 @@ AppPreferences get testPreferences => sl<AppPreferences>();
 /// a spinner the test did not expect to still be there — would otherwise stall
 /// the suite for ten minutes per occurrence instead of failing with a name and
 /// a stack.
-Future<void> settle(WidgetTester tester) => tester.pumpAndSettle(
-      const Duration(milliseconds: 100),
-      EnginePhase.sendSemanticsUpdate,
-      const Duration(seconds: 10),
-    );
+///
+/// The `runAsync` turn first is load-bearing. `pump` only drains microtasks
+/// scheduled inside the test's fake-async zone, and a `setUp` callback runs
+/// outside it — so a stream created there (the connectivity service, and the
+/// cubit listening to it) delivers into a zone the pump never touches. One
+/// real turn of the event loop drains those before the frames begin.
+Future<void> settle(WidgetTester tester) async {
+  await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+
+  await tester.pumpAndSettle(
+    const Duration(milliseconds: 100),
+    EnginePhase.sendSemanticsUpdate,
+    const Duration(seconds: 10),
+  );
+}

@@ -27,6 +27,7 @@ class CtmsColors extends ThemeExtension<CtmsColors> {
     required this.onCritical,
     required this.neutral,
     required this.info,
+    required this.onInfo,
     required this.liveAccent,
     required this.staleAccent,
     required this.emergency,
@@ -53,6 +54,7 @@ class CtmsColors extends ThemeExtension<CtmsColors> {
 
   /// Completed, informational. Paired with information-circle.
   final Color info;
+  final Color onInfo;
 
   /// Position is fresh. Used only for live GPS — never decoratively.
   final Color liveAccent;
@@ -82,6 +84,7 @@ class CtmsColors extends ThemeExtension<CtmsColors> {
     onCritical: Color(0xFFFFFFFF),
     neutral: Color(0xFF5F6368),
     info: Color(0xFF00639B),
+    onInfo: Color(0xFFFFFFFF),
     liveAccent: Color(0xFF00A63E),
     staleAccent: Color(0xFF9AA0A6),
     emergency: Color(0xFF8C1D18),
@@ -100,6 +103,7 @@ class CtmsColors extends ThemeExtension<CtmsColors> {
     onCritical: Color(0xFF690005),
     neutral: Color(0xFF9AA0A6),
     info: Color(0xFF8ECFF8),
+    onInfo: Color(0xFF003353),
     liveAccent: Color(0xFF5CE07A),
     staleAccent: Color(0xFF6F7378),
     emergency: Color(0xFFF2B8B5),
@@ -119,6 +123,7 @@ class CtmsColors extends ThemeExtension<CtmsColors> {
     Color? onCritical,
     Color? neutral,
     Color? info,
+    Color? onInfo,
     Color? liveAccent,
     Color? staleAccent,
     Color? emergency,
@@ -136,6 +141,7 @@ class CtmsColors extends ThemeExtension<CtmsColors> {
       onCritical: onCritical ?? this.onCritical,
       neutral: neutral ?? this.neutral,
       info: info ?? this.info,
+      onInfo: onInfo ?? this.onInfo,
       liveAccent: liveAccent ?? this.liveAccent,
       staleAccent: staleAccent ?? this.staleAccent,
       emergency: emergency ?? this.emergency,
@@ -159,6 +165,7 @@ class CtmsColors extends ThemeExtension<CtmsColors> {
       onCritical: Color.lerp(onCritical, other.onCritical, t)!,
       neutral: Color.lerp(neutral, other.neutral, t)!,
       info: Color.lerp(info, other.info, t)!,
+      onInfo: Color.lerp(onInfo, other.onInfo, t)!,
       liveAccent: Color.lerp(liveAccent, other.liveAccent, t)!,
       staleAccent: Color.lerp(staleAccent, other.staleAccent, t)!,
       emergency: Color.lerp(emergency, other.emergency, t)!,

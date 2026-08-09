@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/connectivity/connectivity_service.dart';
 import '../../core/services/analytics_service.dart';
 import '../../core/services/logger_service.dart';
 import '../../core/widgets/error_boundary.dart';
@@ -55,8 +54,7 @@ GoRouter buildRouter({
       GoRoute(
         path: Routes.login,
         name: Routes.login,
-        builder: (context, state) =>
-            LoginScreen(connectivity: sl<ConnectivityService>()),
+        builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
         path: Routes.sessionExpired,
