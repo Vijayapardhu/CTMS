@@ -364,6 +364,72 @@ class AppStringsEn extends AppStrings {
       'Route could not be loaded — the bus position is still live.';
 
   @override
+  String get opsOnBoard => 'ON BOARD';
+
+  @override
+  String get opsBoard => 'ON';
+
+  @override
+  String get opsAlight => 'OFF';
+
+  @override
+  String opsNotYetSynced(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count not yet sent',
+      one: '1 not yet sent',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get opsArrived => 'Arrived';
+
+  @override
+  String get opsSkip => 'Skip';
+
+  @override
+  String opsSkipTitle(String stop) {
+    return 'Skip $stop?';
+  }
+
+  @override
+  String get opsSkipBody =>
+      'The students waiting there will be told, and given your reason.';
+
+  @override
+  String get opsSkipReason => 'Why are you skipping this stop?';
+
+  @override
+  String get opsSkipReasonHint =>
+      'At least 5 characters. This is shown to the students waiting.';
+
+  @override
+  String get opsSkipConfirm => 'Skip stop';
+
+  @override
+  String get opsComplete => 'Complete trip';
+
+  @override
+  String get opsCompleteTitle => 'Complete this trip?';
+
+  @override
+  String get opsCompleteBody =>
+      'The trip will be closed and the office notified. You cannot record anything against it afterwards.';
+
+  @override
+  String opsRejected(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count boardings could not be applied',
+      one: '1 boarding could not be applied',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get gpsLive => 'Position sharing';
 
   @override

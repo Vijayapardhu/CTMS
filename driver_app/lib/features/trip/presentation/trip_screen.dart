@@ -18,6 +18,8 @@ import '../../../core/widgets/skeleton_loader.dart';
 import '../../gps/domain/gps_state.dart';
 import '../../gps/presentation/bloc/gps_cubit.dart';
 import '../../gps/presentation/widgets/gps_status_pill.dart';
+import '../../operations/presentation/bloc/operations_cubit.dart';
+import '../../operations/presentation/widgets/trip_controls.dart';
 import '../../tracking/presentation/bloc/tracking_bloc.dart';
 import '../../../l10n/app_localizations.dart';
 import '../domain/trip.dart';
@@ -45,6 +47,7 @@ class _TripScreenState extends State<TripScreen> with WidgetsBindingObserver {
   /// widget and the stream still has to be stopped when the tree goes.
   late final GpsCubit _gps;
   late final TrackingBloc _tracking;
+  late final OperationsCubit _operations;
 
   @override
   void initState() {
@@ -52,6 +55,7 @@ class _TripScreenState extends State<TripScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     _gps = context.read<GpsCubit>();
     _tracking = context.read<TrackingBloc>();
+    _operations = context.read<OperationsCubit>();
 
     // The bloc is app-scoped, so it may already hold today's trip from an
     // earlier visit to this tab. Only ask when there is nothing yet.
@@ -67,8 +71,11 @@ class _TripScreenState extends State<TripScreen> with WidgetsBindingObserver {
     // does reach here is the app going away or the session ending, and letting
     // the position stream run past either would keep the hardware awake for a
     // trip nobody is driving.
-    _gps.stop();
-    _tracking.add(const TrackingStopped());
+    // Guarded: on sign-out the graph is torn down before the tree is, so both
+    // of these can already be closed by the time this runs. Stopping something
+    // that has stopped is not worth an exception in a driver's face.
+    if (!_gps.isClosed) _gps.stop();
+    if (!_tracking.isClosed) _tracking.add(const TrackingStopped());
     super.dispose();
   }
 
@@ -80,6 +87,11 @@ class _TripScreenState extends State<TripScreen> with WidgetsBindingObserver {
   void _followTrip(TripState state) {
     if (state is TripRunning) {
       _gps.start(state.value.id);
+      _operations.adopt(
+        tripId: state.value.id,
+        occupied: state.value.occupiedSeatCount,
+        capacity: state.value.bus?.seatingCapacity,
+      );
 
       // The map's poll is started from here rather than from the map itself:
       // a driver who never opens the Map tab still has a trip being tracked,
@@ -563,11 +575,6 @@ class _Running extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final strings = AppStrings.of(context);
-    final theme = Theme.of(context);
-    final capacity = trip.bus?.seatingCapacity;
-    final occupied = trip.occupiedSeatCount;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -586,14 +593,59 @@ class _Running extends StatelessWidget {
         ),
         TripCard(state: state),
         const SizedBox(height: Spacing.lg),
-        if (occupied != null && capacity != null)
-          Text(
-            strings.tripOnBoard(occupied, capacity),
-            style: theme.textTheme.headlineSmall,
-          ),
-        const SizedBox(height: Spacing.md),
+
+        // Where the bus is in the run, from the live poll rather than from the
+        // trip row, which does not change as stops are reached.
+        const _StopProgress(),
+        const SizedBox(height: Spacing.lg),
         _TripFacts(trip),
+        const SizedBox(height: Spacing.xl),
+
+        // The same controls the map carries. A driver must never have to open
+        // the map to operate the bus.
+        TripControls(tripId: trip.id),
       ],
+    );
+  }
+}
+
+/// Which stop the bus is at or heading for, and when it gets there.
+class _StopProgress extends StatelessWidget {
+  const _StopProgress();
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = AppStrings.of(context);
+    final theme = Theme.of(context);
+
+    return BlocBuilder<TrackingBloc, TrackingState>(
+      builder: (context, state) {
+        final trip = state.trip;
+        if (trip == null) return const SizedBox.shrink();
+
+        final at = trip.currentStop;
+        final next = trip.nextStop;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              at != null ? strings.mapAtStop(at.name ?? '') : strings.mapNextStop,
+              style: theme.textTheme.labelLarge
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            ),
+            Text(
+              (at ?? next)?.name ?? strings.mapNoMoreStops,
+              style: theme.textTheme.headlineSmall,
+            ),
+            if (state.eta?.isUsable ?? false)
+              Text(
+                strings.mapEtaMinutes(state.eta!.minutes!),
+                style: theme.textTheme.titleMedium,
+              ),
+          ],
+        );
+      },
     );
   }
 }

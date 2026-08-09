@@ -12,10 +12,12 @@ import '../../../l10n/app_localizations.dart';
 import '../../gps/domain/gps_state.dart';
 import '../../gps/presentation/bloc/gps_cubit.dart';
 import '../../gps/presentation/widgets/gps_status_pill.dart';
+import '../../operations/presentation/widgets/trip_controls.dart';
 import '../../tracking/domain/live_trip.dart';
 import '../../tracking/presentation/bloc/tracking_bloc.dart';
 import '../../trip/domain/trip_state.dart';
 import '../../trip/presentation/bloc/trip_bloc.dart';
+import 'widgets/map_overlays.dart';
 import 'widgets/map_styles.dart';
 import 'widgets/next_stop_sheet.dart';
 
@@ -214,8 +216,8 @@ class _MapBody extends StatelessWidget {
             compassEnabled: false,
             zoomControlsEnabled: false,
             mapToolbarEnabled: false,
-            markers: _markers(context, strings, colors),
-            polylines: _polylines(colors),
+            markers: _markers(context, strings),
+            polylines: MapOverlays.route(state, colors.info),
             onCameraMoveStarted: onPanned,
           ),
 
@@ -255,87 +257,41 @@ class _MapBody extends StatelessWidget {
               ),
             ),
 
+          // Next stop and estimate, then the controls beneath them. The map
+          // keeps the majority of the screen and the driver never has to open
+          // it to work the bus — these are the same controls R1 carries.
           Align(
             alignment: Alignment.bottomCenter,
-            child: NextStopSheet(state: state),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                NextStopSheet(state: state),
+                if (state.trip case final trip?)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      Spacing.md,
+                      0,
+                      Spacing.md,
+                      Spacing.md,
+                    ),
+                    child: TripControls(tripId: trip.tripId, compact: true),
+                  ),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  Set<Marker> _markers(
-    BuildContext context,
-    AppStrings strings,
-    CtmsColors colors,
-  ) {
-    final trip = state.trip;
+  Set<Marker> _markers(BuildContext context, AppStrings strings) {
+    final bus = MapOverlays.bus(state, busTarget, strings.mapBusMarker);
 
     return {
-      for (final stop in state.stops)
-        Marker(
-          markerId: MarkerId('stop-${stop.id}'),
-          position: LatLng(stop.latitude, stop.longitude),
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-            _hueFor(_stateOf(trip, stop.id)),
-          ),
-          infoWindow: InfoWindow(
-            title: stop.name,
-            snippet: stop.landmark ?? stop.address?.split('\n').first,
-          ),
-        ),
-      if (busTarget != null)
-        Marker(
-          markerId: const MarkerId('bus'),
-          position: busTarget!,
-          zIndexInt: 2,
-          // Faded when the server says the position is not current. A
-          // fresh-looking bus over an old fix is the lie this screen most
-          // easily tells.
-          alpha: state.isStale ? 0.45 : 1,
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-          infoWindow: InfoWindow(title: strings.mapBusMarker),
-        ),
+      ...MapOverlays.stops(state),
+      if (bus != null) bus,
     };
   }
-
-  /// The route, drawn through the stops in order.
-  ///
-  /// The stop coordinates are CTMS's own. The backend's routing provider does
-  /// fetch a road-following polyline, but no endpoint exposes it — see the note
-  /// in the slice report — so this is the real geometry the API offers rather
-  /// than a shape invented here.
-  Set<Polyline> _polylines(CtmsColors colors) {
-    if (state.stops.length < 2) return const {};
-
-    return {
-      Polyline(
-        polylineId: const PolylineId('route'),
-        points: [
-          for (final stop in state.stops) LatLng(stop.latitude, stop.longitude),
-        ],
-        width: 6,
-        color: colors.info,
-      ),
-    };
-  }
-
-  StopState _stateOf(LiveTrip? trip, String stopId) {
-    if (trip == null) return StopState.unknown;
-
-    for (final stop in trip.stops) {
-      if (stop.stopId == stopId) return stop.state;
-    }
-    return StopState.unknown;
-  }
-
-  double _hueFor(StopState state) => switch (state) {
-        StopState.arrived => BitmapDescriptor.hueGreen,
-        StopState.departed => BitmapDescriptor.hueViolet,
-        StopState.skipped => BitmapDescriptor.hueRose,
-        StopState.approaching => BitmapDescriptor.hueOrange,
-        _ => BitmapDescriptor.hueYellow,
-      };
 }
 
 /// The map surface itself failed. Almost always credentials.

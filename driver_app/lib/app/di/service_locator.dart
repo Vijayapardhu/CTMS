@@ -25,6 +25,8 @@ import '../../features/auth/data/session_store.dart';
 import '../../features/auth/presentation/bloc/session_bloc.dart';
 import '../../features/evidence/data/photo_capture.dart';
 import '../../features/gps/data/location_source.dart';
+import '../../features/operations/data/operations_api.dart';
+import '../../features/operations/presentation/bloc/operations_cubit.dart';
 import '../../features/tracking/data/tracking_api.dart';
 import '../../features/tracking/data/tracking_repository.dart';
 import '../../features/tracking/presentation/bloc/tracking_bloc.dart';
@@ -206,6 +208,33 @@ Future<void> configureDependencies(
       logger: sl<LoggerService>(),
     ));
 
+  // Queued boardings replay through the same engine as positions, under the
+  // key minted when the driver's thumb hit the button.
+  final operations = OperationsApi(sl<ApiClient>());
+  engine
+    ..register(
+      SyncKinds.board,
+      (action) => operations.board(
+        action.payload['trip_id']! as String,
+        idempotencyKey: action.idempotencyKey,
+        routeStopId: action.payload['route_stop_id'] as String?,
+      ),
+    )
+    ..register(
+      SyncKinds.alight,
+      (action) => operations.alight(
+        action.payload['trip_id']! as String,
+        idempotencyKey: action.idempotencyKey,
+        routeStopId: action.payload['route_stop_id'] as String?,
+      ),
+    );
+
+  sl.registerSingleton<OperationsCubit>(OperationsCubit(
+    api: operations,
+    queue: queue,
+    sync: sl<SyncCubit>(),
+  ));
+
   // R2. App-scoped so the poll survives a tab switch, and so the map does
   // not re-fetch the route every time the driver glances at it.
   sl.registerSingleton<TrackingBloc>(TrackingBloc(
@@ -221,6 +250,7 @@ Future<void> configureDependencies(
 
 /// Clears every registration. Used between tests and on a full restart.
 Future<void> resetDependencies() async {
+  if (sl.isRegistered<OperationsCubit>()) await sl<OperationsCubit>().close();
   if (sl.isRegistered<TrackingBloc>()) await sl<TrackingBloc>().close();
   if (sl.isRegistered<GpsCubit>()) await sl<GpsCubit>().close();
   if (sl.isRegistered<SyncCubit>()) await sl<SyncCubit>().close();

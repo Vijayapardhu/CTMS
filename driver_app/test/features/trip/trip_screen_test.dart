@@ -123,7 +123,10 @@ void main() {
       await openTrip(tester);
 
       expect(find.text('RUNNING'), findsOneWidget);
-      expect(find.text('26 of 40 on board'), findsOneWidget);
+      // Slice 8 moved the figure into the counter, which takes the server's
+      // occupancy from the trip payload and then follows the live poll.
+      expect(find.text('ON BOARD'), findsOneWidget);
+      expect(find.text('26'), findsOneWidget);
     });
 
     testWidgets('closed shows the server cancellation reason verbatim',

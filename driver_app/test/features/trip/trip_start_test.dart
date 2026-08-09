@@ -122,7 +122,9 @@ void main() {
 
       await confirmStart(tester);
 
-      expect(find.textContaining('7 of 40 on board'), findsOneWidget);
+      // The occupancy the server returned, in the counter Slice 8 added.
+      expect(find.text('ON BOARD'), findsOneWidget);
+      expect(find.text('7'), findsOneWidget);
     });
   });
 

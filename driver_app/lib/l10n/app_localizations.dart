@@ -634,6 +634,96 @@ abstract class AppStrings {
   /// **'Route could not be loaded — the bus position is still live.'**
   String get mapRouteUnavailable;
 
+  /// Label above the occupancy figure
+  ///
+  /// In en, this message translates to:
+  /// **'ON BOARD'**
+  String get opsOnBoard;
+
+  /// Counter button — one more passenger aboard
+  ///
+  /// In en, this message translates to:
+  /// **'ON'**
+  String get opsBoard;
+
+  /// Counter button — one passenger off
+  ///
+  /// In en, this message translates to:
+  /// **'OFF'**
+  String get opsAlight;
+
+  /// Taps the server has not acknowledged. Not an error
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 not yet sent} other{{count} not yet sent}}'**
+  String opsNotYetSynced(int count);
+
+  /// Marks the bus as standing at the next stop
+  ///
+  /// In en, this message translates to:
+  /// **'Arrived'**
+  String get opsArrived;
+
+  /// Opens the skip-stop sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get opsSkip;
+
+  /// S4 title
+  ///
+  /// In en, this message translates to:
+  /// **'Skip {stop}?'**
+  String opsSkipTitle(String stop);
+
+  /// S4 body — states who sees the reason
+  ///
+  /// In en, this message translates to:
+  /// **'The students waiting there will be told, and given your reason.'**
+  String get opsSkipBody;
+
+  /// S4 reason field label
+  ///
+  /// In en, this message translates to:
+  /// **'Why are you skipping this stop?'**
+  String get opsSkipReason;
+
+  /// S4 reason field helper — the server floor, stated up front
+  ///
+  /// In en, this message translates to:
+  /// **'At least 5 characters. This is shown to the students waiting.'**
+  String get opsSkipReasonHint;
+
+  /// S4 confirm action
+  ///
+  /// In en, this message translates to:
+  /// **'Skip stop'**
+  String get opsSkipConfirm;
+
+  /// Closes the trip
+  ///
+  /// In en, this message translates to:
+  /// **'Complete trip'**
+  String get opsComplete;
+
+  /// S3 title
+  ///
+  /// In en, this message translates to:
+  /// **'Complete this trip?'**
+  String get opsCompleteTitle;
+
+  /// S3 body — what closing costs
+  ///
+  /// In en, this message translates to:
+  /// **'The trip will be closed and the office notified. You cannot record anything against it afterwards.'**
+  String get opsCompleteBody;
+
+  /// M4 reconciled — the difference is shown, never smoothed over
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 boarding could not be applied} other{{count} boardings could not be applied}}'**
+  String opsRejected(int count);
+
   /// GPS pill — fixes are reaching the server
   ///
   /// In en, this message translates to:

@@ -251,4 +251,9 @@ class _Attempt {
 /// The kinds the engine knows how to be given.
 abstract final class SyncKinds {
   static const position = 'position';
+
+  /// A head counted at the door. Queued rather than lost when the door
+  /// happens to be in a dead spot.
+  static const board = 'board';
+  static const alight = 'alight';
 }

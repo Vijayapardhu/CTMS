@@ -262,6 +262,60 @@
   "mapRouteUnavailable": "Route could not be loaded — the bus position is still live.",
   "@mapRouteUnavailable": { "description": "R2 — stops failed to load; distinct from the map failing" },
 
+  "opsOnBoard": "ON BOARD",
+  "@opsOnBoard": { "description": "Label above the occupancy figure" },
+
+  "opsBoard": "ON",
+  "@opsBoard": { "description": "Counter button — one more passenger aboard" },
+
+  "opsAlight": "OFF",
+  "@opsAlight": { "description": "Counter button — one passenger off" },
+
+  "opsNotYetSynced": "{count, plural, =1{1 not yet sent} other{{count} not yet sent}}",
+  "@opsNotYetSynced": {
+    "description": "Taps the server has not acknowledged. Not an error",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "opsArrived": "Arrived",
+  "@opsArrived": { "description": "Marks the bus as standing at the next stop" },
+
+  "opsSkip": "Skip",
+  "@opsSkip": { "description": "Opens the skip-stop sheet" },
+
+  "opsSkipTitle": "Skip {stop}?",
+  "@opsSkipTitle": {
+    "description": "S4 title",
+    "placeholders": { "stop": { "type": "String" } }
+  },
+
+  "opsSkipBody": "The students waiting there will be told, and given your reason.",
+  "@opsSkipBody": { "description": "S4 body — states who sees the reason" },
+
+  "opsSkipReason": "Why are you skipping this stop?",
+  "@opsSkipReason": { "description": "S4 reason field label" },
+
+  "opsSkipReasonHint": "At least 5 characters. This is shown to the students waiting.",
+  "@opsSkipReasonHint": { "description": "S4 reason field helper — the server floor, stated up front" },
+
+  "opsSkipConfirm": "Skip stop",
+  "@opsSkipConfirm": { "description": "S4 confirm action" },
+
+  "opsComplete": "Complete trip",
+  "@opsComplete": { "description": "Closes the trip" },
+
+  "opsCompleteTitle": "Complete this trip?",
+  "@opsCompleteTitle": { "description": "S3 title" },
+
+  "opsCompleteBody": "The trip will be closed and the office notified. You cannot record anything against it afterwards.",
+  "@opsCompleteBody": { "description": "S3 body — what closing costs" },
+
+  "opsRejected": "{count, plural, =1{1 boarding could not be applied} other{{count} boardings could not be applied}}",
+  "@opsRejected": {
+    "description": "M4 reconciled — the difference is shown, never smoothed over",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
   "gpsLive": "Position sharing",
   "@gpsLive": { "description": "GPS pill — fixes are reaching the server" },
 
