@@ -181,6 +181,24 @@
     "description": "R1 waiting — reassures that the early-start refusal resolves on its own"
   },
 
+  "mapIdleTitle": "No trip is running",
+  "@mapIdleTitle": { "description": "R2 when there is nothing to track" },
+
+  "mapIdleBody": "The map shows the bus once a trip has started.",
+  "@mapIdleBody": { "description": "R2 idle body" },
+
+  "mapBusMarker": "Your bus",
+  "@mapBusMarker": { "description": "Label on the bus marker" },
+
+  "mapRecentre": "Centre on the bus",
+  "@mapRecentre": { "description": "R2 recentre action" },
+
+  "mapPositionAge": "{minutes, plural, =1{Position 1 minute old} other{Position {minutes} minutes old}}",
+  "@mapPositionAge": {
+    "description": "R2 stale badge — an old position is never shown as current",
+    "placeholders": { "minutes": { "type": "int" } }
+  },
+
   "gpsLive": "Position sharing",
   "@gpsLive": { "description": "GPS pill — fixes are reaching the server" },
 

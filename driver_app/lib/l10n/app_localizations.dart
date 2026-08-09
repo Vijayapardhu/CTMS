@@ -508,6 +508,36 @@ abstract class AppStrings {
   /// **'Start will unlock by itself. You do not need to do anything.'**
   String get tripStartWindowWaiting;
 
+  /// R2 when there is nothing to track
+  ///
+  /// In en, this message translates to:
+  /// **'No trip is running'**
+  String get mapIdleTitle;
+
+  /// R2 idle body
+  ///
+  /// In en, this message translates to:
+  /// **'The map shows the bus once a trip has started.'**
+  String get mapIdleBody;
+
+  /// Label on the bus marker
+  ///
+  /// In en, this message translates to:
+  /// **'Your bus'**
+  String get mapBusMarker;
+
+  /// R2 recentre action
+  ///
+  /// In en, this message translates to:
+  /// **'Centre on the bus'**
+  String get mapRecentre;
+
+  /// R2 stale badge — an old position is never shown as current
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes, plural, =1{Position 1 minute old} other{Position {minutes} minutes old}}'**
+  String mapPositionAge(int minutes);
+
   /// GPS pill — fixes are reaching the server
   ///
   /// In en, this message translates to:

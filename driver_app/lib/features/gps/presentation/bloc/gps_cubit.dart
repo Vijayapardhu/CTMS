@@ -69,7 +69,7 @@ class GpsCubit extends Cubit<GpsState> {
           _onFix,
           onError: (Object e) {
             _logger.warn('Position stream failed', context: {'error': '$e'});
-            emit(GpsNoSignal(count: state.buffered));
+            emit(GpsNoSignal(count: state.buffered, fix: state.lastFix));
           },
         );
   }
@@ -122,17 +122,19 @@ class GpsCubit extends Cubit<GpsState> {
       return;
     }
 
-    // What the driver is told is simply whether the queue is draining.
+    // What the driver is told is simply whether the queue is draining. The fix
+    // travels with the state either way — the map's marker is about where the
+    // bus is, not about whether the office has heard yet.
     emit(report.remaining == 0
-        ? GpsLive(lastFixAt: fix.recordedAt)
-        : GpsBuffering(report.remaining));
+        ? GpsLive(fix: fix)
+        : GpsBuffering(report.remaining, fix: fix));
   }
 
   void _armNoFixTimer() {
     _noFix?.cancel();
     _noFix = Timer(_noFixAfter, () {
       if (state is GpsIdle || state is GpsDenied) return;
-      emit(GpsNoSignal(count: state.buffered));
+      emit(GpsNoSignal(count: state.buffered, fix: state.lastFix));
     });
   }
 

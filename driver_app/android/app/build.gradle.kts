@@ -20,6 +20,21 @@ val keystoreProperties = Properties().apply {
 }
 val hasReleaseKeystore = keystoreProperties.getProperty("storeFile") != null
 
+// The Maps SDK key, read from android/local.properties — which is gitignored,
+// so the key reaches the manifest without ever reaching the repository.
+//
+// Absent on a machine that has not been given one: the build still succeeds and
+// the map surface renders blank with an authorisation failure in logcat, which
+// is a far better failure than a build that cannot be run at all. CI checks a
+// debug build and has no key.
+val mapsApiKey: String = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        file.inputStream().use { load(it) }
+    }
+}.getProperty("MAPS_API_KEY") ?: ""
+
+
 android {
     namespace = "com.ctms.ctms_driver"
 
@@ -51,6 +66,10 @@ android {
         targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        // Substituted into the `com.google.android.geo.API_KEY` meta-data at
+        // merge time, so no committed file ever holds the value.
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     signingConfigs {

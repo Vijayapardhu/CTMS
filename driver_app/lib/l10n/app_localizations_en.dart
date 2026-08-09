@@ -255,6 +255,29 @@ class AppStringsEn extends AppStrings {
       'Start will unlock by itself. You do not need to do anything.';
 
   @override
+  String get mapIdleTitle => 'No trip is running';
+
+  @override
+  String get mapIdleBody => 'The map shows the bus once a trip has started.';
+
+  @override
+  String get mapBusMarker => 'Your bus';
+
+  @override
+  String get mapRecentre => 'Centre on the bus';
+
+  @override
+  String mapPositionAge(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: 'Position $minutes minutes old',
+      one: 'Position 1 minute old',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get gpsLive => 'Position sharing';
 
   @override

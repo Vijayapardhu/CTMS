@@ -28,6 +28,11 @@
         android:label="ctms_driver"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- Substituted from android/local.properties by app/build.gradle.kts.
+             The literal value is never committed. -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

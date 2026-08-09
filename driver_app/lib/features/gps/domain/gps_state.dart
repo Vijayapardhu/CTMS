@@ -53,8 +53,13 @@ sealed class GpsState extends Equatable {
   /// Fixes taken but not yet accepted by the server.
   int get buffered => 0;
 
+  /// The most recent reading the device produced, whatever the server has
+  /// since made of it. The map draws from this, so a bus in a tunnel keeps a
+  /// marker where it was last seen instead of vanishing.
+  PositionFix? get lastFix => null;
+
   @override
-  List<Object?> get props => [buffered];
+  List<Object?> get props => [buffered, lastFix];
 }
 
 /// No trip running. The pill is hidden.
@@ -69,33 +74,45 @@ final class GpsAcquiring extends GpsState {
 
 /// Posting, and the server is taking them.
 final class GpsLive extends GpsState {
-  const GpsLive({this.lastFixAt});
+  const GpsLive({this.fix});
 
-  final DateTime? lastFixAt;
+  final PositionFix? fix;
 
   @override
-  List<Object?> get props => [lastFixAt];
+  PositionFix? get lastFix => fix;
 }
 
 /// Fixes are arriving but not landing. They accumulate; nothing is thrown away.
 final class GpsBuffering extends GpsState {
-  const GpsBuffering(this.count);
+  const GpsBuffering(this.count, {this.fix});
 
   final int count;
+  final PositionFix? fix;
 
   @override
   int get buffered => count;
+
+  @override
+  PositionFix? get lastFix => fix;
 }
 
 /// The device itself has no fix — a tunnel, or a basement car park. Also
 /// accumulating, because the trip is still happening.
 final class GpsNoSignal extends GpsState {
-  const GpsNoSignal({this.count = 0});
+  const GpsNoSignal({this.count = 0, this.fix});
 
   final int count;
 
+  /// Kept deliberately. The last known position is still the truth about where
+  /// the bus was; the map dims it and says how old it is rather than dropping
+  /// the marker, because an empty map reads as "no bus" instead of "no signal".
+  final PositionFix? fix;
+
   @override
   int get buffered => count;
+
+  @override
+  PositionFix? get lastFix => fix;
 }
 
 /// Location is switched off or refused. E2: the trip cannot be tracked, and
