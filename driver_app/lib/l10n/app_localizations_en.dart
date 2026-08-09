@@ -278,6 +278,92 @@ class AppStringsEn extends AppStrings {
   }
 
   @override
+  String get mapPositionStale => 'Location may be outdated';
+
+  @override
+  String get mapPollFailed => 'Not updating — showing the last known position';
+
+  @override
+  String get mapUnavailableTitle => 'Map unavailable';
+
+  @override
+  String get mapUnavailableBody =>
+      'The map could not load. Tracking is unaffected — your position is still being sent.';
+
+  @override
+  String get mapNextStop => 'NEXT STOP';
+
+  @override
+  String get mapUnnamedStop => 'Next stop';
+
+  @override
+  String mapAtStop(String stop) {
+    return 'At $stop';
+  }
+
+  @override
+  String get mapNoMoreStops => 'No stops remaining';
+
+  @override
+  String mapEtaMinutes(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: '$minutes min',
+      one: '1 min',
+      zero: 'Arriving now',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mapEtaStale(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: 'About $minutes min — not updating',
+      one: 'About 1 min — not updating',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mapEtaScheduled(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: '$minutes min by timetable',
+      one: '1 min by timetable',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get mapEtaScheduledOnly =>
+      'Running to timetable — no live estimate yet';
+
+  @override
+  String get mapEtaArrived => 'Arrived';
+
+  @override
+  String get mapEtaUnavailable => 'No estimate available';
+
+  @override
+  String mapStopsAway(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count stops away',
+      one: '1 stop away',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get mapRouteUnavailable =>
+      'Route could not be loaded — the bus position is still live.';
+
+  @override
   String get gpsLive => 'Position sharing';
 
   @override

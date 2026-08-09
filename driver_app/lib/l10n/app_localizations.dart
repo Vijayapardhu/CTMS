@@ -538,6 +538,102 @@ abstract class AppStrings {
   /// **'{minutes, plural, =1{Position 1 minute old} other{Position {minutes} minutes old}}'**
   String mapPositionAge(int minutes);
 
+  /// R2 — the server flagged the position stale with no age
+  ///
+  /// In en, this message translates to:
+  /// **'Location may be outdated'**
+  String get mapPositionStale;
+
+  /// R2 — the live poll is failing; what is drawn is older than it looks
+  ///
+  /// In en, this message translates to:
+  /// **'Not updating — showing the last known position'**
+  String get mapPollFailed;
+
+  /// R2 — the Maps SDK did not load. Distinct from having no bus position
+  ///
+  /// In en, this message translates to:
+  /// **'Map unavailable'**
+  String get mapUnavailableTitle;
+
+  /// R2 map failure body
+  ///
+  /// In en, this message translates to:
+  /// **'The map could not load. Tracking is unaffected — your position is still being sent.'**
+  String get mapUnavailableBody;
+
+  /// R2 sheet heading
+  ///
+  /// In en, this message translates to:
+  /// **'NEXT STOP'**
+  String get mapNextStop;
+
+  /// Fallback when the server sent no stop name
+  ///
+  /// In en, this message translates to:
+  /// **'Next stop'**
+  String get mapUnnamedStop;
+
+  /// R2 — the bus is standing at a stop
+  ///
+  /// In en, this message translates to:
+  /// **'At {stop}'**
+  String mapAtStop(String stop);
+
+  /// R2 — every stop is done
+  ///
+  /// In en, this message translates to:
+  /// **'No stops remaining'**
+  String get mapNoMoreStops;
+
+  /// R2 — a live estimate from the backend Route Matrix
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes, plural, =0{Arriving now} =1{1 min} other{{minutes} min}}'**
+  String mapEtaMinutes(int minutes);
+
+  /// R2 — the server computed this from a position it no longer trusts
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes, plural, =1{About 1 min — not updating} other{About {minutes} min — not updating}}'**
+  String mapEtaStale(int minutes);
+
+  /// R2 — no live position, so the estimate is the schedule
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes, plural, =1{1 min by timetable} other{{minutes} min by timetable}}'**
+  String mapEtaScheduled(int minutes);
+
+  /// R2 — scheduled basis with no minutes
+  ///
+  /// In en, this message translates to:
+  /// **'Running to timetable — no live estimate yet'**
+  String get mapEtaScheduledOnly;
+
+  /// R2 — the bus reached this stop
+  ///
+  /// In en, this message translates to:
+  /// **'Arrived'**
+  String get mapEtaArrived;
+
+  /// R2 — the ETA call failed or the server could not say
+  ///
+  /// In en, this message translates to:
+  /// **'No estimate available'**
+  String get mapEtaUnavailable;
+
+  /// R2 — how many stops before the next one
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 stop away} other{{count} stops away}}'**
+  String mapStopsAway(int count);
+
+  /// R2 — stops failed to load; distinct from the map failing
+  ///
+  /// In en, this message translates to:
+  /// **'Route could not be loaded — the bus position is still live.'**
+  String get mapRouteUnavailable;
+
   /// GPS pill — fixes are reaching the server
   ///
   /// In en, this message translates to:

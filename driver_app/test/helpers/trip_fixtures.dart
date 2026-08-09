@@ -178,6 +178,101 @@ Map<String, dynamic> positionRejected(String reason) {
   };
 }
 
+/// `GET /routes/{id}/stops` — captured from the live API.
+Map<String, dynamic> routeStopsResponse({int count = 3}) {
+  return {
+    'success': true,
+    'message': 'Route stops retrieved successfully.',
+    'code': 200,
+    'data': [
+      for (var i = 1; i <= count; i++)
+        {
+          'id': 'stop-$i',
+          'route_id': 'route-1',
+          'stop_name': 'Stop $i',
+          'sequence_number': i,
+          'latitude': 12.80 + (i * 0.05),
+          'longitude': 77.42 + (i * 0.05),
+          'address': '$i Some Road, Bengaluru',
+          'landmark': 'Landmark $i',
+          'distance_from_start_km': i * 6,
+          'estimated_arrival_minutes': i * 10,
+          'waiting_time_minutes': 5,
+          'stop_type': 'BOTH',
+        },
+    ],
+  };
+}
+
+/// `GET /trips/{id}/live` — the shape the tracking controller returns.
+Map<String, dynamic> liveResponse({
+  Map<String, dynamic>? position,
+  List<Map<String, dynamic>>? stops,
+  String status = 'RUNNING',
+  int? delayMinutes = 0,
+}) {
+  return {
+    'success': true,
+    'message': 'Live trip state retrieved successfully.',
+    'code': 200,
+    'data': {
+      'trip_id': 'trip-1',
+      'status': status,
+      'position': position,
+      'occupancy': {'occupied': 0, 'capacity': 40},
+      'delay_minutes': delayMinutes,
+      'stops': stops ??
+          [
+            for (var i = 1; i <= 3; i++)
+              {
+                'stop_id': 'stop-$i',
+                'stop_name': 'Stop $i',
+                'sequence_number': i,
+                'state': 'PENDING',
+                'eta_at': null,
+                'arrived_at': null,
+              },
+          ],
+    },
+  };
+}
+
+/// A position block for [liveResponse]. `is_stale` is the server's own
+/// judgement and is never recomputed on the client.
+Map<String, dynamic> livePosition({
+  double latitude = 12.9716,
+  double longitude = 77.5946,
+  bool isStale = false,
+  int ageSeconds = 12,
+}) {
+  return {
+    'latitude': latitude,
+    'longitude': longitude,
+    'recorded_at': '2026-08-09T08:00:00+00:00',
+    'age_seconds': ageSeconds,
+    'is_stale': isStale,
+  };
+}
+
+/// `GET /trips/{id}/eta?stop_id=…`
+Map<String, dynamic> etaResponse({
+  String basis = 'live',
+  int? minutes = 4,
+  int? stopsAway = 1,
+}) {
+  return {
+    'success': true,
+    'message': 'Estimate retrieved successfully.',
+    'code': 200,
+    'data': {
+      'eta_at': minutes == null ? null : '2026-08-09T08:04:00+00:00',
+      'minutes': minutes,
+      'basis': basis,
+      'stops_away': stopsAway,
+    },
+  };
+}
+
 /// The reason string the backend actually returns for a missing inspection —
 /// the one and only reason a driver can act on themselves.
 const missingInspection = 'No pre-trip inspection has been completed today.';

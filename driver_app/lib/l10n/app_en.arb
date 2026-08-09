@@ -199,6 +199,69 @@
     "placeholders": { "minutes": { "type": "int" } }
   },
 
+  "mapPositionStale": "Location may be outdated",
+  "@mapPositionStale": { "description": "R2 — the server flagged the position stale with no age" },
+
+  "mapPollFailed": "Not updating — showing the last known position",
+  "@mapPollFailed": { "description": "R2 — the live poll is failing; what is drawn is older than it looks" },
+
+  "mapUnavailableTitle": "Map unavailable",
+  "@mapUnavailableTitle": { "description": "R2 — the Maps SDK did not load. Distinct from having no bus position" },
+
+  "mapUnavailableBody": "The map could not load. Tracking is unaffected — your position is still being sent.",
+  "@mapUnavailableBody": { "description": "R2 map failure body" },
+
+  "mapNextStop": "NEXT STOP",
+  "@mapNextStop": { "description": "R2 sheet heading" },
+
+  "mapUnnamedStop": "Next stop",
+  "@mapUnnamedStop": { "description": "Fallback when the server sent no stop name" },
+
+  "mapAtStop": "At {stop}",
+  "@mapAtStop": {
+    "description": "R2 — the bus is standing at a stop",
+    "placeholders": { "stop": { "type": "String" } }
+  },
+
+  "mapNoMoreStops": "No stops remaining",
+  "@mapNoMoreStops": { "description": "R2 — every stop is done" },
+
+  "mapEtaMinutes": "{minutes, plural, =0{Arriving now} =1{1 min} other{{minutes} min}}",
+  "@mapEtaMinutes": {
+    "description": "R2 — a live estimate from the backend Route Matrix",
+    "placeholders": { "minutes": { "type": "int" } }
+  },
+
+  "mapEtaStale": "{minutes, plural, =1{About 1 min — not updating} other{About {minutes} min — not updating}}",
+  "@mapEtaStale": {
+    "description": "R2 — the server computed this from a position it no longer trusts",
+    "placeholders": { "minutes": { "type": "int" } }
+  },
+
+  "mapEtaScheduled": "{minutes, plural, =1{1 min by timetable} other{{minutes} min by timetable}}",
+  "@mapEtaScheduled": {
+    "description": "R2 — no live position, so the estimate is the schedule",
+    "placeholders": { "minutes": { "type": "int" } }
+  },
+
+  "mapEtaScheduledOnly": "Running to timetable — no live estimate yet",
+  "@mapEtaScheduledOnly": { "description": "R2 — scheduled basis with no minutes" },
+
+  "mapEtaArrived": "Arrived",
+  "@mapEtaArrived": { "description": "R2 — the bus reached this stop" },
+
+  "mapEtaUnavailable": "No estimate available",
+  "@mapEtaUnavailable": { "description": "R2 — the ETA call failed or the server could not say" },
+
+  "mapStopsAway": "{count, plural, =1{1 stop away} other{{count} stops away}}",
+  "@mapStopsAway": {
+    "description": "R2 — how many stops before the next one",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "mapRouteUnavailable": "Route could not be loaded — the bus position is still live.",
+  "@mapRouteUnavailable": { "description": "R2 — stops failed to load; distinct from the map failing" },
+
   "gpsLive": "Position sharing",
   "@gpsLive": { "description": "GPS pill — fixes are reaching the server" },
 

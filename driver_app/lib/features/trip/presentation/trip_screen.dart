@@ -18,6 +18,7 @@ import '../../../core/widgets/skeleton_loader.dart';
 import '../../gps/domain/gps_state.dart';
 import '../../gps/presentation/bloc/gps_cubit.dart';
 import '../../gps/presentation/widgets/gps_status_pill.dart';
+import '../../tracking/presentation/bloc/tracking_bloc.dart';
 import '../../../l10n/app_localizations.dart';
 import '../domain/trip.dart';
 import '../domain/trip_state.dart';
@@ -43,12 +44,14 @@ class _TripScreenState extends State<TripScreen> with WidgetsBindingObserver {
   /// Held from `initState`, because `dispose` may not look up an inherited
   /// widget and the stream still has to be stopped when the tree goes.
   late final GpsCubit _gps;
+  late final TrackingBloc _tracking;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _gps = context.read<GpsCubit>();
+    _tracking = context.read<TrackingBloc>();
 
     // The bloc is app-scoped, so it may already hold today's trip from an
     // earlier visit to this tab. Only ask when there is nothing yet.
@@ -65,6 +68,7 @@ class _TripScreenState extends State<TripScreen> with WidgetsBindingObserver {
     // the position stream run past either would keep the hardware awake for a
     // trip nobody is driving.
     _gps.stop();
+    _tracking.add(const TrackingStopped());
     super.dispose();
   }
 
@@ -76,8 +80,20 @@ class _TripScreenState extends State<TripScreen> with WidgetsBindingObserver {
   void _followTrip(TripState state) {
     if (state is TripRunning) {
       _gps.start(state.value.id);
+
+      // The map's poll is started from here rather than from the map itself:
+      // a driver who never opens the Map tab still has a trip being tracked,
+      // and the sheet on this screen reads the same live state.
+      final routeId = state.value.route?.id;
+      if (routeId != null) {
+        _tracking.add(TrackingStarted(
+          tripId: state.value.id,
+          routeId: routeId,
+        ));
+      }
     } else {
       _gps.stop();
+      _tracking.add(const TrackingStopped());
     }
   }
 

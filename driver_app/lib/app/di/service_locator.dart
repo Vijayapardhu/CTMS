@@ -25,6 +25,9 @@ import '../../features/auth/data/session_store.dart';
 import '../../features/auth/presentation/bloc/session_bloc.dart';
 import '../../features/evidence/data/photo_capture.dart';
 import '../../features/gps/data/location_source.dart';
+import '../../features/tracking/data/tracking_api.dart';
+import '../../features/tracking/data/tracking_repository.dart';
+import '../../features/tracking/presentation/bloc/tracking_bloc.dart';
 import '../../features/gps/presentation/bloc/gps_cubit.dart';
 import '../../features/trip/data/trip_api.dart';
 import '../../features/trip/data/trip_repository.dart';
@@ -203,6 +206,12 @@ Future<void> configureDependencies(
       logger: sl<LoggerService>(),
     ));
 
+  // R2. App-scoped so the poll survives a tab switch, and so the map does
+  // not re-fetch the route every time the driver glances at it.
+  sl.registerSingleton<TrackingBloc>(TrackingBloc(
+    repository: TrackingRepository(TrackingApi(sl<ApiClient>())),
+  ));
+
   // Whatever survived the last run is owed before anything new is added.
   //
   // Not awaited: opening the queue is disk work, and boot has nothing to
@@ -212,6 +221,7 @@ Future<void> configureDependencies(
 
 /// Clears every registration. Used between tests and on a full restart.
 Future<void> resetDependencies() async {
+  if (sl.isRegistered<TrackingBloc>()) await sl<TrackingBloc>().close();
   if (sl.isRegistered<GpsCubit>()) await sl<GpsCubit>().close();
   if (sl.isRegistered<SyncCubit>()) await sl<SyncCubit>().close();
   if (_ownsDatabase && sl.isRegistered<SyncDatabase>()) {

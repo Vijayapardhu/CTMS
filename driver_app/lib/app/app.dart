@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../core/connectivity/connectivity_cubit.dart';
 import '../core/sync/sync_cubit.dart';
 import '../features/gps/presentation/bloc/gps_cubit.dart';
+import '../features/tracking/presentation/bloc/tracking_bloc.dart';
 import '../features/auth/presentation/bloc/session_bloc.dart';
 import '../features/trip/presentation/bloc/trip_bloc.dart';
 import '../l10n/app_localizations.dart';
@@ -70,6 +71,7 @@ class _CtmsDriverAppState extends State<CtmsDriverApp> {
         // tab the driver is looking at.
         BlocProvider<SyncCubit>.value(value: sl<SyncCubit>()),
         BlocProvider<GpsCubit>.value(value: sl<GpsCubit>()),
+        BlocProvider<TrackingBloc>.value(value: sl<TrackingBloc>()),
       ],
       child: ListenableBuilder(
         listenable: prefs,
