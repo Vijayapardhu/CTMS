@@ -294,7 +294,7 @@ Each step is shippable and demonstrable before the next.
 | 0 | **Foundation** | see the explicit scope below | app builds, four empty tabs render in both themes |
 | 1 | **Auth** | `SessionBloc`, secure storage, refresh interceptor, P1/P2/P4 | sign in, survive restart, silent refresh, expiry → login |
 | 2 | **Connectivity** | `ConnectivityCubit`, offline banner, API-reachability detection | banner appears on three consecutive failures and clears on the next success |
-| 3 | **Trip read** | `TripBloc`, R1 all states, readiness | every state renders from real data |
+| 3 | **Trip read** | `TripBloc` (M1, eight states), R1 all states, readiness | every state renders from real data |
 | 4 | **Inspection** | P9/P10/P11, draft persistence | full checklist submits; drafts survive a kill |
 | 5 | **Evidence** | M1/M2, compression, upload | failing item attaches a real photograph |
 | 6 | **Start** | S2, refusal handling | `reasons[]` renders grouped and actionable |

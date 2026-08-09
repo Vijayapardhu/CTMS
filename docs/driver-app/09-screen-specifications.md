@@ -58,23 +58,40 @@ API        GET /auth/me                       (on session, cached)
            GET /trips?date=today              (on open, on resume, pull-to-refresh)
            GET /buses/{busId}/service-readiness  (when trip is SCHEDULED)
            GET /notifications/unread-count    (on open, on push)
-State      TripBloc: loading | none | blocked | ready | waiting | running | closed
+State      TripBloc: loading | none | blocked | ready | waiting | running |
+                     closed | unavailable
 Loading    SkeletonLoader(card) — layout is known, so skeleton not spinner
-Empty      EmptyState "No trip assigned today" + Call the office. Neutral tone.
+Empty      EmptyState "No trip assigned today". Neutral tone. Reached only when
+           the server answered and the answer was none.
 Offline    Cached trip rendered with banner. Readiness shows last known result
            with its timestamp and an explicit caveat. Start is DISABLED offline.
 Error      401 → session machine handles
            403 → should be impossible (trips are driver-scoped); log and show
                  generic
            500 → error card with Retry, cached trip still shown beneath
+           first read failed, nothing cached → `unavailable`, error card + Retry
 Retry      Pull-to-refresh always available. Auto-refresh on app resume.
 ```
+
+**`unavailable` is not `none`.** `none` means the server answered and there is
+no trip. `unavailable` means it did not answer and nothing is held, so the app
+cannot honestly claim either. A refresh that fails when a trip is already
+loaded never falls back here — the trip stays on screen, marked stale, with the
+retry affordance. See M1.
+
+> **Specification gap — the office contact.** The `none` and `blocked` layouts
+> below call for a "Call the office" action, but no endpoint in Phase 1 returns
+> an office telephone number and no configuration value carries one. The action
+> is therefore **not implemented**, rather than shipped against a hard-coded
+> number. Closing this means adding the contact to the API contract, not to the
+> Flutter app.
 
 **Per-state layout**
 
 | State | Top | Middle | Bottom |
 |---|---|---|---|
-| `none` | greeting | `EmptyState` | Call office |
+| `unavailable` | greeting | error card + Retry | — |
+| `none` | greeting | `EmptyState` | Call office *(blocked — see gap above)* |
 | `blocked` | `TripCard(blocked)` | `ReasonList` grouped | Start inspection (if actionable) + Call |
 | `ready` | `TripCard(ready)` | departure, stop count, first stop | **START TRIP** (64dp) |
 | `waiting` | `TripCard(ready)` | countdown to window | Start (disabled + countdown) |

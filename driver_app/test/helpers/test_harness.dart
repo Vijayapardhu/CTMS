@@ -12,6 +12,8 @@ import 'package:ctms_driver/core/connectivity/connectivity_service.dart';
 import 'package:ctms_driver/core/storage/secure_store.dart';
 import 'package:ctms_driver/features/auth/domain/session_state.dart';
 import 'package:ctms_driver/features/auth/presentation/bloc/session_bloc.dart';
+import 'package:ctms_driver/features/trip/domain/trip_state.dart';
+import 'package:ctms_driver/features/trip/presentation/bloc/trip_bloc.dart';
 import 'package:ctms_driver/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -69,6 +71,8 @@ class TestApp {
 
   ConnectivityCubit get connectivityCubit => sl<ConnectivityCubit>();
 
+  TripBloc get trip => sl<TripBloc>();
+
   Future<void> dispose() async {
     await connectivity.dispose();
     await resetDependencies();
@@ -116,6 +120,9 @@ Future<TestApp> registerTestDependencies({
     ),
     secureStore: store,
     connectivity: connectivity,
+    // No back-off. Widget tests should not spend four real seconds per
+    // unreachable endpoint watching a policy that has its own tests.
+    retryDelays: const [],
   );
 
   sl<ApiClient>().dio.httpClientAdapter = backend;
@@ -132,6 +139,16 @@ Future<TestApp> registerTestDependencies({
 Future<void> pumpApp(WidgetTester tester) async {
   await tester.pumpWidget(const CtmsDriverApp());
   await waitForSession(tester, (s) => s is! SessionInitialising);
+
+  // A signed-in driver lands on the trip tab, which starts reading straight
+  // away and shows a skeleton while it does. The skeleton's shimmer repeats by
+  // design, so settling before the read resolves would wait on an animation
+  // that never stops. Tests that want to inspect the loading state pump by
+  // hand instead of calling this.
+  if (sl<SessionBloc>().state.isAuthenticated) {
+    await waitForTrip(tester, (s) => s is! TripLoading);
+  }
+
   await settle(tester);
 }
 
@@ -167,6 +184,30 @@ Future<void> waitForSession(
   fail(
     'The session never reached the expected state. It is ${bloc.state}.',
   );
+}
+
+/// Drives the app until the trip bloc satisfies [matches].
+///
+/// Same reasoning as [waitForSession] — see the note there on why this polls
+/// rather than awaiting the bloc's stream.
+Future<void> waitForTrip(
+  WidgetTester tester,
+  bool Function(TripState) matches, {
+  int turns = 120,
+}) async {
+  final bloc = sl<TripBloc>();
+
+  for (var turn = 0; turn < turns; turn++) {
+    if (matches(bloc.state)) {
+      await tester.pump();
+      return;
+    }
+
+    await tester.runAsync(() => Future<void>.delayed(_realTurn));
+    await tester.pump(_fakeTurn);
+  }
+
+  fail('The trip never reached the expected state. It is ${bloc.state}.');
 }
 
 /// Long enough for the real event loop to deliver an HTTP response.

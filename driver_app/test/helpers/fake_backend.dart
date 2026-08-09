@@ -59,6 +59,7 @@ class FakeBackend implements HttpClientAdapter {
       bearer: (options.headers['Authorization'] as String?)
           ?.replaceFirst('Bearer ', ''),
       body: options.data,
+      query: options.queryParameters.map((k, v) => MapEntry(k, '$v')),
     ));
 
     final index = _routes.indexWhere((r) => options.path.endsWith(r.path));
@@ -103,12 +104,17 @@ class RecordedRequest {
     required this.method,
     this.bearer,
     this.body,
+    this.query = const {},
   });
 
   final String path;
   final String method;
   final String? bearer;
   final Object? body;
+
+  /// Stringified, because a test asserting `date=2026-08-09` should not have to
+  /// care whether the client sent a String or a DateTime.
+  final Map<String, String> query;
 }
 
 class _Route {

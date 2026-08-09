@@ -74,28 +74,58 @@ The most important machine in the app. Mirrors `TripStatus` server-side, plus cl
         │ loading  │
         └────┬─────┘
              │
-    ┌────────┼────────┬──────────┬───────────┐
-    ▼        ▼        ▼          ▼           ▼
-┌───────┐┌────────┐┌────────┐┌─────────┐┌─────────┐
-│ none  ││blocked ││ ready  ││ running ││ closed  │
-└───────┘└───┬────┘└───┬────┘└────┬────┘└─────────┘
-             │         │          │
-        inspection  start ok      │ complete
-             └────────►│          └──────────►closed
-                       │
-                  start refused
+    ┌────────┼────────┬──────────┬───────────┬──────────────┐
+    ▼        ▼        ▼          ▼           ▼              ▼
+┌───────┐┌────────┐┌────────┐┌─────────┐┌─────────┐┌─────────────┐
+│ none  ││blocked ││ ready  ││ running ││ closed  ││ unavailable │
+└───────┘└───┬────┘└───┬────┘└────┬────┘└─────────┘└──────┬──────┘
+             │         │          │                        │
+        inspection  start ok      │ complete          retry │
+             └────────►│          └──────────►closed        │
+                       │                                    ▼
+                  start refused                          loading
                        └──────────► blocked
 ```
 
 | State | Meaning | Server truth |
 |---|---|---|
-| `loading` | fetching | — |
-| `none` | no trip today | empty `/trips` |
+| `loading` | fetching, nothing authoritative held yet | — |
+| `none` | no trip today | empty `/trips`, **answered** |
 | `blocked` | trip exists, bus not cleared | `SCHEDULED` + readiness false |
 | `ready` | cleared to start | `SCHEDULED` + readiness true |
 | `running` | in progress | `RUNNING` |
 | `closed` | finished or cancelled | `COMPLETED` / `CANCELLED` |
 | `waiting` | cleared but outside start window | `SCHEDULED`, 409 window |
+| `unavailable` | the first read failed and nothing is cached | **no answer** |
+
+### `none` and `unavailable` are not the same thing
+
+`none` is an answer: the server was asked and said there is no trip today. It
+is a calm, empty screen — not an error.
+
+`unavailable` is the absence of an answer: the first read failed and there is
+no previously authoritative trip to fall back on. Rendering `none` here would
+tell a driver they have no work when the truth is that we do not know, which is
+the same class of lie as showing a stale position as live. Rendering `loading`
+forever is the other way to get it wrong.
+
+`unavailable` renders R1's error card with Retry.
+
+### A failed refresh is not a state
+
+Once a trip has been loaded, a later failure never discards it. The state stays
+what it was and carries the failure alongside the data it already holds —
+the same parameterised idiom as `ready(stale)` and `ready(pending)` above:
+
+```
+   first read fails, nothing held ─────────────► unavailable ──retry──► loaded
+
+   refresh fails, trip already held ──► same state(stale: true) + retry
+                                        (the trip stays on screen)
+```
+
+Discarding a known trip because a refresh failed would take the day's work off
+a driver's screen for the duration of a tunnel.
 
 `blocked` carries `reasons: List<BlockReason>` where each reason is `{text, actionable}`. `actionable` is true **only** for the missing-inspection reason — that single flag drives whether the screen offers a button.
 
@@ -105,6 +135,9 @@ The most important machine in the app. Mirrors `TripStatus` server-side, plus cl
 |---|---|---|
 | `loading` | trips empty | `none` |
 | `loading` | `RUNNING` found | `running` (**resume**, restart GPS) |
+| `loading` | read failed, nothing cached | `unavailable` |
+| `unavailable` | retry succeeds | the state the answer implies |
+| any loaded | refresh failed | unchanged, `stale: true` |
 | `blocked` | inspection passes | `ready` |
 | `ready` | start 200 | `running` |
 | `ready` | start 409 window | `waiting` (timer → `ready`) |

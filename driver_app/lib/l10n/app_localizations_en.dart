@@ -160,4 +160,98 @@ class AppStringsEn extends AppStrings {
   @override
   String get accountUnconfirmed =>
       'Signed in from saved credentials — not yet confirmed with the server';
+
+  @override
+  String get tripNoneTitle => 'No trip assigned today';
+
+  @override
+  String get tripNoneBody => 'If you expect one, contact the transport office.';
+
+  @override
+  String get tripUnavailableTitle => 'Could not load today\'s trip';
+
+  @override
+  String get tripUnavailableBody =>
+      'This is not the same as having no trip. Check your connection and try again.';
+
+  @override
+  String get tripRetry => 'Try again';
+
+  @override
+  String get tripStale =>
+      'Showing the last known trip — this could not be refreshed';
+
+  @override
+  String get tripStatusReady => 'READY';
+
+  @override
+  String get tripStatusBlocked => 'NOT READY';
+
+  @override
+  String get tripStatusRunning => 'RUNNING';
+
+  @override
+  String get tripStatusWaiting => 'WAITING';
+
+  @override
+  String get tripStatusCompleted => 'COMPLETED';
+
+  @override
+  String get tripStatusCancelled => 'CANCELLED';
+
+  @override
+  String get tripReasonsActionable => 'You can fix this';
+
+  @override
+  String get tripReasonsBlocking => 'Operations must fix this';
+
+  @override
+  String tripDeparture(String time) {
+    return 'Departs $time';
+  }
+
+  @override
+  String tripStopCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count stops',
+      one: '1 stop',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripExpected(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count students expected',
+      one: '1 student expected',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripOnBoard(int occupied, int capacity) {
+    return '$occupied of $capacity on board';
+  }
+
+  @override
+  String tripCancelledBecause(String reason) {
+    return 'Cancelled: $reason';
+  }
+
+  @override
+  String get tripAutoClosed => 'This trip was closed automatically.';
+
+  @override
+  String tripReadinessCheckedAt(String time) {
+    return 'Clearance checked at $time';
+  }
+
+  @override
+  String tripStartWindowOpens(String time) {
+    return 'Start opens at $time';
+  }
 }

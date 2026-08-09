@@ -16,6 +16,9 @@ import '../../features/auth/data/auth_api.dart';
 import '../../features/auth/data/session_manager.dart';
 import '../../features/auth/data/session_store.dart';
 import '../../features/auth/presentation/bloc/session_bloc.dart';
+import '../../features/trip/data/trip_api.dart';
+import '../../features/trip/data/trip_repository.dart';
+import '../../features/trip/presentation/bloc/trip_bloc.dart';
 import '../config/app_config.dart';
 import '../lifecycle/app_lifecycle_observer.dart';
 import '../settings/app_preferences.dart';
@@ -41,10 +44,17 @@ const authClientName = 'auth';
 /// platform channel. They are parameters rather than hard-wired so a test can
 /// substitute them at the composition root — which is what a composition root
 /// is for — without any other file knowing.
+///
+/// [retryDelays] is the third. The client's back-off is real elapsed time, and
+/// a widget test that has to sit through 1s + 3s for every unreachable
+/// endpoint stops being a test and becomes a wait. The default is production's
+/// own; the retry policy itself is covered where it belongs, against an
+/// [ApiClient] constructed directly.
 Future<void> configureDependencies(
   AppConfig config, {
   SecureStore? secureStore,
   ConnectivityService? connectivity,
+  List<Duration>? retryDelays,
 }) async {
   final prefs = await SharedPreferences.getInstance();
 
@@ -82,6 +92,7 @@ Future<void> configureDependencies(
     baseUrl: config.apiBaseUrl,
     logger: sl<LoggerService>(),
     connectivity: sl<ConnectivityService>(),
+    retryDelays: retryDelays,
   );
 
   final manager = SessionManager(
@@ -100,6 +111,7 @@ Future<void> configureDependencies(
       logger: sl<LoggerService>(),
       session: manager,
       connectivity: sl<ConnectivityService>(),
+      retryDelays: retryDelays,
     ))
     ..registerSingleton<SessionBloc>(SessionBloc(
       manager: manager,
@@ -110,10 +122,18 @@ Future<void> configureDependencies(
     // subscribes to it and a driver switching tabs must not restart it.
     ..registerSingleton<ConnectivityCubit>(
         ConnectivityCubit(sl<ConnectivityService>()));
+
+  // M1. App-scoped too: a driver checking the map mid-trip must come back to
+  // the same trip rather than to a fresh load.
+  sl.registerSingleton<TripBloc>(TripBloc(
+    repository: TripRepository(TripApi(sl<ApiClient>())),
+    logger: sl<LoggerService>(),
+  ));
 }
 
 /// Clears every registration. Used between tests and on a full restart.
 Future<void> resetDependencies() async {
+  if (sl.isRegistered<TripBloc>()) await sl<TripBloc>().close();
   if (sl.isRegistered<ConnectivityCubit>()) {
     await sl<ConnectivityCubit>().close();
   }

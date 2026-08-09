@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../core/connectivity/connectivity_cubit.dart';
 import '../features/auth/presentation/bloc/session_bloc.dart';
+import '../features/trip/presentation/bloc/trip_bloc.dart';
 import '../l10n/app_localizations.dart';
 import 'di/service_locator.dart';
 import 'lifecycle/app_lifecycle_observer.dart';
@@ -61,6 +62,7 @@ class _CtmsDriverAppState extends State<CtmsDriverApp> {
       providers: [
         BlocProvider<SessionBloc>.value(value: _session),
         BlocProvider<ConnectivityCubit>.value(value: sl<ConnectivityCubit>()),
+        BlocProvider<TripBloc>.value(value: sl<TripBloc>()),
       ],
       child: ListenableBuilder(
         listenable: prefs,

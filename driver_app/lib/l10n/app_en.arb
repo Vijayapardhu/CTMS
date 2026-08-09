@@ -109,5 +109,76 @@
     "placeholders": { "number": { "type": "String" } }
   },
   "accountUnconfirmed": "Signed in from saved credentials — not yet confirmed with the server",
-  "@accountUnconfirmed": { "description": "Shown while the session is running from cache" }
+  "@accountUnconfirmed": { "description": "Shown while the session is running from cache" },
+
+  "tripNoneTitle": "No trip assigned today",
+  "@tripNoneTitle": { "description": "R1 empty state — the server answered and there is no trip" },
+  "tripNoneBody": "If you expect one, contact the transport office.",
+  "@tripNoneBody": { "description": "Supporting line under the no-trip empty state" },
+
+  "tripUnavailableTitle": "Could not load today's trip",
+  "@tripUnavailableTitle": { "description": "R1 unavailable — the read failed and nothing is cached" },
+  "tripUnavailableBody": "This is not the same as having no trip. Check your connection and try again.",
+  "@tripUnavailableBody": { "description": "Explains that unavailable is not the same as none" },
+  "tripRetry": "Try again",
+  "@tripRetry": { "description": "Retry action on the trip error card" },
+
+  "tripStale": "Showing the last known trip — this could not be refreshed",
+  "@tripStale": { "description": "Marks a trip retained after a failed refresh" },
+
+  "tripStatusReady": "READY",
+  "@tripStatusReady": { "description": "Trip card status chip when the bus is cleared" },
+  "tripStatusBlocked": "NOT READY",
+  "@tripStatusBlocked": { "description": "Trip card status chip when the bus is not cleared" },
+  "tripStatusRunning": "RUNNING",
+  "@tripStatusRunning": { "description": "Trip card status chip while the trip is in progress" },
+  "tripStatusWaiting": "WAITING",
+  "@tripStatusWaiting": { "description": "Trip card status chip outside the start window" },
+  "tripStatusCompleted": "COMPLETED",
+  "@tripStatusCompleted": { "description": "Trip card status chip for a finished trip" },
+  "tripStatusCancelled": "CANCELLED",
+  "@tripStatusCancelled": { "description": "Trip card status chip for a cancelled trip" },
+
+  "tripReasonsActionable": "You can fix this",
+  "@tripReasonsActionable": { "description": "Heading for reasons the driver can act on" },
+  "tripReasonsBlocking": "Operations must fix this",
+  "@tripReasonsBlocking": { "description": "Heading for reasons only operations can fix" },
+
+  "tripDeparture": "Departs {time}",
+  "@tripDeparture": {
+    "description": "Scheduled departure time",
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "tripStopCount": "{count, plural, =1{1 stop} other{{count} stops}}",
+  "@tripStopCount": {
+    "description": "Number of stops on the route",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "tripExpected": "{count, plural, =1{1 student expected} other{{count} students expected}}",
+  "@tripExpected": {
+    "description": "Booked seat count for the trip",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "tripOnBoard": "{occupied} of {capacity} on board",
+  "@tripOnBoard": {
+    "description": "Occupancy while a trip is running",
+    "placeholders": { "occupied": { "type": "int" }, "capacity": { "type": "int" } }
+  },
+  "tripCancelledBecause": "Cancelled: {reason}",
+  "@tripCancelledBecause": {
+    "description": "The server's cancellation reason, shown verbatim",
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "tripAutoClosed": "This trip was closed automatically.",
+  "@tripAutoClosed": { "description": "Shown when the server closed the trip without the driver" },
+  "tripReadinessCheckedAt": "Clearance checked at {time}",
+  "@tripReadinessCheckedAt": {
+    "description": "When the readiness answer was obtained",
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "tripStartWindowOpens": "Start opens at {time}",
+  "@tripStartWindowOpens": {
+    "description": "Countdown target while waiting for the start window",
+    "placeholders": { "time": { "type": "String" } }
+  }
 }

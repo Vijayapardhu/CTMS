@@ -9,11 +9,19 @@ void main() {
   group('navigation shell', () {
     late TestApp app;
 
-    setUp(() async => app = await registerTestDependencies(signedIn: true));
+    // Registered inside each test body, not in setUp. A setUp callback runs
+    // outside the widget test's fake-async zone, so timers created there —
+    // the API client's retry back-off — are scheduled on a clock that `pump`
+    // never advances, and a read that retries would never finish.
     tearDown(() async => app.dispose());
 
-    testWidgets('opens on the trip tab', (tester) async {
+    Future<void> boot(WidgetTester tester) async {
+      app = await registerTestDependencies(signedIn: true);
       await pumpApp(tester);
+    }
+
+    testWidgets('opens on the trip tab', (tester) async {
+      await boot(tester);
 
       expect(find.text('Trip'), findsWidgets);
       expect(
@@ -24,7 +32,7 @@ void main() {
 
     testWidgets('shows the four spec destinations and no others',
         (tester) async {
-      await pumpApp(tester);
+      await boot(tester);
 
       final bar = tester.widget<NavigationBar>(find.byType(NavigationBar));
 
@@ -39,7 +47,7 @@ void main() {
     });
 
     testWidgets('every tab label is always visible', (tester) async {
-      await pumpApp(tester);
+      await boot(tester);
 
       // The behaviour comes from the theme, not the widget, so the widget's
       // own field is null — assert the value that actually takes effect.
@@ -59,7 +67,7 @@ void main() {
     });
 
     testWidgets('switching tab changes the screen', (tester) async {
-      await pumpApp(tester);
+      await boot(tester);
 
       await tester.tap(find.text('Me'));
       await settle(tester);
@@ -68,7 +76,7 @@ void main() {
     });
 
     testWidgets('returning to a tab keeps its own state', (tester) async {
-      await pumpApp(tester);
+      await boot(tester);
 
       await tester.tap(find.text('Me'));
       await settle(tester);
@@ -81,13 +89,13 @@ void main() {
     });
 
     testWidgets('no offline banner while the API is reachable', (tester) async {
-      await pumpApp(tester);
+      await boot(tester);
 
       expect(find.textContaining('Offline'), findsNothing);
     });
 
     testWidgets('the offline banner appears on any tab', (tester) async {
-      await pumpApp(tester);
+      await boot(tester);
 
       app.connectivity.emit(Reachability.offline);
       await settle(tester);
@@ -105,7 +113,7 @@ void main() {
     });
 
     testWidgets('the offline banner clears on recovery', (tester) async {
-      await pumpApp(tester);
+      await boot(tester);
 
       app.connectivity.emit(Reachability.offline);
       await settle(tester);

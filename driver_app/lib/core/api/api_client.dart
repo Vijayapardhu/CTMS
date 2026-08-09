@@ -23,7 +23,7 @@ class ApiClient {
     SessionDelegate? session,
     ConnectivityService? connectivity,
     Dio? dio,
-    List<Duration> retryDelays = _defaultRetryDelays,
+    List<Duration>? retryDelays,
   })  : _logger = logger,
         _session = session,
         _connectivity = connectivity,
@@ -40,7 +40,7 @@ class ApiClient {
     );
 
     _dio.interceptors.add(_EnvelopeInterceptor());
-    _retryDelays = retryDelays;
+    _retryDelays = retryDelays ?? _defaultRetryDelays;
   }
 
   /// Back-off between retries of a transient failure. One retry after a second,

@@ -375,6 +375,138 @@ abstract class AppStrings {
   /// In en, this message translates to:
   /// **'Signed in from saved credentials — not yet confirmed with the server'**
   String get accountUnconfirmed;
+
+  /// R1 empty state — the server answered and there is no trip
+  ///
+  /// In en, this message translates to:
+  /// **'No trip assigned today'**
+  String get tripNoneTitle;
+
+  /// Supporting line under the no-trip empty state
+  ///
+  /// In en, this message translates to:
+  /// **'If you expect one, contact the transport office.'**
+  String get tripNoneBody;
+
+  /// R1 unavailable — the read failed and nothing is cached
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load today\'s trip'**
+  String get tripUnavailableTitle;
+
+  /// Explains that unavailable is not the same as none
+  ///
+  /// In en, this message translates to:
+  /// **'This is not the same as having no trip. Check your connection and try again.'**
+  String get tripUnavailableBody;
+
+  /// Retry action on the trip error card
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get tripRetry;
+
+  /// Marks a trip retained after a failed refresh
+  ///
+  /// In en, this message translates to:
+  /// **'Showing the last known trip — this could not be refreshed'**
+  String get tripStale;
+
+  /// Trip card status chip when the bus is cleared
+  ///
+  /// In en, this message translates to:
+  /// **'READY'**
+  String get tripStatusReady;
+
+  /// Trip card status chip when the bus is not cleared
+  ///
+  /// In en, this message translates to:
+  /// **'NOT READY'**
+  String get tripStatusBlocked;
+
+  /// Trip card status chip while the trip is in progress
+  ///
+  /// In en, this message translates to:
+  /// **'RUNNING'**
+  String get tripStatusRunning;
+
+  /// Trip card status chip outside the start window
+  ///
+  /// In en, this message translates to:
+  /// **'WAITING'**
+  String get tripStatusWaiting;
+
+  /// Trip card status chip for a finished trip
+  ///
+  /// In en, this message translates to:
+  /// **'COMPLETED'**
+  String get tripStatusCompleted;
+
+  /// Trip card status chip for a cancelled trip
+  ///
+  /// In en, this message translates to:
+  /// **'CANCELLED'**
+  String get tripStatusCancelled;
+
+  /// Heading for reasons the driver can act on
+  ///
+  /// In en, this message translates to:
+  /// **'You can fix this'**
+  String get tripReasonsActionable;
+
+  /// Heading for reasons only operations can fix
+  ///
+  /// In en, this message translates to:
+  /// **'Operations must fix this'**
+  String get tripReasonsBlocking;
+
+  /// Scheduled departure time
+  ///
+  /// In en, this message translates to:
+  /// **'Departs {time}'**
+  String tripDeparture(String time);
+
+  /// Number of stops on the route
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 stop} other{{count} stops}}'**
+  String tripStopCount(int count);
+
+  /// Booked seat count for the trip
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 student expected} other{{count} students expected}}'**
+  String tripExpected(int count);
+
+  /// Occupancy while a trip is running
+  ///
+  /// In en, this message translates to:
+  /// **'{occupied} of {capacity} on board'**
+  String tripOnBoard(int occupied, int capacity);
+
+  /// The server's cancellation reason, shown verbatim
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled: {reason}'**
+  String tripCancelledBecause(String reason);
+
+  /// Shown when the server closed the trip without the driver
+  ///
+  /// In en, this message translates to:
+  /// **'This trip was closed automatically.'**
+  String get tripAutoClosed;
+
+  /// When the readiness answer was obtained
+  ///
+  /// In en, this message translates to:
+  /// **'Clearance checked at {time}'**
+  String tripReadinessCheckedAt(String time);
+
+  /// Countdown target while waiting for the start window
+  ///
+  /// In en, this message translates to:
+  /// **'Start opens at {time}'**
+  String tripStartWindowOpens(String time);
 }
 
 class _AppStringsDelegate extends LocalizationsDelegate<AppStrings> {
