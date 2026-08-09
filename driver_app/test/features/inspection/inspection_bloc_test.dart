@@ -287,6 +287,28 @@ void main() {
         reason: 'a mis-tap should not cost the driver what they already typed',
       );
     });
+
+    test('filling the untouched remainder leaves answered items alone',
+        () async {
+      backend.on('/inspections/checklist', status: 200, body: checklistResponse());
+      final bloc = await build();
+      addTearDown(bloc.close);
+
+      bloc.add(const InspectionOpened('bus-1'));
+      await bloc.stream.firstWhere((s) => s is! InspectionLoading);
+      bloc.add(const ItemAnswered('HORN', Verdict.failed));
+      await bloc.stream.first;
+      bloc.add(const ItemNotesChanged('HORN', 'Very faint.'));
+      await bloc.stream.first;
+
+      // Changing the verdict back re-runs the remainder fill over an item that
+      // is now PASSED. Filling by verdict rather than by presence would replace
+      // this answer wholesale and take the note with it.
+      bloc.add(const ItemAnswered('HORN', Verdict.passed));
+      final state = await bloc.stream.first;
+
+      expect(state.draft!.answers['HORN']?.notes, 'Very faint.');
+    });
   });
 
   group('submitting', () {

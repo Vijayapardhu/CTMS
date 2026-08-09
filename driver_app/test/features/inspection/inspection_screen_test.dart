@@ -244,14 +244,37 @@ void main() {
       );
       await settle(tester);
 
-      final draft = inspectionStateOf(tester).draft!;
-      expect(draft.answers['HORN']?.verdict, Verdict.failed);
+      final state = inspectionStateOf(tester);
+      expect(state.draft!.answers['HORN']?.verdict, Verdict.failed);
       expect(
-        draft.answers.length,
-        1,
+        state.draft!.passedCount(state.items),
+        13,
         reason: 'a driver reporting the horn should not have to confirm '
-            'thirteen things that are fine',
+            'thirteen things that are fine — singling one item out is the '
+            'statement that the rest are',
       );
+      // Only the reported item is outstanding — it still owes its note.
+      expect(state.draft!.unresolved(state.items), hasLength(1));
+      expect(state.draft!.unresolved(state.items).single.code, 'HORN');
+    });
+
+    testWidgets('reporting one problem does not demand the other thirteen',
+        (tester) async {
+      await openInspection(tester);
+      await acceptOdometer(tester);
+      await somethingWrong(tester);
+
+      await tester.tap(
+        find.descendant(of: tileFor('Brakes'), matching: find.text('Fail')),
+      );
+      await settle(tester);
+
+      final state = inspectionStateOf(tester);
+
+      // Brakes is safety-critical, so it still owes a note and a photograph —
+      // but nothing else is outstanding.
+      expect(state.draft!.unresolved(state.items), hasLength(1));
+      expect(state.draft!.passedCount(state.items), 13);
     });
 
     testWidgets('a later failure overrides an earlier ALL OK', (tester) async {

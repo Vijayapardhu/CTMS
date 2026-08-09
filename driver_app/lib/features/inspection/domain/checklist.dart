@@ -159,7 +159,10 @@ class InspectionDraft {
     final next = Map<String, ItemAnswer>.from(answers);
 
     for (final item in items) {
-      if (next[item.code]?.verdict == Verdict.failed) continue;
+      // Only the untouched remainder. Overwriting an answer the driver already
+      // gave would discard the note typed against it — and a later explicit
+      // failure must outrank this, not be replaced by it.
+      if (next.containsKey(item.code)) continue;
       next[item.code] = const ItemAnswer(verdict: Verdict.passed);
     }
 

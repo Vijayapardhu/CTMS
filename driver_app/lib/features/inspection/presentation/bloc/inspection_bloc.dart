@@ -205,7 +205,15 @@ class InspectionBloc extends Bloc<InspectionEvent, InspectionState> {
         // have to type it a second time.
         : existing.copyWith(verdict: event.verdict);
 
-    await _persist(emit, current, current.value.copyWith(answers: answers));
+    // Singling one item out is itself the statement that the rest are fine.
+    // A driver who opens the list to report the brakes has checked the bus;
+    // making them then tap Pass thirteen times is the friction this screen
+    // exists to remove. The remainder is filled in, and the screen says so.
+    final next = current.value
+        .copyWith(answers: answers)
+        .allOk(current.checklist);
+
+    await _persist(emit, current, next);
   }
 
   Future<void> _onNotes(
