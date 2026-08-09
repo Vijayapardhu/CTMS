@@ -251,12 +251,30 @@ class AppStringsEn extends AppStrings {
   }
 
   @override
-  String tripStartWindowOpens(String time) {
-    return 'Start opens at $time';
-  }
+  String get tripStartWindowWaiting =>
+      'Start will unlock by itself. You do not need to do anything.';
 
   @override
   String get tripStartInspection => 'Start inspection';
+
+  @override
+  String get tripStart => 'START TRIP';
+
+  @override
+  String get tripStartOffline => 'You need a connection to start.';
+
+  @override
+  String get tripStartConfirmTitle => 'Start this trip?';
+
+  @override
+  String get tripStartConfirmBody =>
+      'Students will be told the bus is on its way.';
+
+  @override
+  String get tripStartConfirm => 'Start trip';
+
+  @override
+  String get tripStartCancel => 'Not yet';
 
   @override
   String get inspectionTitle => 'Pre-trip inspection';

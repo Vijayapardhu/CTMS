@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../app/di/service_locator.dart';
 import '../../../app/router/routes.dart';
 import '../../../core/api/api_client.dart';
-import '../../../core/connectivity/connectivity_service.dart';
 import '../../../core/services/logger_service.dart';
 import '../../trip/presentation/bloc/trip_bloc.dart';
 import '../data/inspection_api.dart';
@@ -44,7 +43,6 @@ class InspectionEntry extends StatelessWidget {
           sl<SharedPreferences>(),
           sl<LoggerService>(),
         ),
-        connectivity: sl<ConnectivityService>(),
       )..add(InspectionOpened(
           busId,
           minimumOdometer: minimumOdometer,

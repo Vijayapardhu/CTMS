@@ -1,5 +1,4 @@
 import 'package:ctms_driver/core/api/api_client.dart';
-import 'package:ctms_driver/core/connectivity/connectivity_service.dart';
 import 'package:ctms_driver/features/inspection/data/inspection_api.dart';
 import 'package:ctms_driver/features/inspection/data/inspection_draft_store.dart';
 import 'package:ctms_driver/features/inspection/domain/checklist.dart';
@@ -12,26 +11,10 @@ import '../../helpers/fake_backend.dart';
 import '../../helpers/inspection_fixtures.dart';
 import '../../helpers/test_doubles.dart';
 
-/// A connectivity service the test sets directly.
-class _Reach implements ConnectivityService {
-  @override
-  Reachability current = Reachability.online;
-
-  @override
-  Stream<Reachability> get changes => const Stream.empty();
-
-  @override
-  void recordFailure() {}
-
-  @override
-  void recordSuccess() {}
-}
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   late FakeBackend backend;
-  late _Reach reach;
   late SharedPreferences prefs;
   late InspectionDraftStore drafts;
 
@@ -45,7 +28,6 @@ void main() {
     return InspectionBloc(
       api: InspectionApi(client),
       drafts: drafts,
-      connectivity: reach,
     );
   }
 
@@ -54,7 +36,6 @@ void main() {
     prefs = await SharedPreferences.getInstance();
     drafts = InspectionDraftStore(prefs, SilentLogger());
     backend = FakeBackend();
-    reach = _Reach();
   });
 
   /// Answers every item so review becomes reachable.
@@ -471,30 +452,6 @@ void main() {
   });
 
   group('offline', () {
-    test('an inspection is saved, not queued as though it succeeded', () async {
-      backend.on('/inspections/checklist', status: 200, body: checklistResponse());
-      final bloc = await build();
-      addTearDown(bloc.close);
-
-      bloc.add(const InspectionOpened('bus-1'));
-      await bloc.stream.firstWhere((s) => s is! InspectionLoading);
-      await completeAll(bloc);
-      bloc.add(const ReviewRequested());
-      await bloc.stream.first;
-
-      reach.current = Reachability.offline;
-      bloc.add(const SubmissionRequested());
-      final state = await bloc.stream.first;
-
-      expect(state, isA<InspectionSaved>());
-      expect(
-        backend.callsTo('/inspections'),
-        0,
-        reason: 'the bus is not cleared until the server says so',
-      );
-      expect(drafts.read('bus-1'), isNotNull);
-    });
-
     test('a network failure mid-submit saves rather than losing the work',
         () async {
       backend.on('/inspections/checklist', status: 200, body: checklistResponse());

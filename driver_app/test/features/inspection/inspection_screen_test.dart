@@ -412,7 +412,11 @@ void main() {
       await tester.tap(find.text('ALL OK'));
       await settle(tester);
 
+      // The submit is attempted rather than pre-empted — the call is the only
+      // evidence of reachability worth having — so the transport has to be
+      // genuinely down for this to be the offline path.
       app.connectivity.emit(Reachability.offline);
+      app.backend.offline('/inspections');
       await settle(tester);
 
       await tester.tap(find.text('Confirm & submit'));
@@ -421,7 +425,6 @@ void main() {
 
       expect(find.textContaining('not yet submitted'), findsOneWidget);
       expect(find.textContaining('bus is not cleared'), findsOneWidget);
-      expect(app.backend.callsTo('/inspections'), 0);
     });
   });
 

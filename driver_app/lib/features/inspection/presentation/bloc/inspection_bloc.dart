@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/api/api_failure.dart';
-import '../../../../core/connectivity/connectivity_service.dart';
 import '../../data/inspection_api.dart';
 import '../../data/inspection_draft_store.dart';
 import '../../domain/checklist.dart';
@@ -115,10 +114,8 @@ class InspectionBloc extends Bloc<InspectionEvent, InspectionState> {
   InspectionBloc({
     required InspectionApi api,
     required InspectionDraftStore drafts,
-    required ConnectivityService connectivity,
   })  : _api = api,
         _drafts = drafts,
-        _connectivity = connectivity,
         super(const InspectionLoading()) {
     on<InspectionOpened>(_onOpened);
     on<OdometerEntered>(_onOdometer);
@@ -135,7 +132,6 @@ class InspectionBloc extends Bloc<InspectionEvent, InspectionState> {
 
   final InspectionApi _api;
   final InspectionDraftStore _drafts;
-  final ConnectivityService _connectivity;
 
   /// The floor for the odometer, from the bus's recorded total.
   int? minimumOdometer;
@@ -330,14 +326,11 @@ class InspectionBloc extends Bloc<InspectionEvent, InspectionState> {
     final current = state;
     if (current is! InspectionReviewing) return;
 
-    // An inspection cannot be submitted offline: a safety-critical failure
-    // needs an evidence upload, and there is no honest way to queue a
-    // clearance. The draft is kept and the driver is told plainly.
-    if (_connectivity.current == Reachability.offline) {
-      emit(InspectionSaved(value: current.value, checklist: current.checklist));
-      return;
-    }
-
+    // The attempt itself is the only evidence of reachability worth having.
+    // Refusing on a cached offline flag stranded a draft saved in a depot:
+    // reachability only clears on a successful call, and this screen's one
+    // action was the call it would not make. A genuine failure still lands on
+    // InspectionSaved below, so nothing is claimed that the server did not say.
     emit(InspectionSubmitting(
       value: current.value,
       checklist: current.checklist,

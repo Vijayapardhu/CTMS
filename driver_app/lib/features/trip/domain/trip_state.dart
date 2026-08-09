@@ -71,16 +71,30 @@ final class TripBlocked extends TripState {
 }
 
 /// Cleared to start.
+///
+/// [starting] is a parameter rather than a ninth state, the same idiom M1 uses
+/// for `ready(stale)`: the request is in flight, the screen is unchanged, and
+/// only the button knows.
 final class TripReady extends TripState {
   const TripReady({
     required this.value,
     required this.clearance,
+    this.starting = false,
+    this.refusal,
     super.stale,
     super.failure,
   });
 
   final Trip value;
   final ServiceReadiness clearance;
+
+  /// A start request is in flight.
+  final bool starting;
+
+  /// The server's last refusal, in its own words, when it was one that does not
+  /// change what the trip is — a rate limit, a server fault, or no connection.
+  /// Refusals that do change it move state instead.
+  final String? refusal;
 
   @override
   Trip? get trip => value;
@@ -90,11 +104,15 @@ final class TripReady extends TripState {
 }
 
 /// Cleared, but outside the start window. Time-based and self-resolving.
+///
+/// Reached only from a start refusal: the window length is server configuration
+/// (`checkin_window_minutes`) and appears in no payload, so the client cannot
+/// know a trip is early until it asks.
 final class TripWaiting extends TripState {
   const TripWaiting({
     required this.value,
     required this.clearance,
-    required this.opensAt,
+    required this.message,
     super.stale,
     super.failure,
   });
@@ -102,8 +120,12 @@ final class TripWaiting extends TripState {
   final Trip value;
   final ServiceReadiness clearance;
 
-  /// When the window opens. The screen counts down to it.
-  final DateTime opensAt;
+  /// The server's refusal verbatim, which names the time the trip may start.
+  ///
+  /// The only place that time exists: the window opens some configured number
+  /// of minutes before departure and that number appears in no payload, so
+  /// there is nothing here to count down to and nothing to recompute.
+  final String message;
 
   @override
   Trip? get trip => value;

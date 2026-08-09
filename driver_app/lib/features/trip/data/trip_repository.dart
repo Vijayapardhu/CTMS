@@ -26,6 +26,14 @@ class TripRepository {
 
   final TripApi _api;
 
+  /// Starts the trip and returns what the server says it now is.
+  ///
+  /// No local optimism: the trip the caller renders afterwards is the server's
+  /// row, not a client-side guess at what starting must have done. Failures
+  /// propagate — the refusal *is* the answer here, and swallowing it the way
+  /// [load] swallows a readiness failure would clear a bus nobody cleared.
+  Future<Trip> start(String tripId) => _api.start(tripId);
+
   Future<TripSnapshot> load({DateTime? on}) async {
     final trips = await _api.today(on: on);
 

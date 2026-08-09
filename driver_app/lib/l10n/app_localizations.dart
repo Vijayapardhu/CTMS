@@ -502,17 +502,53 @@ abstract class AppStrings {
   /// **'Clearance checked at {time}'**
   String tripReadinessCheckedAt(String time);
 
-  /// Countdown target while waiting for the start window
+  /// R1 waiting — reassures that the early-start refusal resolves on its own
   ///
   /// In en, this message translates to:
-  /// **'Start opens at {time}'**
-  String tripStartWindowOpens(String time);
+  /// **'Start will unlock by itself. You do not need to do anything.'**
+  String get tripStartWindowWaiting;
 
   /// R1 blocked — the one reason a driver can act on
   ///
   /// In en, this message translates to:
   /// **'Start inspection'**
   String get tripStartInspection;
+
+  /// R1 ready — the primary action, 64dp
+  ///
+  /// In en, this message translates to:
+  /// **'START TRIP'**
+  String get tripStart;
+
+  /// Why START TRIP is disabled with no connection
+  ///
+  /// In en, this message translates to:
+  /// **'You need a connection to start.'**
+  String get tripStartOffline;
+
+  /// S2 title
+  ///
+  /// In en, this message translates to:
+  /// **'Start this trip?'**
+  String get tripStartConfirmTitle;
+
+  /// S2 body — what starting causes outside the phone
+  ///
+  /// In en, this message translates to:
+  /// **'Students will be told the bus is on its way.'**
+  String get tripStartConfirmBody;
+
+  /// S2 confirm action
+  ///
+  /// In en, this message translates to:
+  /// **'Start trip'**
+  String get tripStartConfirm;
+
+  /// S2 dismiss action
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet'**
+  String get tripStartCancel;
 
   /// P9 title
   ///

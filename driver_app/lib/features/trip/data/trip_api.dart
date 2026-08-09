@@ -1,7 +1,7 @@
 import '../../../core/api/api_client.dart';
 import '../domain/trip.dart';
 
-/// The two endpoints Slice 3 reads. Nothing writes.
+/// The trip endpoints the driver app calls.
 ///
 /// Paths are the contract's own. Neither is constructed anywhere else in the
 /// app, so there is one place to look when the contract moves.
@@ -30,6 +30,18 @@ class TripApi {
         .whereType<Map<String, dynamic>>()
         .map(Trip.fromJson)
         .toList(growable: false);
+  }
+
+  /// `POST /trips/{id}/start`
+  ///
+  /// The gate, not a formality. A 409 here is the server declining for a
+  /// stated reason and is the normal outcome of tapping Start too early or on
+  /// an uncleared bus — it is handled, never retried.
+  Future<Trip> start(String tripId) async {
+    final body = await _client.post('/trips/$tripId/start');
+    final data = body['data'];
+
+    return Trip.fromJson(data is Map<String, dynamic> ? data : const {});
   }
 
   /// `GET /buses/{id}/service-readiness` → `{ cleared, reasons[], inspection }`

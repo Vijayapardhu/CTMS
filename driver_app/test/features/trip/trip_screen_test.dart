@@ -226,12 +226,10 @@ void main() {
 
       await openTrip(tester);
 
-      // Every mutation belongs to a later slice. A control rendered here
-      // without its flow behind it is a button that lies.
+      // Starting arrived with slice 6. Everything below it still belongs to a
+      // later one, and a control rendered without its flow behind it is a
+      // button that lies.
       for (final label in [
-        'START TRIP',
-        'Start trip',
-        'Start inspection',
         'Complete trip',
         'End trip',
         'Board',
@@ -239,7 +237,7 @@ void main() {
         'Report a problem',
         'SOS',
       ]) {
-        expect(find.text(label), findsNothing, reason: '"$label" is not Slice 3');
+        expect(find.text(label), findsNothing, reason: '"$label" has no flow yet');
       }
     });
 

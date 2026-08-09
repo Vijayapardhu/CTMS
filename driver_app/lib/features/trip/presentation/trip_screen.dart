@@ -4,9 +4,12 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/router/routes.dart';
 
+import '../../../core/connectivity/connectivity_cubit.dart';
+import '../../../core/connectivity/connectivity_service.dart';
 import '../../../core/design_system/ctms_colors.dart';
 import '../../../core/design_system/tokens.dart';
 import '../../../core/icons/app_icons.dart';
+import '../../../core/widgets/confirm_sheet.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/reason_list.dart';
 import '../../../core/widgets/skeleton_loader.dart';
@@ -16,11 +19,14 @@ import '../domain/trip_state.dart';
 import 'bloc/trip_bloc.dart';
 import 'widgets/trip_card.dart';
 
+/// The START TRIP control, in whichever state renders it.
+const startTripKey = Key('trip-start');
+
 /// R1 — the trip root.
 ///
-/// One destination, eight states. Slice 3 reads them all; the controls that
-/// change a trip — start, inspection, boarding, ending — belong to the slices
-/// that own those actions and are deliberately absent here.
+/// One destination, eight states. Reading them is slice 3; starting the trip is
+/// slice 6. Boarding and ending belong to the slices that own those actions and
+/// are deliberately absent here.
 class TripScreen extends StatefulWidget {
   const TripScreen({super.key});
 
@@ -96,8 +102,7 @@ class _TripScreenState extends State<TripScreen> with WidgetsBindingObserver {
       TripBlocked(:final clearance) => _Blocked(state: state, clearance: clearance),
       TripReady(:final value, :final clearance) =>
         _Ready(state: state, trip: value, clearance: clearance),
-      TripWaiting(:final value, :final opensAt) =>
-        _Waiting(state: state, trip: value, opensAt: opensAt),
+      TripWaiting() => _Waiting(state: state),
       TripRunning(:final value) => _Running(state: state, trip: value),
       TripClosed(:final value) => _Closed(state: state, trip: value),
     };
@@ -299,7 +304,7 @@ class _Ready extends StatelessWidget {
     required this.clearance,
   });
 
-  final TripState state;
+  final TripReady state;
   final Trip trip;
   final ServiceReadiness clearance;
 
@@ -315,7 +320,141 @@ class _Ready extends StatelessWidget {
           const SizedBox(height: Spacing.sm),
           _CheckedAt(clearance.checkedAt!),
         ],
-        // START TRIP is the start slice's control, not this one's.
+        const SizedBox(height: Spacing.xl),
+        _StartTrip(trip: trip, starting: state.starting),
+        if (state.refusal case final refusal?) ...[
+          const SizedBox(height: Spacing.md),
+          _StartRefusal(refusal),
+        ],
+      ],
+    );
+  }
+}
+
+/// The 64dp control this screen exists to offer.
+///
+/// Disabled with no connection, because starting is not a thing that can be
+/// queued: a trip is running only when the server says so, and a driver who
+/// believed otherwise would pull out with nothing behind them.
+class _StartTrip extends StatelessWidget {
+  const _StartTrip({required this.trip, required this.starting});
+
+  final Trip trip;
+  final bool starting;
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = AppStrings.of(context);
+    final theme = Theme.of(context);
+    final offline =
+        context.watch<ConnectivityCubit>().state == Reachability.offline;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SizedBox(
+          height: Sizes.buttonProminent,
+          child: FilledButton.icon(
+            // Keyed: the start control is one affordance across two states,
+            // and `FilledButton.icon` builds a private subclass that a type
+            // finder cannot see.
+            key: startTripKey,
+            onPressed:
+                offline || starting ? null : () => _confirm(context, strings),
+            icon: starting
+                ? const SizedBox.square(
+                    dimension: IconSize.sm,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const AppIconView(AppIcon.tripStart, size: IconSize.md),
+            label: Text(
+              strings.tripStart,
+              style: theme.textTheme.titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        if (offline) ...[
+          const SizedBox(height: Spacing.sm),
+          Text(
+            strings.tripStartOffline,
+            style: theme.textTheme.bodySmall
+                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ],
+    );
+  }
+
+  /// S2 — one tap to open, one to agree. The sheet states what is about to
+  /// happen and asks nothing else.
+  Future<void> _confirm(BuildContext context, AppStrings strings) async {
+    final bloc = context.read<TripBloc>();
+
+    final confirmed = await ConfirmSheet.show(
+      context,
+      title: strings.tripStartConfirmTitle,
+      body: strings.tripStartConfirmBody,
+      confirmLabel: strings.tripStartConfirm,
+      cancelLabel: strings.tripStartCancel,
+      child: _StartFacts(trip),
+    );
+
+    if (confirmed) bloc.add(const TripStartRequested());
+  }
+}
+
+/// What the driver is agreeing to, inside the sheet.
+class _StartFacts extends StatelessWidget {
+  const _StartFacts(this.trip);
+
+  final Trip trip;
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = AppStrings.of(context);
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (trip.bus?.registrationNumber case final bus?)
+          Text(bus, style: theme.textTheme.titleLarge),
+        if (trip.route?.name case final route?)
+          Text(route, style: theme.textTheme.bodyLarge),
+        if (trip.scheduledDeparture case final departs?)
+          Text(strings.tripDeparture(departs), style: theme.textTheme.bodyLarge),
+      ],
+    );
+  }
+}
+
+/// A refusal that did not change what the trip is — a rate limit, a server
+/// fault, a dead connection. The server's own wording, never a paraphrase.
+class _StartRefusal extends StatelessWidget {
+  const _StartRefusal(this.message);
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.ctms;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AppIconView(AppIcon.error, size: IconSize.sm, color: colors.critical),
+        const SizedBox(width: Spacing.sm),
+        Expanded(
+          child: Text(
+            message,
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: colors.critical),
+          ),
+        ),
       ],
     );
   }
@@ -323,15 +462,9 @@ class _Ready extends StatelessWidget {
 
 /// `waiting` — cleared, but outside the start window.
 class _Waiting extends StatelessWidget {
-  const _Waiting({
-    required this.state,
-    required this.trip,
-    required this.opensAt,
-  });
+  const _Waiting({required this.state});
 
-  final TripState state;
-  final Trip trip;
-  final DateTime opensAt;
+  final TripWaiting state;
 
   @override
   Widget build(BuildContext context) {
@@ -343,15 +476,29 @@ class _Waiting extends StatelessWidget {
       children: [
         TripCard(state: state),
         const SizedBox(height: Spacing.lg),
+        // The server's sentence, which names the time. Nothing here recomputes
+        // it: the check-in window is server configuration and is published
+        // nowhere in the contract.
+        Text(state.message, style: theme.textTheme.titleMedium),
+        const SizedBox(height: Spacing.sm),
         Text(
-          strings.tripStartWindowOpens(
-            '${opensAt.hour.toString().padLeft(2, '0')}:'
-            '${opensAt.minute.toString().padLeft(2, '0')}',
-          ),
-          style: theme.textTheme.titleMedium,
+          strings.tripStartWindowWaiting,
+          style: theme.textTheme.bodyMedium
+              ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
         ),
         const SizedBox(height: Spacing.md),
-        _TripFacts(trip),
+        _TripFacts(state.value),
+        const SizedBox(height: Spacing.xl),
+        // Deliberately dead. The trip is early; the bloc puts a live button
+        // back on its own, so there is nothing here for the driver to do.
+        SizedBox(
+          height: Sizes.buttonProminent,
+          child: FilledButton(
+            key: startTripKey,
+            onPressed: null,
+            child: Text(strings.tripStart),
+          ),
+        ),
       ],
     );
   }

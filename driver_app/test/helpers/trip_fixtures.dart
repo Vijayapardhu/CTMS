@@ -99,6 +99,49 @@ Map<String, dynamic> readinessResponse({
   };
 }
 
+/// `POST /trips/{id}/start` on success — the trip row, now RUNNING.
+Map<String, dynamic> startResponse({Map<String, dynamic>? trip}) {
+  return {
+    'success': true,
+    'message': 'Trip started. Passengers have been notified.',
+    'code': 200,
+    'data': trip ?? tripJson(status: 'RUNNING', departure: '08:00:00'),
+  };
+}
+
+/// A 409 from the start gate.
+///
+/// The shapes are the ones `TripService::start` and `ApiError::response`
+/// actually produce: a single sentence, plus whatever `context` the rule
+/// attached. Only the clearance gate returns a `reasons` array; every other
+/// rule refuses one at a time, which is why the client must render both.
+Map<String, dynamic> startRefusal({
+  required String message,
+  Map<String, dynamic>? errors,
+}) {
+  return {
+    'success': false,
+    'message': message,
+    'data': null,
+    'errors': errors,
+    'code': 409,
+  };
+}
+
+/// BR-252 — too early. The one refusal that resolves itself, and the only one
+/// carrying `scheduled_departure`.
+Map<String, dynamic> tooEarlyRefusal({String at = '07:45'}) => startRefusal(
+      message: 'This trip cannot start until $at.',
+      errors: {'scheduled_departure': '2026-08-09T08:00:00+00:00'},
+    );
+
+/// BR-251 — the composite safety gate, the one refusal that reports every
+/// blocking reason at once.
+Map<String, dynamic> notClearedRefusal(List<String> reasons) => startRefusal(
+      message: 'This bus is not cleared for service: ${reasons.join(' ')}',
+      errors: {'reasons': reasons},
+    );
+
 /// The reason string the backend actually returns for a missing inspection —
 /// the one and only reason a driver can act on themselves.
 const missingInspection = 'No pre-trip inspection has been completed today.';

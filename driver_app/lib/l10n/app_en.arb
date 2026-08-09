@@ -176,14 +176,31 @@
     "description": "When the readiness answer was obtained",
     "placeholders": { "time": { "type": "String" } }
   },
-  "tripStartWindowOpens": "Start opens at {time}",
-  "@tripStartWindowOpens": {
-    "description": "Countdown target while waiting for the start window",
-    "placeholders": { "time": { "type": "String" } }
+  "tripStartWindowWaiting": "Start will unlock by itself. You do not need to do anything.",
+  "@tripStartWindowWaiting": {
+    "description": "R1 waiting — reassures that the early-start refusal resolves on its own"
   },
 
   "tripStartInspection": "Start inspection",
   "@tripStartInspection": { "description": "R1 blocked — the one reason a driver can act on" },
+
+  "tripStart": "START TRIP",
+  "@tripStart": { "description": "R1 ready — the primary action, 64dp" },
+
+  "tripStartOffline": "You need a connection to start.",
+  "@tripStartOffline": { "description": "Why START TRIP is disabled with no connection" },
+
+  "tripStartConfirmTitle": "Start this trip?",
+  "@tripStartConfirmTitle": { "description": "S2 title" },
+
+  "tripStartConfirmBody": "Students will be told the bus is on its way.",
+  "@tripStartConfirmBody": { "description": "S2 body — what starting causes outside the phone" },
+
+  "tripStartConfirm": "Start trip",
+  "@tripStartConfirm": { "description": "S2 confirm action" },
+
+  "tripStartCancel": "Not yet",
+  "@tripStartCancel": { "description": "S2 dismiss action" },
 
   "inspectionTitle": "Pre-trip inspection",
   "@inspectionTitle": { "description": "P9 title" },
