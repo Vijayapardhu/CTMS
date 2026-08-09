@@ -58,6 +58,7 @@ void main() {
     expect(find.byType(GoogleMap), findsOneWidget);
     expect(find.text('NEXT STOP'), findsOneWidget);
     expect(find.text('Stop 1'), findsWidgets);
-    expect(find.text('4 min'), findsOneWidget);
+    // The estimate is rendered as h:mm:ss, from the server's own `eta_at`.
+    expect(find.textContaining(RegExp(r'\d+:\d{2}:\d{2}')), findsOneWidget);
   });
 }

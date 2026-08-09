@@ -8,9 +8,13 @@ import '../../../../core/widgets/big_number_display.dart';
 import '../../../../core/widgets/confirm_sheet.dart';
 import '../../../../core/widgets/counter_button.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../gps/domain/gps_state.dart';
+import '../../../gps/presentation/bloc/gps_cubit.dart';
 import '../../../tracking/domain/live_trip.dart';
 import '../../../tracking/presentation/bloc/tracking_bloc.dart';
+import '../../domain/stop_proximity.dart';
 import '../bloc/operations_cubit.dart';
+import 'skip_stop_sheet.dart';
 
 /// The driver's controls during a running trip.
 ///
@@ -41,7 +45,7 @@ class TripControls extends StatelessWidget {
             final atStop = trip?.currentStop;
             final next = trip?.nextStop;
 
-            return Column(
+            final body = Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -63,6 +67,21 @@ class TripControls extends StatelessWidget {
                     _CompleteControl(ops: ops),
                 ],
               ],
+            );
+
+            // Over the map the controls need a ground of their own. Map tiles
+            // are light whatever the app's theme is, and body text drawn
+            // straight onto them disappears.
+            if (!compact) return body;
+
+            return Material(
+              elevation: 6,
+              borderRadius: BorderRadius.circular(Radii.md),
+              color: Theme.of(context).colorScheme.surface,
+              child: Padding(
+                padding: const EdgeInsets.all(Spacing.md),
+                child: body,
+              ),
             );
           },
         );
@@ -91,45 +110,61 @@ class _Occupancy extends StatelessWidget {
     final cubit = context.read<OperationsCubit>();
 
     final stop = atStop;
+    final size = compact ? Sizes.buttonProminent + 8 : Sizes.counterButton;
 
+    // Counting only happens at a stop. Between stops the figure stands alone —
+    // offering the buttons there invites a tap for someone who is not present.
+    if (stop == null) {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: BigNumberDisplay(
+          value: ops.occupied ?? 0,
+          total: ops.capacity,
+          label: strings.opsOnBoard,
+          pending: ops.pending,
+          pendingLabel: strings.opsNotYetSynced(ops.pending),
+          tone: ops.isFull ? colors.caution : null,
+        ),
+      );
+    }
+
+    // OFF on the left, the count in the middle, ON on the right — the order the
+    // door works in, so a driver's thumb goes to the same side every time.
     return Row(
       children: [
+        CounterButton(
+          icon: AppIcon.alight,
+          label: strings.opsAlight,
+          tone: colors.caution,
+          size: size,
+          onPressed: (ops.occupied ?? 0) <= 0
+              ? null
+              : () => cubit.alight(routeStopId: stop.stopId),
+        ),
         Expanded(
-          child: BigNumberDisplay(
-            value: ops.occupied ?? 0,
-            total: ops.capacity,
-            label: strings.opsOnBoard,
-            pending: ops.pending,
-            pendingLabel: strings.opsNotYetSynced(ops.pending),
-            tone: ops.isFull ? colors.caution : null,
+          child: Center(
+            child: BigNumberDisplay(
+              value: ops.occupied ?? 0,
+              total: ops.capacity,
+              label: strings.opsOnBoard,
+              pending: ops.pending,
+              pendingLabel: strings.opsNotYetSynced(ops.pending),
+              tone: ops.isFull ? colors.caution : null,
+              centred: true,
+            ),
           ),
         ),
-        // Counting only happens at a stop. Offering the buttons between stops
-        // would invite a tap for someone who is not there.
-        if (stop != null) ...[
-          CounterButton(
-            icon: AppIcon.alight,
-            label: strings.opsAlight,
-            tone: colors.caution,
-            size: compact ? Sizes.buttonProminent + 8 : Sizes.counterButton,
-            onPressed: (ops.occupied ?? 0) <= 0
-                ? null
-                : () => cubit.alight(routeStopId: stop.stopId),
-          ),
-          const SizedBox(width: Spacing.sm),
-          CounterButton(
-            icon: AppIcon.board,
-            label: strings.opsBoard,
-            tone: colors.positive,
-            size: compact ? Sizes.buttonProminent + 8 : Sizes.counterButton,
-            // The server owns the capacity rule. This only stops the obvious
-            // case locally so a driver is not made to wait for a refusal they
-            // could see coming.
-            onPressed: ops.isFull
-                ? null
-                : () => cubit.board(routeStopId: stop.stopId),
-          ),
-        ],
+        CounterButton(
+          icon: AppIcon.board,
+          label: strings.opsBoard,
+          tone: colors.positive,
+          size: size,
+          // The server owns the capacity rule. This only stops the obvious case
+          // locally so a driver is not made to wait for a refusal they could
+          // see coming.
+          onPressed:
+              ops.isFull ? null : () => cubit.board(routeStopId: stop.stopId),
+        ),
       ],
     );
   }
@@ -145,85 +180,129 @@ class _ApproachingControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final strings = AppStrings.of(context);
+    final theme = Theme.of(context);
+    final colors = context.ctms;
 
-    return Row(
-      children: [
-        Expanded(
-          flex: 2,
-          child: SizedBox(
-            height: Sizes.buttonProminent,
-            child: FilledButton.icon(
-              key: const Key('ops-arrived'),
-              onPressed: ops.busy ? null : () => _arrive(context),
-              icon: ops.busy
-                  ? const SizedBox.square(
-                      dimension: IconSize.sm,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const AppIconView(AppIcon.stop, size: IconSize.md),
-              label: Text(
-                strings.opsArrived,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+    return BlocBuilder<GpsCubit, GpsState>(
+      builder: (context, gps) {
+        final near = _proximity(context, gps.lastFix);
+        final atStop = near != null && near.withinRadius;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // How far there is still to go, from the device's own fix. Says why
+            // the button looks the way it does rather than leaving the driver
+            // to guess.
+            if (near != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: Spacing.sm),
+                child: Text(
+                  atStop
+                      ? strings.opsAtStopNow(stop.name ?? '')
+                      : strings.opsDistanceToStop(
+                          near.readable,
+                          stop.name ?? '',
+                        ),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: atStop
+                        ? colors.positive
+                        : theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
               ),
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: SizedBox(
+                    height: Sizes.buttonProminent,
+                    child: FilledButton.icon(
+                      key: const Key('ops-arrived'),
+                      onPressed: ops.busy ? null : () => _arrive(context),
+                      style: atStop
+                          ? FilledButton.styleFrom(
+                              backgroundColor: colors.positive,
+                              foregroundColor: colors.onPositive,
+                            )
+                          : null,
+                      icon: ops.busy
+                          ? const SizedBox.square(
+                              dimension: IconSize.sm,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const AppIconView(AppIcon.stop, size: IconSize.md),
+                      label: Text(
+                        // Names the stop once the bus is at it, so a driver
+                        // pressing this in the wrong place can see that it is
+                        // the wrong place.
+                        atStop
+                            ? strings.opsArrivedAt(stop.name ?? '')
+                            : strings.opsArrived,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: Spacing.sm),
+                Expanded(
+                  child: SizedBox(
+                    height: Sizes.buttonProminent,
+                    child: OutlinedButton(
+                      key: const Key('ops-skip'),
+                      onPressed: ops.busy ? null : () => _skip(context),
+                      child: Text(strings.opsSkip),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ),
-        const SizedBox(width: Spacing.sm),
-        Expanded(
-          child: SizedBox(
-            height: Sizes.buttonProminent,
-            child: OutlinedButton(
-              key: const Key('ops-skip'),
-              onPressed: ops.busy ? null : () => _skip(context),
-              child: Text(strings.opsSkip),
-            ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
+  }
+
+  /// How far the bus is from this stop, when both positions are known.
+  ///
+  /// Null when the device has no fix or the stop geometry has not loaded. The
+  /// plain Arrived button still stands in that case: BR-306 exists so a driver
+  /// whose GPS is dead can record an arrival by hand, and a geofence the phone
+  /// cannot compute must never be the thing that strands them.
+  StopProximity? _proximity(BuildContext context, PositionFix? fix) {
+    if (fix == null) return null;
+
+    for (final candidate in context.read<TrackingBloc>().state.stops) {
+      if (candidate.id != stop.stopId) continue;
+
+      return StopProximity.between(
+        fromLatitude: fix.latitude,
+        fromLongitude: fix.longitude,
+        toLatitude: candidate.latitude,
+        toLongitude: candidate.longitude,
+      );
+    }
+
+    return null;
   }
 
   Future<void> _arrive(BuildContext context) async {
     await context.read<OperationsCubit>().arrive(stop.stopId);
   }
 
-  /// S4 — skipping needs a reason, and the students waiting at that stop are
-  /// told it. Five characters is the server's floor; the sheet says so rather
-  /// than letting the driver find out by being refused.
+  /// S4. The sheet owns its own field and returns the reason, so nothing here
+  /// manages a controller that outlives the pop.
   Future<void> _skip(BuildContext context) async {
-    final strings = AppStrings.of(context);
     final cubit = context.read<OperationsCubit>();
-    final controller = TextEditingController();
 
-    final confirmed = await ConfirmSheet.show(
-      context,
-      title: strings.opsSkipTitle(stop.name ?? ''),
-      body: strings.opsSkipBody,
-      confirmLabel: strings.opsSkipConfirm,
-      cancelLabel: strings.cancel,
-      danger: true,
-      child: TextField(
-        controller: controller,
-        autofocus: true,
-        maxLength: 500,
-        minLines: 2,
-        maxLines: 4,
-        textCapitalization: TextCapitalization.sentences,
-        decoration: InputDecoration(
-          labelText: strings.opsSkipReason,
-          helperText: strings.opsSkipReasonHint,
-        ),
-      ),
-    );
+    final reason = await SkipStopSheet.show(context, stopName: stop.name ?? '');
 
-    final reason = controller.text.trim();
-    controller.dispose();
-
-    if (confirmed && reason.length >= 5) {
-      await cubit.skip(stop.stopId, reason);
-    }
+    if (reason != null) await cubit.skip(stop.stopId, reason);
   }
 }
 

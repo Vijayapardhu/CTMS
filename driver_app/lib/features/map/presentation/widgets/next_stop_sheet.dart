@@ -119,7 +119,7 @@ class _NextStop extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: Spacing.xs),
-        _EtaLine(eta: eta, failed: failed),
+        EtaLine(eta: eta, failed: failed),
       ],
     );
   }
@@ -130,8 +130,11 @@ class _NextStop extends StatelessWidget {
 /// `basis` is not decoration. A scheduled estimate is the timetable and has
 /// nothing to do with where the bus actually is; showing it in the same words
 /// as a live one would tell a driver the system knows something it does not.
-class _EtaLine extends StatelessWidget {
-  const _EtaLine({required this.eta, required this.failed});
+/// Public because R1 shows the same estimate and must say the same thing about
+/// it. Two renderings of one number is how a driver reads a stale figure as
+/// live on whichever screen forgot to mention it.
+class EtaLine extends StatelessWidget {
+  const EtaLine({required this.eta, required this.failed, super.key});
 
   final Eta? eta;
   final bool failed;
@@ -167,13 +170,19 @@ class _EtaLine extends StatelessWidget {
       );
     }
 
+    final clock = _clock(value);
+
+    if (clock == null) {
+      return Text(
+        strings.mapEtaArrivingNow,
+        style: theme.textTheme.titleMedium?.copyWith(color: colors.positive),
+      );
+    }
+
     final (label, tone) = switch (value.basis) {
-      EtaBasis.live => (strings.mapEtaMinutes(value.minutes!), colors.positive),
-      EtaBasis.stale => (
-          strings.mapEtaStale(value.minutes!),
-          colors.caution,
-        ),
-      _ => (strings.mapEtaScheduled(value.minutes!), colors.caution),
+      EtaBasis.live => (strings.mapEtaMinutes(clock), colors.positive),
+      EtaBasis.stale => (strings.mapEtaStale(clock), colors.caution),
+      _ => (strings.mapEtaScheduled(clock), colors.caution),
     };
 
     return Row(
@@ -197,4 +206,25 @@ class _EtaLine extends StatelessWidget {
       ],
     );
   }
+}
+
+/// The time left, as h:mm:ss.
+///
+/// Taken from `eta_at` when the server sent one, so the seconds are real rather
+/// than a whole-minute figure padded with zeroes. Falls back to the minutes
+/// field otherwise. Null once the estimate has run out, which reads better as
+/// "arriving now" than as a row of zeroes.
+String? _clock(Eta eta) {
+  final at = eta.etaAt;
+  final remaining = at != null
+      ? at.difference(DateTime.now())
+      : Duration(minutes: eta.minutes ?? 0);
+
+  if (remaining.inSeconds <= 0) return null;
+
+  final hours = remaining.inHours;
+  final minutes = remaining.inMinutes.remainder(60).toString().padLeft(2, '0');
+  final seconds = remaining.inSeconds.remainder(60).toString().padLeft(2, '0');
+
+  return '$hours:$minutes:$seconds';
 }

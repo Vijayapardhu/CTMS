@@ -21,6 +21,7 @@ class BigNumberDisplay extends StatelessWidget {
     this.pending = 0,
     this.pendingLabel,
     this.tone,
+    this.centred = false,
     super.key,
   });
 
@@ -34,6 +35,9 @@ class BigNumberDisplay extends StatelessWidget {
   final String? pendingLabel;
   final Color? tone;
 
+  /// Sits between the two counter buttons rather than at the start of a row.
+  final bool centred;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -41,7 +45,8 @@ class BigNumberDisplay extends StatelessWidget {
 
     return ConstrainedTextScale(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment:
+            centred ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
@@ -50,6 +55,9 @@ class BigNumberDisplay extends StatelessWidget {
                 ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),
           Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment:
+                centred ? MainAxisAlignment.center : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [

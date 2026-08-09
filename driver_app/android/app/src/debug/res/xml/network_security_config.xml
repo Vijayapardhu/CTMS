@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Debug builds only.
+
+  Android blocks cleartext HTTP from targetSdk 28 onward, which is correct and
+  is left alone for release. A development backend runs on plain HTTP on the
+  host machine, reached over `adb reverse` (127.0.0.1) or the emulator's host
+  alias (10.0.2.2), so those two names — and nothing else — are exempted here.
+
+  This file lives under src/debug and is never merged into a release build, so
+  a shipped APK still refuses cleartext to everything.
+-->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">127.0.0.1</domain>
+        <domain includeSubdomains="false">localhost</domain>
+        <domain includeSubdomains="false">10.0.2.2</domain>
+    </domain-config>
+</network-security-config>

@@ -305,38 +305,22 @@ class AppStringsEn extends AppStrings {
   String get mapNoMoreStops => 'No stops remaining';
 
   @override
-  String mapEtaMinutes(int minutes) {
-    String _temp0 = intl.Intl.pluralLogic(
-      minutes,
-      locale: localeName,
-      other: '$minutes min',
-      one: '1 min',
-      zero: 'Arriving now',
-    );
-    return '$_temp0';
+  String mapEtaMinutes(String clock) {
+    return '$clock';
   }
 
   @override
-  String mapEtaStale(int minutes) {
-    String _temp0 = intl.Intl.pluralLogic(
-      minutes,
-      locale: localeName,
-      other: 'About $minutes min — not updating',
-      one: 'About 1 min — not updating',
-    );
-    return '$_temp0';
+  String mapEtaStale(String clock) {
+    return 'About $clock — not updating';
   }
 
   @override
-  String mapEtaScheduled(int minutes) {
-    String _temp0 = intl.Intl.pluralLogic(
-      minutes,
-      locale: localeName,
-      other: '$minutes min by timetable',
-      one: '1 min by timetable',
-    );
-    return '$_temp0';
+  String mapEtaScheduled(String clock) {
+    return '$clock by timetable';
   }
+
+  @override
+  String get mapEtaArrivingNow => 'Arriving now';
 
   @override
   String get mapEtaScheduledOnly =>
@@ -381,6 +365,21 @@ class AppStringsEn extends AppStrings {
       one: '1 not yet sent',
     );
     return '$_temp0';
+  }
+
+  @override
+  String opsArrivedAt(String stop) {
+    return 'I have arrived at $stop';
+  }
+
+  @override
+  String opsAtStopNow(String stop) {
+    return 'You are at $stop';
+  }
+
+  @override
+  String opsDistanceToStop(String distance, String stop) {
+    return '$distance to $stop';
   }
 
   @override

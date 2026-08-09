@@ -586,23 +586,29 @@ abstract class AppStrings {
   /// **'No stops remaining'**
   String get mapNoMoreStops;
 
-  /// R2 — a live estimate from the backend Route Matrix
+  /// R2 — a live estimate from the backend Route Matrix, as h:mm:ss
   ///
   /// In en, this message translates to:
-  /// **'{minutes, plural, =0{Arriving now} =1{1 min} other{{minutes} min}}'**
-  String mapEtaMinutes(int minutes);
+  /// **'{clock}'**
+  String mapEtaMinutes(String clock);
 
   /// R2 — the server computed this from a position it no longer trusts
   ///
   /// In en, this message translates to:
-  /// **'{minutes, plural, =1{About 1 min — not updating} other{About {minutes} min — not updating}}'**
-  String mapEtaStale(int minutes);
+  /// **'About {clock} — not updating'**
+  String mapEtaStale(String clock);
 
   /// R2 — no live position, so the estimate is the schedule
   ///
   /// In en, this message translates to:
-  /// **'{minutes, plural, =1{1 min by timetable} other{{minutes} min by timetable}}'**
-  String mapEtaScheduled(int minutes);
+  /// **'{clock} by timetable'**
+  String mapEtaScheduled(String clock);
+
+  /// R2 — the estimate has run down to zero
+  ///
+  /// In en, this message translates to:
+  /// **'Arriving now'**
+  String get mapEtaArrivingNow;
 
   /// R2 — scheduled basis with no minutes
   ///
@@ -657,6 +663,24 @@ abstract class AppStrings {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 not yet sent} other{{count} not yet sent}}'**
   String opsNotYetSynced(int count);
+
+  /// Arrival control once the bus is inside the stop's radius
+  ///
+  /// In en, this message translates to:
+  /// **'I have arrived at {stop}'**
+  String opsArrivedAt(String stop);
+
+  /// Shown when the device's own fix puts the bus inside the stop radius
+  ///
+  /// In en, this message translates to:
+  /// **'You are at {stop}'**
+  String opsAtStopNow(String stop);
+
+  /// How far the bus still is from the next stop
+  ///
+  /// In en, this message translates to:
+  /// **'{distance} to {stop}'**
+  String opsDistanceToStop(String distance, String stop);
 
   /// Marks the bus as standing at the next stop
   ///

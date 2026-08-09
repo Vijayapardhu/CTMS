@@ -265,7 +265,15 @@ Map<String, dynamic> etaResponse({
     'message': 'Estimate retrieved successfully.',
     'code': 200,
     'data': {
-      'eta_at': minutes == null ? null : '2026-08-09T08:04:00+00:00',
+      // Relative to now, as the server's would be: an absolute timestamp baked
+      // into a fixture is in the past by the time anyone runs it, and the
+      // client would rightly render that as "arriving now".
+      'eta_at': minutes == null
+          ? null
+          : DateTime.now()
+              .toUtc()
+              .add(Duration(minutes: minutes))
+              .toIso8601String(),
       'minutes': minutes,
       'basis': basis,
       'stops_away': stopsAway,

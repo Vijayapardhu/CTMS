@@ -20,6 +20,7 @@ import '../../gps/presentation/bloc/gps_cubit.dart';
 import '../../gps/presentation/widgets/gps_status_pill.dart';
 import '../../operations/presentation/bloc/operations_cubit.dart';
 import '../../operations/presentation/widgets/trip_controls.dart';
+import '../../map/presentation/widgets/next_stop_sheet.dart';
 import '../../tracking/presentation/bloc/tracking_bloc.dart';
 import '../../../l10n/app_localizations.dart';
 import '../domain/trip.dart';
@@ -638,11 +639,10 @@ class _StopProgress extends StatelessWidget {
               (at ?? next)?.name ?? strings.mapNoMoreStops,
               style: theme.textTheme.headlineSmall,
             ),
-            if (state.eta?.isUsable ?? false)
-              Text(
-                strings.mapEtaMinutes(state.eta!.minutes!),
-                style: theme.textTheme.titleMedium,
-              ),
+            const SizedBox(height: Spacing.xs),
+            // The same line the map draws, so one estimate cannot read as live
+            // here and stale there.
+            EtaLine(eta: state.eta, failed: state.etaFailed),
           ],
         );
       },
