@@ -282,6 +282,7 @@ class _StartInspection extends StatelessWidget {
           queryParameters: {
             if (trip.bus?.currentOdometer != null)
               'min': '${trip.bus!.currentOdometer}',
+            'bus': trip.bus!.registrationNumber,
           },
         ),
         child: Text(AppStrings.of(context).tripStartInspection),

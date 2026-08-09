@@ -24,11 +24,16 @@ class InspectionEntry extends StatelessWidget {
   const InspectionEntry({
     required this.busId,
     this.minimumOdometer,
+    this.busLabel,
     super.key,
   });
 
   final String busId;
   final int? minimumOdometer;
+
+  /// The registration, so P9 can say which bus this is about without a second
+  /// round trip for something the trip screen already had.
+  final String? busLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +45,11 @@ class InspectionEntry extends StatelessWidget {
           sl<LoggerService>(),
         ),
         connectivity: sl<ConnectivityService>(),
-      )..add(InspectionOpened(busId, minimumOdometer: minimumOdometer)),
+      )..add(InspectionOpened(
+          busId,
+          minimumOdometer: minimumOdometer,
+          busLabel: busLabel,
+        )),
       child: InspectionFlow(
         onFinished: () {
           // The clearance has almost certainly just changed, so the trip is

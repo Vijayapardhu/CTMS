@@ -795,6 +795,138 @@ abstract class AppStrings {
   /// In en, this message translates to:
   /// **'Open settings'**
   String get evidenceOpenSettings;
+
+  /// P9 title, in a driver's words
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-trip check'**
+  String get quickTitle;
+
+  /// Label above the registration number
+  ///
+  /// In en, this message translates to:
+  /// **'Bus'**
+  String get quickBus;
+
+  /// The bus's recorded odometer, offered for confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'{value} km'**
+  String quickOdometerReading(String value);
+
+  /// Accepts the pre-filled odometer without typing
+  ///
+  /// In en, this message translates to:
+  /// **'This is correct'**
+  String get quickOdometerCorrect;
+
+  /// Opens the odometer for typing
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get quickOdometerEdit;
+
+  /// Accepts a typed odometer
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get quickOdometerContinue;
+
+  /// Shown when the API supplied no recorded total
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the odometer reading'**
+  String get quickOdometerUnknown;
+
+  /// The question above the ALL OK action
+  ///
+  /// In en, this message translates to:
+  /// **'Have you checked the bus?'**
+  String get quickPrompt;
+
+  /// The one deliberate action for a normal check
+  ///
+  /// In en, this message translates to:
+  /// **'ALL OK'**
+  String get quickAllOk;
+
+  /// Screen-reader meaning of the ALL OK action
+  ///
+  /// In en, this message translates to:
+  /// **'All OK. Marks every check as passed.'**
+  String get quickAllOkSemantics;
+
+  /// Opens the item list to report an exception
+  ///
+  /// In en, this message translates to:
+  /// **'Something wrong?'**
+  String get quickSomethingWrong;
+
+  /// Counted from the server checklist, never a constant
+  ///
+  /// In en, this message translates to:
+  /// **'{passed} of {total} checks OK'**
+  String quickChecksOk(int passed, int total);
+
+  /// How many items the driver marked as not OK
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 issue} other{{count} issues}}'**
+  String quickIssues(int count);
+
+  /// Heading on the compact confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Inspection ready'**
+  String get quickReady;
+
+  /// Primary action on the confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm & submit'**
+  String get quickConfirmSubmit;
+
+  /// Returns from the confirmation to the check
+  ///
+  /// In en, this message translates to:
+  /// **'Go back'**
+  String get quickGoBack;
+
+  /// Marks one item as the exception
+  ///
+  /// In en, this message translates to:
+  /// **'Not OK'**
+  String get quickNotOk;
+
+  /// An item that is fine
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get quickItemOk;
+
+  /// Heading above the revealed item list
+  ///
+  /// In en, this message translates to:
+  /// **'What is wrong?'**
+  String get quickWhatIsWrong;
+
+  /// Shown on the review for an evidenced failure
+  ///
+  /// In en, this message translates to:
+  /// **'Photo attached'**
+  String get quickPhotoAttached;
+
+  /// The server accepted the inspection
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted'**
+  String get quickSubmitted;
+
+  /// Offline — deliberately not the word submitted
+  ///
+  /// In en, this message translates to:
+  /// **'Saved on this device'**
+  String get quickSavedHere;
 }
 
 class _AppStringsDelegate extends LocalizationsDelegate<AppStrings> {

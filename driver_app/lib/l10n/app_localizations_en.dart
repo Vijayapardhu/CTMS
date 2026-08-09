@@ -423,4 +423,82 @@ class AppStringsEn extends AppStrings {
 
   @override
   String get evidenceOpenSettings => 'Open settings';
+
+  @override
+  String get quickTitle => 'Pre-trip check';
+
+  @override
+  String get quickBus => 'Bus';
+
+  @override
+  String quickOdometerReading(String value) {
+    return '$value km';
+  }
+
+  @override
+  String get quickOdometerCorrect => 'This is correct';
+
+  @override
+  String get quickOdometerEdit => 'Edit';
+
+  @override
+  String get quickOdometerContinue => 'Continue';
+
+  @override
+  String get quickOdometerUnknown => 'Enter the odometer reading';
+
+  @override
+  String get quickPrompt => 'Have you checked the bus?';
+
+  @override
+  String get quickAllOk => 'ALL OK';
+
+  @override
+  String get quickAllOkSemantics => 'All OK. Marks every check as passed.';
+
+  @override
+  String get quickSomethingWrong => 'Something wrong?';
+
+  @override
+  String quickChecksOk(int passed, int total) {
+    return '$passed of $total checks OK';
+  }
+
+  @override
+  String quickIssues(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count issues',
+      one: '1 issue',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get quickReady => 'Inspection ready';
+
+  @override
+  String get quickConfirmSubmit => 'Confirm & submit';
+
+  @override
+  String get quickGoBack => 'Go back';
+
+  @override
+  String get quickNotOk => 'Not OK';
+
+  @override
+  String get quickItemOk => 'OK';
+
+  @override
+  String get quickWhatIsWrong => 'What is wrong?';
+
+  @override
+  String get quickPhotoAttached => 'Photo attached';
+
+  @override
+  String get quickSubmitted => 'Submitted';
+
+  @override
+  String get quickSavedHere => 'Saved on this device';
 }

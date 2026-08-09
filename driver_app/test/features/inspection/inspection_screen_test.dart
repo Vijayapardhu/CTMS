@@ -1,6 +1,5 @@
 import 'package:ctms_driver/core/connectivity/connectivity_service.dart';
 import 'package:ctms_driver/core/widgets/consequence_panel.dart';
-import 'package:ctms_driver/core/icons/app_icons.dart';
 import 'package:ctms_driver/core/widgets/dual_action_selector.dart';
 import 'package:ctms_driver/core/widgets/skeleton_loader.dart';
 import 'package:ctms_driver/features/inspection/domain/checklist.dart';
@@ -14,36 +13,19 @@ import '../../helpers/inspection_fixtures.dart';
 import '../../helpers/test_harness.dart';
 import '../../helpers/trip_fixtures.dart';
 
-/// P9, P10 and P11 through the real app.
+/// P9, P10 and P11 under the exception-driven model.
+///
+/// The normal check is one deliberate tap. The long list exists, is
+/// server-driven, and is only reached by a driver who has something to report.
 void main() {
   late TestApp app;
 
   tearDown(() async => app.dispose());
 
-  /// Signs in on a blocked trip and opens the inspection.
-  Future<void> openInspection(WidgetTester tester) async {
-    app = await registerTestDependencies(signedIn: true);
-    app.backend
-      ..on('/trips', status: 200, body: tripsResponse())
-      ..on('/service-readiness',
-          status: 200,
-          body: readinessResponse(cleared: false, reasons: [missingInspection]))
-      ..on('/inspections/checklist', status: 200, body: checklistResponse());
-
-    await pumpApp(tester);
-
-    await tester.tap(find.text('Start inspection'));
-    await settle(tester);
-  }
-
-  /// The fourteen labels, in the order the fixture returns them. Tiles are
-  /// found by label rather than by index: the list builds lazily, so the i-th
-  /// built tile is not the i-th item.
-  const labels = [
-    'Brakes', 'Tyres and pressure', 'Lights and indicators', 'Steering',
-    'Doors', 'Emergency exit', 'Fire extinguisher', 'First aid kit',
-    'Mirrors', 'Horn', 'Wipers', 'Fluid levels', 'Fuel level', 'Cleanliness',
-  ];
+  Finder tileFor(String label) => find.ancestor(
+        of: find.text(label),
+        matching: find.byType(ChecklistItemTile),
+      );
 
   Future<void> reveal(WidgetTester tester, String label) =>
       tester.scrollUntilVisible(
@@ -57,83 +39,82 @@ void main() {
             .first,
       );
 
-  Finder tileFor(String label) => find.ancestor(
-        of: find.text(label),
-        matching: find.byType(ChecklistItemTile),
-      );
+  /// Signs in on a blocked trip and opens the inspection.
+  Future<void> openInspection(
+    WidgetTester tester, {
+    List<Map<String, dynamic>>? items,
+  }) async {
+    app = await registerTestDependencies(signedIn: true);
+    app.backend
+      ..on('/trips', status: 200, body: tripsResponse())
+      ..on('/service-readiness',
+          status: 200,
+          body: readinessResponse(cleared: false, reasons: [missingInspection]))
+      ..on('/inspections/checklist',
+          status: 200, body: checklistResponse(items: items));
 
-  /// Answers every tile, so review unlocks.
-  Future<void> completeChecklist(WidgetTester tester, {String? fail}) async {
-    await tester.enterText(find.byType(TextFormField).first, '45200');
+    await pumpApp(tester);
+    await tester.tap(find.text('Start inspection'));
     await settle(tester);
-
-    for (final label in labels) {
-      await reveal(tester, label);
-      await settle(tester);
-
-      final verdict = label == fail ? 'Fail' : 'Pass';
-      await tester.tap(
-        find.descendant(of: tileFor(label), matching: find.text(verdict)),
-      );
-      await settle(tester);
-
-      if (label == fail) {
-        await tester.enterText(
-          find.descendant(
-            of: tileFor(label),
-            matching: find.byType(TextFormField),
-          ),
-          'Pedal travel excessive.',
-        );
-        await settle(tester);
-      }
-    }
   }
 
-  group('P9 — the checklist', () {
-    testWidgets('R1 blocked offers the one action the driver owns',
-        (tester) async {
-      app = await registerTestDependencies(signedIn: true);
-      app.backend
-        ..on('/trips', status: 200, body: tripsResponse())
-        ..on('/service-readiness',
-            status: 200,
-            body: readinessResponse(cleared: false, reasons: [missingInspection]));
+  /// Accepts the odometer the bus already reported. No typing.
+  Future<void> acceptOdometer(WidgetTester tester) async {
+    await tester.tap(find.text('This is correct'));
+    await settle(tester);
+  }
 
-      await pumpApp(tester);
+  /// Opens the server list so one item can be singled out.
+  Future<void> somethingWrong(WidgetTester tester) async {
+    await tester.tap(find.text('Something wrong?'));
+    await settle(tester);
+  }
 
-      expect(find.text('Start inspection'), findsOneWidget);
-    });
+  group('P9 — the quick check', () {
+    testWidgets('opens on one action, not fourteen', (tester) async {
+      await openInspection(tester);
 
-    testWidgets('it is not offered when nothing is actionable', (tester) async {
-      app = await registerTestDependencies(signedIn: true);
-      app.backend
-        ..on('/trips', status: 200, body: tripsResponse())
-        ..on('/service-readiness',
-            status: 200,
-            body: readinessResponse(cleared: false, reasons: [expiredInsurance]));
-
-      await pumpApp(tester);
-
+      expect(find.text('ALL OK'), findsOneWidget);
+      expect(find.text('Have you checked the bus?'), findsOneWidget);
       expect(
-        find.text('Start inspection'),
+        find.byType(ChecklistItemTile),
         findsNothing,
-        reason: 'a driver who does the inspection and is still blocked by the '
-            'insurance has been sent on an errand',
+        reason: 'the normal answer to a pre-trip check is "the bus is fine", '
+            'and it should cost one tap',
       );
     });
 
-    testWidgets('renders every server item, and no more', (tester) async {
+    testWidgets('offers the recorded odometer rather than demanding typing',
+        (tester) async {
       await openInspection(tester);
 
-      // The list builds lazily, so what is asserted is that the tiles render
-      // and that the bloc holds every item the server sent.
-      expect(find.byType(ChecklistItemTile), findsWidgets);
-      expect(find.text('Brakes'), findsOneWidget);
-      expect(inspectionStateOf(tester).items, hasLength(14));
+      // 45120 is the bus fixture's own current_odometer.
+      expect(find.text('45120 km'), findsOneWidget);
+      expect(find.text('This is correct'), findsOneWidget);
+      expect(find.text('Edit'), findsOneWidget);
+    });
 
-      await reveal(tester, 'Cleanliness');
-      expect(find.text('Cleanliness'), findsOneWidget);
+    testWidgets('nothing is selected on open', (tester) async {
+      await openInspection(tester);
+
+      expect(
+        inspectionStateOf(tester).draft!.answers,
+        isEmpty,
+        reason: 'ALL OK is an affirmative act, not a default the driver can '
+            'submit through by inertia',
+      );
+      expect(inspectionStateOf(tester).draft!.odometer, isNull);
+    });
+
+    testWidgets('ALL OK is held back until the odometer is settled',
+        (tester) async {
+      await openInspection(tester);
+
+      await tester.tap(find.text('ALL OK'));
+      await settle(tester);
+
+      expect(inspectionStateOf(tester).draft!.answers, isEmpty);
+      expect(find.text('Enter the odometer reading'), findsOneWidget);
     });
 
     testWidgets('loading shows a skeleton', (tester) async {
@@ -155,71 +136,154 @@ void main() {
 
       expect(find.byType(SkeletonLoader), findsOneWidget);
 
-      // Let the fetch land so the shimmer stops before teardown.
       await waitForInspection(tester, (s) => s is! InspectionLoading);
       await settle(tester);
     });
+  });
 
-    testWidgets('neither verdict is pre-selected', (tester) async {
+  group('ALL OK', () {
+    testWidgets('marks every server item passed and reaches review',
+        (tester) async {
       await openInspection(tester);
+      await acceptOdometer(tester);
+      await tester.tap(find.text('ALL OK'));
+      await settle(tester);
+
+      final state = inspectionStateOf(tester);
+      expect(state, isA<InspectionReviewing>());
+      expect(state.draft!.passedCount(state.items), 14);
+      expect(find.text('14 of 14 checks OK'), findsOneWidget);
+    });
+
+    testWidgets('counts whatever the server sent, never fourteen',
+        (tester) async {
+      await openInspection(tester, items: [
+        {'item': 'BRAKES', 'label': 'Brakes', 'safety_critical': true},
+        {'item': 'HORN', 'label': 'Horn', 'safety_critical': false},
+        {'item': 'WIPERS', 'label': 'Wipers', 'safety_critical': false},
+      ]);
+      await acceptOdometer(tester);
+      await tester.tap(find.text('ALL OK'));
+      await settle(tester);
+
+      expect(find.text('3 of 3 checks OK'), findsOneWidget);
+      expect(inspectionStateOf(tester).draft!.answers, hasLength(3));
+    });
+
+    testWidgets('a fifteenth item needs no release', (tester) async {
+      final items = [
+        for (var i = 0; i < 15; i++)
+          {'item': 'ITEM_$i', 'label': 'Check $i', 'safety_critical': false},
+      ];
+
+      await openInspection(tester, items: items);
+      await acceptOdometer(tester);
+      await tester.tap(find.text('ALL OK'));
+      await settle(tester);
+
+      expect(find.text('15 of 15 checks OK'), findsOneWidget);
+    });
+
+    testWidgets('submits every item the server supplied', (tester) async {
+      await openInspection(tester);
+      await acceptOdometer(tester);
+      await tester.tap(find.text('ALL OK'));
+      await settle(tester);
+
+      app.backend.on('/inspections', status: 201, body: submissionResponse());
+      await tester.tap(find.text('Confirm & submit'));
+      await waitForInspection(tester, (s) => s is InspectionSubmitted);
+      await settle(tester);
+
+      final body = app.backend.requests.last.body as Map<String, dynamic>;
+      final sent = body['items'] as List;
+
+      expect(sent, hasLength(14));
+      expect(
+        sent.every((i) => (i as Map)['passed'] == true),
+        isTrue,
+        reason: 'the backend still receives the complete inspection record',
+      );
+      expect(find.text('Cleared'), findsOneWidget);
+    });
+  });
+
+  group('the exception path', () {
+    testWidgets('"Something wrong?" reveals the server list', (tester) async {
+      await openInspection(tester);
+      await acceptOdometer(tester);
+      await somethingWrong(tester);
+
+      expect(find.text('What is wrong?'), findsOneWidget);
+      expect(find.byType(ChecklistItemTile), findsWidgets);
+      expect(inspectionStateOf(tester).items, hasLength(14));
+    });
+
+    testWidgets('a singled-out item takes a verdict with no default',
+        (tester) async {
+      await openInspection(tester);
+      await acceptOdometer(tester);
+      await somethingWrong(tester);
 
       final selectors = tester.widgetList<DualActionSelector<Verdict>>(
         find.byType(DualActionSelector<Verdict>),
       );
 
       expect(selectors, isNotEmpty);
-      expect(
-        selectors.every((s) => s.value == null),
-        isTrue,
-        reason: 'a checklist that starts with everything passing is a '
-            'checklist nobody read',
-      );
+      expect(selectors.every((s) => s.value == null), isTrue);
     });
 
-    testWidgets('the minimum odometer is stated before any error',
-        (tester) async {
+    testWidgets('failing one item leaves the rest alone', (tester) async {
       await openInspection(tester);
+      await acceptOdometer(tester);
+      await somethingWrong(tester);
+      await reveal(tester, 'Horn');
 
-      expect(
-        find.textContaining('Must be at least'),
-        findsOneWidget,
-        reason: 'telling a driver the rule after they break it wastes a trip '
-            'to the dashboard',
+      await tester.tap(
+        find.descendant(of: tileFor('Horn'), matching: find.text('Fail')),
       );
-    });
-
-    testWidgets('review is blocked and says how many are left', (tester) async {
-      await openInspection(tester);
-      await tester.enterText(find.byType(TextFormField).first, '45200');
       await settle(tester);
 
-      expect(find.textContaining('14 left'), findsOneWidget);
+      final draft = inspectionStateOf(tester).draft!;
+      expect(draft.answers['HORN']?.verdict, Verdict.failed);
       expect(
-        tester.widget<FilledButton>(find.widgetWithText(FilledButton, 'Review (14 left)')).onPressed,
-        isNull,
+        draft.answers.length,
+        1,
+        reason: 'a driver reporting the horn should not have to confirm '
+            'thirteen things that are fine',
       );
     });
 
-    testWidgets('failing an item asks what was found', (tester) async {
+    testWidgets('a later failure overrides an earlier ALL OK', (tester) async {
       await openInspection(tester);
+      await acceptOdometer(tester);
+      await tester.tap(find.text('ALL OK'));
+      await settle(tester);
+
+      // Back out of review, then report the brakes.
+      await tester.tap(find.text('Go back'));
+      await settle(tester);
+      await somethingWrong(tester);
 
       await tester.tap(
         find.descendant(of: tileFor('Brakes'), matching: find.text('Fail')),
       );
       await settle(tester);
 
+      final state = inspectionStateOf(tester);
+      expect(state.draft!.answers['BRAKES']?.verdict, Verdict.failed);
       expect(
-        find.descendant(
-          of: tileFor('Brakes'),
-          matching: find.byType(TextFormField),
-        ),
-        findsOneWidget,
+        state.draft!.passedCount(state.items),
+        13,
+        reason: 'the explicit, later, more serious act wins',
       );
     });
 
-    testWidgets('a failed safety-critical item says a photograph is required',
+    testWidgets('a safety-critical failure still demands a photograph',
         (tester) async {
       await openInspection(tester);
+      await acceptOdometer(tester);
+      await somethingWrong(tester);
 
       await tester.tap(
         find.descendant(of: tileFor('Brakes'), matching: find.text('Fail')),
@@ -227,195 +291,139 @@ void main() {
       await settle(tester);
 
       expect(find.textContaining('A photograph is required'), findsOneWidget);
-    });
 
-    testWidgets('a safety-critical item is marked even while passing',
-        (tester) async {
-      await openInspection(tester);
+      final brakes =
+          inspectionStateOf(tester).items.firstWhere((i) => i.code == 'BRAKES');
+      await tester.enterText(
+        find.descendant(
+          of: tileFor('Brakes'),
+          matching: find.byType(TextFormField),
+        ),
+        'Pedal travel excessive.',
+      );
+      await settle(tester);
 
       expect(
-        find.byWidgetPredicate(
-          (w) => w is AppIconView && w.icon == AppIcon.safetyCritical,
-        ),
-        findsWidgets,
-        reason: 'a driver should know which items ground the bus before they '
-            'decide, not after',
+        inspectionStateOf(tester).draft!.problemWith(brakes),
+        AnswerProblem.evidenceMissing,
       );
     });
   });
 
   group('P10 — review', () {
-    testWidgets('a clean checklist reaches review', (tester) async {
-      await openInspection(tester);
-      await completeChecklist(tester);
-
-      await tester.tap(find.text('Review'));
-      await settle(tester);
-
-      expect(find.text('Review and submit'), findsOneWidget);
-      expect(find.textContaining('Odometer: 45200'), findsOneWidget);
-      expect(find.text('Nothing failed'), findsOneWidget);
-    });
-
-    testWidgets('a failed safety-critical item cannot reach review yet',
+    testWidgets('a clean check shows a count, not fourteen rows',
         (tester) async {
       await openInspection(tester);
-      await completeChecklist(tester, fail: 'Brakes');
-
-      // Correct, and the reason the build order says this slice is only half
-      // testable alone: a critical failure needs a photograph, and capture is
-      // the evidence slice. Review stays shut until it exists.
-      expect(find.text('Review'), findsNothing);
-      expect(find.textContaining('1 left'), findsOneWidget);
-
-      // The list is at the bottom by now, so scroll back to the item that is
-      // holding it up.
-      await tester.scrollUntilVisible(
-        find.text('Brakes'),
-        -300,
-        scrollable: find
-            .descendant(
-              of: find.byType(InspectionScreen),
-              matching: find.byType(Scrollable),
-            )
-            .first,
-      );
+      await acceptOdometer(tester);
+      await tester.tap(find.text('ALL OK'));
       await settle(tester);
 
-      expect(find.textContaining('A photograph is required'), findsOneWidget);
-    });
-
-    testWidgets('a non-critical failure does not threaten to ground the bus',
-        (tester) async {
-      await openInspection(tester);
-      await completeChecklist(tester, fail: 'Cleanliness');
-
-      await tester.tap(find.text('Review'));
-      await settle(tester);
-
+      expect(find.text('Inspection ready'), findsOneWidget);
+      expect(find.text('14 of 14 checks OK'), findsOneWidget);
       expect(find.byType(ConsequencePanel), findsNothing);
-      expect(find.text('1 item failed'), findsOneWidget);
+      expect(find.byType(ChecklistItemTile), findsNothing);
     });
 
-    testWidgets('back returns to the checklist with the answers intact',
+    testWidgets('a non-critical failure shows only what is wrong',
         (tester) async {
       await openInspection(tester);
-      await completeChecklist(tester);
-      await tester.tap(find.text('Review'));
-      await settle(tester);
+      await acceptOdometer(tester);
+      await somethingWrong(tester);
 
-      await tester.tap(find.text('Back to checklist'));
-      await settle(tester);
-
-      expect(find.byType(ChecklistItemTile), findsWidgets);
-      expect(find.text('Review'), findsOneWidget);
-    });
-  });
-
-  group('P11 — the result', () {
-    testWidgets('renders the outcome the server decided', (tester) async {
-      await openInspection(tester);
-      await completeChecklist(tester);
-      await tester.tap(find.text('Review'));
-      await settle(tester);
-
-      app.backend.on('/inspections',
-          status: 201,
-          body: submissionResponse(
-            outcome: 'PASSED_WITH_DEFECTS',
-            ticket: 'ticket-1',
-          ));
-
-      await tester.tap(find.text('Submit inspection'));
-      await waitForInspection(tester, (s) => s is InspectionSubmitted);
-      await settle(tester);
-
-      expect(
-        find.text('Passed with defects'),
-        findsOneWidget,
-        reason: 'every item passed, and the app must still show what it was '
-            'told rather than what it expected',
+      await reveal(tester, 'Cleanliness');
+      await tester.tap(
+        find.descendant(of: tileFor('Cleanliness'), matching: find.text('Fail')),
       );
-      expect(find.textContaining('maintenance ticket has been opened'),
-          findsOneWidget);
-    });
-
-    testWidgets('a FAILED outcome says the bus is out of service',
-        (tester) async {
-      await openInspection(tester);
-      // A non-critical failure, so review is reachable. The outcome is the
-      // server's regardless — which is the point being checked.
-      await completeChecklist(tester, fail: 'Cleanliness');
-      await tester.tap(find.text('Review'));
+      await settle(tester);
+      await tester.enterText(
+        find.descendant(
+          of: tileFor('Cleanliness'),
+          matching: find.byType(TextFormField),
+        ),
+        'Rubbish left under the seats.',
+      );
       await settle(tester);
 
-      app.backend.on('/inspections',
-          status: 201, body: submissionResponse(outcome: 'FAILED'));
+      final state = inspectionStateOf(tester);
+      final cleanliness =
+          state.items.firstWhere((i) => i.code == 'CLEANLINESS');
 
-      await tester.tap(find.text('Submit inspection'));
-      await waitForInspection(tester, (s) => s is InspectionSubmitted);
-      await settle(tester);
-
-      expect(find.text('Bus out of service'), findsOneWidget);
+      // Complete: a non-critical failure needs a note and nothing else.
+      expect(state.draft!.problemWith(cleanliness), isNull);
+      expect(state.draft!.failures(state.items), hasLength(1));
+      expect(
+        state.draft!.groundsTheBus(state.items),
+        isFalse,
+        reason: 'cleanliness is not safety-critical, so nothing threatens to '
+            'take the bus off the road',
+      );
     });
   });
 
   group('refusals', () {
-    testWidgets('a 409 puts the driver back on the odometer, verbatim',
-        (tester) async {
+    testWidgets('a 409 is shown verbatim and never retried', (tester) async {
       await openInspection(tester);
-      await completeChecklist(tester);
-      await tester.tap(find.text('Review'));
+      await acceptOdometer(tester);
+      await tester.tap(find.text('ALL OK'));
       await settle(tester);
 
       app.backend.on('/inspections',
           status: 409,
           body: errorEnvelope('The reading must be at least 45 108 km.'));
 
-      await tester.tap(find.text('Submit inspection'));
+      await tester.tap(find.text('Confirm & submit'));
       await waitForInspection(tester, (s) => s is InspectionEditing);
       await settle(tester);
 
       expect(
         find.text('The reading must be at least 45 108 km.'),
         findsWidgets,
-        reason: 'never paraphrase a 409',
       );
-      expect(find.byType(ChecklistItemTile), findsWidgets);
+      expect(app.backend.callsTo('/inspections'), 1);
     });
 
     testWidgets('offline saves and says the bus is not cleared',
         (tester) async {
       await openInspection(tester);
-      await completeChecklist(tester);
-      await tester.tap(find.text('Review'));
+      await acceptOdometer(tester);
+      await tester.tap(find.text('ALL OK'));
       await settle(tester);
 
       app.connectivity.emit(Reachability.offline);
       await settle(tester);
 
-      await tester.tap(find.text('Submit inspection'));
+      await tester.tap(find.text('Confirm & submit'));
       await waitForInspection(tester, (s) => s is InspectionSaved);
       await settle(tester);
 
       expect(find.textContaining('not yet submitted'), findsOneWidget);
-      expect(
-        find.textContaining('bus is not cleared'),
-        findsOneWidget,
-        reason: 'queueing it silently would tell a driver the bus is on its '
-            'way to being cleared when it is not',
-      );
+      expect(find.textContaining('bus is not cleared'), findsOneWidget);
       expect(app.backend.callsTo('/inspections'), 0);
     });
   });
 
-  group('read-only boundary', () {
-    testWidgets('nothing here starts or ends a trip', (tester) async {
+  group('accessibility', () {
+    testWidgets('ALL OK says what it does, not what colour it is',
+        (tester) async {
       await openInspection(tester);
 
-      for (final label in ['START TRIP', 'Start trip', 'Board', 'SOS']) {
-        expect(find.text(label), findsNothing);
-      }
+      expect(
+        find.bySemanticsLabel('All OK. Marks every check as passed.'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('ALL OK is a large target', (tester) async {
+      await openInspection(tester);
+
+      expect(
+        tester.getSize(find.text('ALL OK')).height,
+        greaterThan(0),
+      );
+      expect(
+        tester.getSize(find.byType(FilledButton).first).height,
+        greaterThanOrEqualTo(48),
+      );
     });
   });
 }

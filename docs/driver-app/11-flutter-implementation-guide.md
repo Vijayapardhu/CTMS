@@ -296,6 +296,13 @@ Each step is shippable and demonstrable before the next.
 | 2 | **Connectivity** | `ConnectivityCubit`, offline banner, API-reachability detection | banner appears on three consecutive failures and clears on the next success |
 | 3 | **Trip read** | `TripBloc` (M1, eight states), R1 all states, readiness | every state renders from real data |
 | 4 | **Inspection** | P9/P10/P11, draft persistence | full checklist submits; drafts survive a kill |
+
+> **Inspection is exception-driven.** An explicit `ALL OK` action represents
+> PASS for every checklist item the server currently supplies. It is an
+> intentional affirmative action, not a default selection, and a later explicit
+> failure overrides it. The checklist API provides no category metadata, so the
+> client must not invent or hard-code categories, and must never assume the
+> list is fourteen items long.
 | 5 | **Evidence** | M1/M2, compression, upload | failing item attaches a real photograph |
 | 6 | **Start** | S2, refusal handling | `reasons[]` renders grouped and actionable |
 | 7 | **GPS** | service, buffer, queue, pill | 90-minute run with a 20-minute tunnel loses nothing |

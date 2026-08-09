@@ -7,9 +7,11 @@ import '../../../core/design_system/tokens.dart';
 import '../../../core/icons/app_icons.dart';
 import '../../../core/widgets/skeleton_loader.dart';
 import '../../../l10n/app_localizations.dart';
+import '../domain/checklist.dart';
 import '../domain/inspection_state.dart';
 import 'bloc/inspection_bloc.dart';
 import 'widgets/checklist_item_tile.dart';
+import 'widgets/quick_check.dart';
 
 /// P9 — the pre-trip checklist.
 ///
@@ -32,24 +34,7 @@ class InspectionScreen extends StatelessWidget {
             if (!didPop) _confirmDiscard(context);
           },
           child: Scaffold(
-            appBar: AppBar(
-              title: Text(strings.inspectionTitle),
-              bottom: state is InspectionEditing
-                  ? PreferredSize(
-                      preferredSize: const Size.fromHeight(24),
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: Spacing.sm),
-                        child: Text(
-                          strings.inspectionProgress(
-                            state.value.answeredCount(state.checklist),
-                            state.checklist.length,
-                          ),
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
-                      ),
-                    )
-                  : null,
-            ),
+            appBar: AppBar(title: Text(strings.quickTitle)),
             body: switch (state) {
               // Scrollable: fourteen placeholder rows are taller than any
               // handset, and a Column would simply overflow.
@@ -58,13 +43,15 @@ class InspectionScreen extends StatelessWidget {
                   child: SkeletonLoader(shape: SkeletonShape.list, count: 14),
                 ),
               InspectionUnavailable() => _Unavailable(state),
+              InspectionEditing(revealed: false) => _Quick(state),
               InspectionEditing() => _Checklist(state),
               // Review, submitting, submitted and saved own their own screens;
               // this one holds the last editable view underneath them.
               _ => const SizedBox.shrink(),
             },
-            bottomNavigationBar:
-                state is InspectionEditing ? _ReviewBar(state) : null,
+            bottomNavigationBar: state is InspectionEditing && state.revealed
+                ? _ReviewBar(state)
+                : null,
           ),
         );
       },
@@ -104,6 +91,115 @@ class InspectionScreen extends StatelessWidget {
   }
 }
 
+/// The normal shape of P9: confirm the odometer, then one deliberate action.
+class _Quick extends StatelessWidget {
+  const _Quick(this.state);
+
+  final InspectionEditing state;
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = AppStrings.of(context);
+    final theme = Theme.of(context);
+    final bloc = context.read<InspectionBloc>();
+    final draft = state.value;
+    final failures = draft.failures(state.checklist);
+    final ready = draft.odometer != null;
+
+    return ListView(
+      padding: const EdgeInsets.all(Spacing.md),
+      children: [
+        if (state.rejection != null) _Rejection(state),
+        Text(
+          strings.quickBus,
+          style: theme.textTheme.labelLarge
+              ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+        ),
+        Text(bloc.busLabel, style: theme.textTheme.headlineSmall),
+        const SizedBox(height: Spacing.lg),
+        OdometerConfirmation(
+          recorded: bloc.minimumOdometer,
+          value: draft.odometer,
+          onChanged: (v) => bloc.add(OdometerEntered(v)),
+        ),
+        const Divider(height: Spacing.xxl),
+
+        // Already reported something, then came back here.
+        if (failures.isNotEmpty) ...[
+          InspectionSummary(
+            passed: draft.passedCount(state.checklist),
+            total: state.checklist.length,
+            issues: failures.length,
+          ),
+          const SizedBox(height: Spacing.md),
+          for (final item in failures) _IssueLine(item),
+          const SizedBox(height: Spacing.lg),
+        ],
+
+        Text(strings.quickPrompt, style: theme.textTheme.titleMedium),
+        const SizedBox(height: Spacing.md),
+        // Held back until the odometer is settled: the reading is part of the
+        // record, and "all OK" without it is not a complete statement.
+        AbsorbPointer(
+          absorbing: !ready,
+          child: Opacity(
+            opacity: ready ? 1 : 0.4,
+            child: AllOkAction(
+              onPressed: () => bloc.add(const AllOkDeclared()),
+            ),
+          ),
+        ),
+        if (!ready) ...[
+          const SizedBox(height: Spacing.sm),
+          Text(
+            strings.quickOdometerUnknown,
+            style: theme.textTheme.bodySmall
+                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+          ),
+        ],
+        const SizedBox(height: Spacing.lg),
+        Center(
+          child: TextButton(
+            onPressed: () => bloc.add(const ChecklistRevealed()),
+            child: Text(strings.quickSomethingWrong),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// One reported problem, as it appears on the quick screen.
+class _IssueLine extends StatelessWidget {
+  const _IssueLine(this.item);
+
+  final ChecklistItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.ctms;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Spacing.xs),
+      child: Row(
+        children: [
+          AppIconView(AppIcon.error, size: IconSize.sm, color: colors.critical),
+          const SizedBox(width: Spacing.sm),
+          Expanded(
+            child: Text(
+              '${item.label} \u00b7 ${AppStrings.of(context).quickNotOk}',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: colors.critical),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _Checklist extends StatelessWidget {
   const _Checklist(this.state);
 
@@ -117,8 +213,15 @@ class _Checklist extends StatelessWidget {
       padding: const EdgeInsets.all(Spacing.md),
       children: [
         if (state.rejection != null) _Rejection(state),
-        _Odometer(state),
-        const SizedBox(height: Spacing.lg),
+        Text(
+          AppStrings.of(context).quickWhatIsWrong,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: Spacing.md),
+        if (state.target == RejectionTarget.odometer) ...[
+          _Odometer(state),
+          const SizedBox(height: Spacing.lg),
+        ],
         for (final item in state.checklist)
           ChecklistItemTile(
             item: item,

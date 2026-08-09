@@ -73,6 +73,20 @@ Sizing       each option ≥ 56dp tall, equal width
 
 **`value` starts null.** No pre-selection. On the `vehicle_can_continue` control a pre-selected "Yes" would let a driver submit a grounded-bus report without ever making the choice — and a pre-selected "No" would ground buses that are fine.
 
+> **Where the rule is relaxed, and why.** The inspection checklist no longer
+> presents fourteen of these. A driver confirms the whole bus with one explicit
+> `ALL OK`, which stands for PASS on every item the server supplied.
+>
+> This does not reintroduce the default the rule exists to prevent. Nothing is
+> selected when the screen opens; the driver cannot reach submission by opening
+> the screen and tapping through; and `ALL OK` is an affirmative statement —
+> *"I have checked the bus and everything listed is OK"* — not the absence of a
+> decision. The failure mode the rule guards against is a driver submitting
+> without ever choosing, and that is still impossible.
+>
+> `DualActionSelector` remains the control for a *single* pass/fail decision on
+> one item the driver has singled out as wrong.
+
 ---
 
 ## 4 · `CounterButton`

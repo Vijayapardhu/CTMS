@@ -40,6 +40,7 @@ final class InspectionEditing extends InspectionState {
   const InspectionEditing({
     required this.value,
     required this.checklist,
+    this.revealed = false,
     this.rejection,
     this.rejectedItem,
     this.target = RejectionTarget.none,
@@ -47,6 +48,13 @@ final class InspectionEditing extends InspectionState {
 
   final InspectionDraft value;
   final List<ChecklistItem> checklist;
+
+  /// Whether the driver has opened the item list to report something.
+  ///
+  /// A mode of `editing`, not a state of its own: the draft, the persistence
+  /// and every rule are identical either way. Quick is the normal shape of the
+  /// screen; revealed is what "Something wrong?" opens.
+  final bool revealed;
 
   /// Carried back from a refused submission, so the message the driver sees is
   /// the server's own rather than a paraphrase.

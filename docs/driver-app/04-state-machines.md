@@ -177,9 +177,34 @@ a driver's screen for the duration of a tunnel.
                 (outcome)          (422/409)
 ```
 
+### Exception-driven, not form-driven
+
+`editing` has two modes, and they are the whole shape of the screen:
+
+```
+   editing(quick)  ── ALL OK ──► every server item = PASS ──► reviewing
+        │
+        │ "Something wrong?"
+        ▼
+   editing(exception) ── one item marked NOT OK, with its note and,
+                          when the server says the item is safety-critical,
+                          its photograph. Everything untouched stays PASS.
+```
+
+A driver who finds nothing wrong makes **one** decision, not fourteen. A driver
+who finds something wrong touches only the thing that is wrong.
+
+**A later failure always wins.** `ALL OK` followed by marking the brakes NOT OK
+submits thirteen passes and one failure, never fourteen passes. The explicit,
+more specific act is the newer one and the more serious one.
+
+The count is whatever the server returned. Nothing in the client knows that the
+list is currently fourteen long, so operations adding a fifteenth item needs no
+release.
+
 | State | Notes |
 |---|---|
-| `editing` | Holds `Map<InspectionItem, ItemVerdict>` — the draft. **Persisted locally on every change** |
+| `editing` | Holds `Map<InspectionItem, ItemVerdict>` — the draft. **Persisted locally on every change**, in either mode |
 | `capturing` | Evidence sub-flow owns the screen (M1) |
 | `reviewing` | All items answered; shows the consequence if any critical item failed |
 | `submitting` | Blocking, non-cancellable |

@@ -9,6 +9,7 @@ import '../../../l10n/app_localizations.dart';
 import '../domain/checklist.dart';
 import '../domain/inspection_state.dart';
 import 'bloc/inspection_bloc.dart';
+import 'widgets/quick_check.dart';
 
 /// P10 — review and submit.
 ///
@@ -39,7 +40,11 @@ class InspectionReviewScreen extends StatelessWidget {
           // nobody can account for is worse than a driver waiting.
           canPop: !submitting,
           child: Scaffold(
-            appBar: AppBar(title: Text(strings.inspectionReviewTitle)),
+            appBar: AppBar(
+              title: Text(failures.isEmpty
+                  ? strings.quickReady
+                  : strings.inspectionReviewTitle),
+            ),
             body: AbsorbPointer(
               absorbing: submitting,
               child: ListView(
@@ -61,17 +66,23 @@ class InspectionReviewScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: Spacing.lg),
                   ],
+                  // Counted from the server's own list, never from 14.
+                  InspectionSummary(
+                    passed: draft.passedCount(checklist),
+                    total: checklist.length,
+                    issues: failures.length,
+                  ),
+                  const SizedBox(height: Spacing.md),
                   Text(
                     strings.inspectionOdometerReading('${draft.odometer}'),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                  const SizedBox(height: Spacing.md),
-                  Text(
-                    strings.inspectionPassedSummary(failures.length),
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: Spacing.sm),
-                  for (final item in failures) _Failure(item, draft),
+                  // Only the exceptions get a row. A clean inspection has
+                  // nothing here to read, which is the point.
+                  if (failures.isNotEmpty) ...[
+                    const SizedBox(height: Spacing.lg),
+                    for (final item in failures) _Failure(item, draft),
+                  ],
                 ],
               ),
             ),
@@ -93,7 +104,9 @@ class InspectionReviewScreen extends StatelessWidget {
                               dimension: IconSize.sm,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : Text(strings.inspectionSubmit),
+                          : Text(failures.isEmpty
+                              ? strings.quickConfirmSubmit
+                              : strings.inspectionSubmit),
                     ),
                   ),
                   if (!submitting)
@@ -101,7 +114,9 @@ class InspectionReviewScreen extends StatelessWidget {
                       onPressed: () => context
                           .read<InspectionBloc>()
                           .add(const EditingResumed()),
-                      child: Text(strings.inspectionBack),
+                      child: Text(failures.isEmpty
+                          ? strings.quickGoBack
+                          : strings.inspectionBack),
                     ),
                 ],
               ),

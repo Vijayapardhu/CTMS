@@ -50,6 +50,13 @@ void main() {
     await tester.tap(find.text('Start inspection'));
     await settle(tester);
 
+    // The quick screen is the default now; the item list is what
+    // "Something wrong?" opens.
+    await tester.tap(find.text('This is correct'));
+    await settle(tester);
+    await tester.tap(find.text('Something wrong?'));
+    await settle(tester);
+
     await tester.tap(
       find.descendant(of: tileFor('Brakes'), matching: find.text('Fail')),
     );

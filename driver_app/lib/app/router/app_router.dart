@@ -89,6 +89,7 @@ GoRouter buildRouter({
                       busId: state.pathParameters['busId'] ?? '',
                       minimumOdometer:
                           int.tryParse(state.uri.queryParameters['min'] ?? ''),
+                      busLabel: state.uri.queryParameters['bus'],
                     ),
                   ),
                 ],

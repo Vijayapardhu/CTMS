@@ -146,6 +146,38 @@ class InspectionDraft {
   int answeredCount(List<ChecklistItem> items) =>
       items.where((i) => answers.containsKey(i.code)).length;
 
+  /// Marks every item the server supplied as passed, keeping any item the
+  /// driver has already singled out as wrong.
+  ///
+  /// A later explicit failure outranks an earlier `ALL OK`: the driver who
+  /// says "everything is fine" and then says "except the brakes" means both
+  /// things, and the second is the more specific and the more serious.
+  ///
+  /// The count comes from [items], never from a constant — operations adding a
+  /// fifteenth check must not need a release.
+  InspectionDraft allOk(List<ChecklistItem> items) {
+    final next = Map<String, ItemAnswer>.from(answers);
+
+    for (final item in items) {
+      if (next[item.code]?.verdict == Verdict.failed) continue;
+      next[item.code] = const ItemAnswer(verdict: Verdict.passed);
+    }
+
+    return copyWith(answers: next);
+  }
+
+  /// The items the driver has singled out as wrong.
+  List<ChecklistItem> failures(List<ChecklistItem> items) => items
+      .where((i) => answers[i.code]?.verdict == Verdict.failed)
+      .toList(growable: false);
+
+  int passedCount(List<ChecklistItem> items) =>
+      items.where((i) => answers[i.code]?.verdict == Verdict.passed).length;
+
+  /// Whether every item now carries a verdict, however it got there.
+  bool isComplete(List<ChecklistItem> items) =>
+      items.isNotEmpty && answeredCount(items) == items.length;
+
   List<ChecklistItem> unresolved(List<ChecklistItem> items) =>
       items.where((i) => problemWith(i) != null).toList(growable: false);
 

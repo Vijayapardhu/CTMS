@@ -124,12 +124,31 @@ Error      500 on checklist → cannot proceed; explain and offer Retry
 Retry      Manual
 ```
 
-**Interaction**
-- Odometer first, with the minimum stated **before** any error (`Must be at least 45 108 km`)
-- Each item is `ChecklistItemTile` with `DualActionSelector`, no default
-- Fail expands: notes (required, min 5 chars) and, if safety-critical, `EvidenceCard`
-- Title shows `n/14`; Review disabled until every item answered, label carries the remaining count
-- Back → `D1 Discard inspection?` if any item answered
+**Interaction — exception-driven**
+
+The normal answer to a pre-trip check is "the bus is fine". That answer costs
+one tap.
+
+- **Odometer first**, pre-filled from the bus's recorded total where the API
+  supplies it: `45,200 km` · `✓ This is correct` · `Edit`. The minimum is still
+  stated before any error, and the server remains the authority (BR-061 is a
+  409, not a client rule)
+- Then one dominant action: **`✓ ALL OK`**, meaning PASS for every item the
+  server currently returns. Explicit, never pre-selected — see Phase 6 §3
+- Beside it, quietly: **`Something wrong?`**, which reveals the server-driven
+  list so the driver can single out the item that is wrong
+- A singled-out item takes `NOT OK`, its note (required, 5–500), and — when the
+  server marked it `safety_critical` — its photograph, via the existing
+  evidence flow
+- Untouched items stay PASS. A driver never confirms thirteen things that are
+  fine in order to report the one that is not
+- **A later explicit failure overrides an earlier `ALL OK`**
+- Back → `D1 Discard inspection?` if anything has been entered
+
+**No categories.** `GET /inspections/checklist` returns `item`, `label` and
+`safety_critical` and nothing else. Grouping the items into Lights / Vehicle /
+Safety would mean hard-coding a map the API does not supply, which breaks the
+moment operations adds an item. The list is rendered flat, in server order.
 
 **Validation (client, mirroring server)**
 
