@@ -38,6 +38,17 @@ dependencies:
   equatable: ^2.1.0
   go_router: ^17.0.0
   dio: ^5.11.0
+
+  # Evidence capture. `image_picker` opens the platform camera rather than
+  # embedding a preview: a driver photographing a brake line wants the camera
+  # they already know, with its own flash and focus.
+  image_picker: ^1.1.2
+  # A 12MP original is ~6MB over a rural connection. Compressed before upload.
+  flutter_image_compress: ^2.3.0
+  permission_handler: ^11.3.1
+  # MediaType for the multipart part. Dio ships it transitively; declared
+  # directly because this app imports it.
+  http_parser: ^4.1.2
   flutter_secure_storage: ^10.3.1
   connectivity_plus: ^7.3.1
   logger: ^2.7.0

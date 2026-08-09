@@ -10,12 +10,14 @@ import '../../core/connectivity/connectivity_service.dart';
 import '../../core/services/analytics_service.dart';
 import '../../core/services/crash_reporter.dart';
 import '../../core/services/logger_service.dart';
+import '../../core/services/permission_service.dart';
 import '../../core/services/ui_service.dart';
 import '../../core/storage/secure_store.dart';
 import '../../features/auth/data/auth_api.dart';
 import '../../features/auth/data/session_manager.dart';
 import '../../features/auth/data/session_store.dart';
 import '../../features/auth/presentation/bloc/session_bloc.dart';
+import '../../features/evidence/data/photo_capture.dart';
 import '../../features/trip/data/trip_api.dart';
 import '../../features/trip/data/trip_repository.dart';
 import '../../features/trip/presentation/bloc/trip_bloc.dart';
@@ -55,6 +57,8 @@ Future<void> configureDependencies(
   SecureStore? secureStore,
   ConnectivityService? connectivity,
   List<Duration>? retryDelays,
+  PhotoCapture? photoCapture,
+  PermissionService? permissions,
 }) async {
   final prefs = await SharedPreferences.getInstance();
 
@@ -76,6 +80,11 @@ Future<void> configureDependencies(
             FlutterSecureStorage(aOptions: FlutterSecureStore.androidOptions)))
     ..registerSingleton<ConnectivityService>(
         connectivity ?? DefaultConnectivityService(Connectivity()))
+    // The camera and the permission dialogs are platform channels, so they
+    // join the other two substitutions a test makes at the composition root.
+    ..registerSingleton<PhotoCapture>(photoCapture ?? DevicePhotoCapture())
+    ..registerSingleton<PermissionService>(
+        permissions ?? const DevicePermissionService())
     ..registerSingleton<UiService>(UiService(
       sl<GlobalKey<NavigatorState>>(),
       sl<GlobalKey<ScaffoldMessengerState>>(),

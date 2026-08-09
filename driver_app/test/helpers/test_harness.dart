@@ -12,6 +12,9 @@ import 'package:ctms_driver/core/connectivity/connectivity_service.dart';
 import 'package:ctms_driver/core/storage/secure_store.dart';
 import 'package:ctms_driver/features/auth/domain/session_state.dart';
 import 'package:ctms_driver/features/auth/presentation/bloc/session_bloc.dart';
+import 'package:ctms_driver/core/widgets/evidence_card.dart';
+import 'package:ctms_driver/features/evidence/domain/evidence_state.dart';
+import 'package:ctms_driver/features/evidence/presentation/bloc/evidence_cubit.dart';
 import 'package:ctms_driver/features/inspection/domain/inspection_state.dart';
 import 'package:ctms_driver/features/inspection/presentation/bloc/inspection_bloc.dart';
 import 'package:ctms_driver/features/inspection/presentation/inspection_flow.dart';
@@ -65,11 +68,15 @@ class TestApp {
     required this.connectivity,
     required this.backend,
     required this.store,
+    required this.camera,
+    required this.permissions,
   });
 
   final FakeConnectivity connectivity;
   final FakeBackend backend;
   final InMemorySecureStore store;
+  final FakeCamera camera;
+  final FakePermissions permissions;
 
   SessionBloc get session => sl<SessionBloc>();
 
@@ -101,6 +108,8 @@ Future<TestApp> registerTestDependencies({
   final backend = FakeBackend();
   final store = InMemorySecureStore();
   final connectivity = FakeConnectivity();
+  final camera = FakeCamera();
+  final permissions = FakePermissions();
 
   if (signedIn) {
     // Written straight to the store, so `SessionStarted` takes the real
@@ -127,12 +136,20 @@ Future<TestApp> registerTestDependencies({
     // No back-off. Widget tests should not spend four real seconds per
     // unreachable endpoint watching a policy that has its own tests.
     retryDelays: const [],
+    photoCapture: camera,
+    permissions: permissions,
   );
 
   sl<ApiClient>().dio.httpClientAdapter = backend;
   sl<ApiClient>(instanceName: authClientName).dio.httpClientAdapter = backend;
 
-  return TestApp(connectivity: connectivity, backend: backend, store: store);
+  return TestApp(
+    connectivity: connectivity,
+    backend: backend,
+    store: store,
+    camera: camera,
+    permissions: permissions,
+  );
 }
 
 /// Boots the app and settles it into its first real screen.
@@ -246,6 +263,33 @@ InspectionState inspectionStateOf(WidgetTester tester) =>
     BlocProvider.of<InspectionBloc>(
       tester.element(find.byType(InspectionFlow)),
     ).state;
+
+/// Drives the app until the evidence cubit satisfies [matches].
+///
+/// Confirming a photograph reads the server's limits and then uploads, both
+/// real round trips. Same polling reason as [waitForSession].
+Future<void> waitForEvidence(
+  WidgetTester tester,
+  bool Function(EvidenceState) matches, {
+  int turns = 120,
+}) async {
+  EvidenceCubit cubit() => BlocProvider.of<EvidenceCubit>(
+        tester.element(find.byType(EvidenceCard)),
+      );
+
+  for (var turn = 0; turn < turns; turn++) {
+    if (matches(cubit().state)) {
+      await tester.pump();
+      return;
+    }
+
+    await tester.runAsync(() => Future<void>.delayed(_realTurn));
+    await tester.pump(_fakeTurn);
+  }
+
+  fail('The evidence never reached the expected state. '
+      'It is ${cubit().state}.');
+}
 
 /// Long enough for the real event loop to deliver an HTTP response.
 const _realTurn = Duration(milliseconds: 5);

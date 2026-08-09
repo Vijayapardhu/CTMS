@@ -6,6 +6,7 @@ import '../../../../core/icons/app_icons.dart';
 import '../../../../core/widgets/dual_action_selector.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/checklist.dart';
+import 'evidence_slot.dart';
 
 /// Component 9 — `ChecklistItemTile`.
 ///
@@ -109,54 +110,14 @@ class ChecklistItemTile extends StatelessWidget {
                 ),
               ),
               if (item.safetyCritical)
-                _EvidenceRequirement(
-                  satisfied: (answer?.evidenceId ?? '').isNotEmpty,
-                  label: item.label,
+                EvidenceSlot(
+                  itemCode: item.code,
+                  itemLabel: item.label,
+                  attachedId: answer?.evidenceId,
                 ),
             ],
           ],
         ),
-      ),
-    );
-  }
-}
-
-/// States the photograph requirement for a failed safety-critical item.
-///
-/// Slice 4 records the requirement and blocks review on it; capture itself is
-/// the evidence slice. Showing a camera button that does nothing would be a
-/// worse lie than saying plainly what is still needed.
-class _EvidenceRequirement extends StatelessWidget {
-  const _EvidenceRequirement({required this.satisfied, required this.label});
-
-  final bool satisfied;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.ctms;
-    final strings = AppStrings.of(context);
-    final theme = Theme.of(context);
-    final tone = satisfied ? colors.positive : colors.critical;
-
-    return Padding(
-      padding: const EdgeInsets.only(top: Spacing.sm),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppIconView(
-            satisfied ? AppIcon.success : AppIcon.camera,
-            size: IconSize.sm,
-            color: tone,
-          ),
-          const SizedBox(width: Spacing.sm),
-          Expanded(
-            child: Text(
-              strings.inspectionEvidenceRequired(label),
-              style: theme.textTheme.bodySmall?.copyWith(color: tone),
-            ),
-          ),
-        ],
       ),
     );
   }

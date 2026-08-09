@@ -58,6 +58,20 @@ final class ItemNotesChanged extends InspectionEvent {
   List<Object?> get props => [code, notes];
 }
 
+/// A photograph was accepted by the server, or withdrawn.
+///
+/// Carries the id the submission will cite. Passing null clears it, which is
+/// what happens when a driver changes a failing verdict back to a pass.
+final class ItemEvidenceChanged extends InspectionEvent {
+  const ItemEvidenceChanged(this.code, this.evidenceId);
+
+  final String code;
+  final String? evidenceId;
+
+  @override
+  List<Object?> get props => [code, evidenceId];
+}
+
 /// All items answered — move to review.
 final class ReviewRequested extends InspectionEvent {
   const ReviewRequested();
@@ -94,6 +108,7 @@ class InspectionBloc extends Bloc<InspectionEvent, InspectionState> {
     on<OdometerEntered>(_onOdometer);
     on<ItemAnswered>(_onAnswered);
     on<ItemNotesChanged>(_onNotes);
+    on<ItemEvidenceChanged>(_onEvidence);
     on<ReviewRequested>(_onReview);
     on<EditingResumed>(_onResume);
     on<SubmissionRequested>(_onSubmit);
@@ -186,6 +201,26 @@ class InspectionBloc extends Bloc<InspectionEvent, InspectionState> {
       verdict: existing.verdict,
       notes: event.notes,
       evidenceId: existing.evidenceId,
+    );
+
+    await _persist(emit, current, current.value.copyWith(answers: answers));
+  }
+
+  Future<void> _onEvidence(
+    ItemEvidenceChanged event,
+    Emitter<InspectionState> emit,
+  ) async {
+    final current = state;
+    if (current is! InspectionEditing) return;
+
+    final answers = Map<String, ItemAnswer>.from(current.value.answers);
+    final existing = answers[event.code];
+    if (existing == null) return;
+
+    answers[event.code] = ItemAnswer(
+      verdict: existing.verdict,
+      notes: existing.notes,
+      evidenceId: event.evidenceId,
     );
 
     await _persist(emit, current, current.value.copyWith(answers: answers));

@@ -711,6 +711,90 @@ abstract class AppStrings {
   /// In en, this message translates to:
   /// **'Back to trip'**
   String get inspectionDone;
+
+  /// EvidenceCard, nothing captured
+  ///
+  /// In en, this message translates to:
+  /// **'No photograph yet'**
+  String get evidenceEmpty;
+
+  /// EvidenceCard, camera open
+  ///
+  /// In en, this message translates to:
+  /// **'Opening the camera…'**
+  String get evidenceCapturing;
+
+  /// EvidenceCard, captured and awaiting confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Use this photograph?'**
+  String get evidencePreview;
+
+  /// EvidenceCard, upload in flight
+  ///
+  /// In en, this message translates to:
+  /// **'Sending the photograph…'**
+  String get evidenceUploading;
+
+  /// EvidenceCard, server confirmed
+  ///
+  /// In en, this message translates to:
+  /// **'Photograph attached'**
+  String get evidenceUploaded;
+
+  /// EvidenceCard, captured offline; the id does not exist yet
+  ///
+  /// In en, this message translates to:
+  /// **'Photograph saved — not yet sent'**
+  String get evidenceQueued;
+
+  /// Says plainly that a queued photograph blocks submission
+  ///
+  /// In en, this message translates to:
+  /// **'It will be sent when you have signal. The inspection cannot be submitted until then.'**
+  String get evidenceQueuedDetail;
+
+  /// EvidenceCard, server refused the file
+  ///
+  /// In en, this message translates to:
+  /// **'The photograph was refused'**
+  String get evidenceRejected;
+
+  /// EvidenceCard, camera permission denied
+  ///
+  /// In en, this message translates to:
+  /// **'The camera is switched off for this app'**
+  String get evidenceBlocked;
+
+  /// States plainly what cannot happen without the camera
+  ///
+  /// In en, this message translates to:
+  /// **'A failing safety check cannot be completed without a photograph.'**
+  String get evidenceBlockedDetail;
+
+  /// EvidenceCard capture action
+  ///
+  /// In en, this message translates to:
+  /// **'Take photograph'**
+  String get evidenceTake;
+
+  /// EvidenceCard retake action
+  ///
+  /// In en, this message translates to:
+  /// **'Retake'**
+  String get evidenceRetake;
+
+  /// EvidenceCard confirm action — uploads on confirm, not on capture
+  ///
+  /// In en, this message translates to:
+  /// **'Use photograph'**
+  String get evidenceUse;
+
+  /// For a permanently denied camera permission
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get evidenceOpenSettings;
 }
 
 class _AppStringsDelegate extends LocalizationsDelegate<AppStrings> {

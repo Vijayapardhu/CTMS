@@ -379,4 +379,48 @@ class AppStringsEn extends AppStrings {
 
   @override
   String get inspectionDone => 'Back to trip';
+
+  @override
+  String get evidenceEmpty => 'No photograph yet';
+
+  @override
+  String get evidenceCapturing => 'Opening the camera…';
+
+  @override
+  String get evidencePreview => 'Use this photograph?';
+
+  @override
+  String get evidenceUploading => 'Sending the photograph…';
+
+  @override
+  String get evidenceUploaded => 'Photograph attached';
+
+  @override
+  String get evidenceQueued => 'Photograph saved — not yet sent';
+
+  @override
+  String get evidenceQueuedDetail =>
+      'It will be sent when you have signal. The inspection cannot be submitted until then.';
+
+  @override
+  String get evidenceRejected => 'The photograph was refused';
+
+  @override
+  String get evidenceBlocked => 'The camera is switched off for this app';
+
+  @override
+  String get evidenceBlockedDetail =>
+      'A failing safety check cannot be completed without a photograph.';
+
+  @override
+  String get evidenceTake => 'Take photograph';
+
+  @override
+  String get evidenceRetake => 'Retake';
+
+  @override
+  String get evidenceUse => 'Use photograph';
+
+  @override
+  String get evidenceOpenSettings => 'Open settings';
 }

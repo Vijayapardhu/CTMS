@@ -1,4 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Evidencing a failed safety-critical inspection item. Declared because
+         the app gates on it explicitly: without the declaration the runtime
+         check can never be granted, and a driver would be told the camera is
+         switched off on a handset where it is not. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Not required: a handset with no camera can still sign in, read a trip
+         and pass an inspection. Only a failing critical item needs one. -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
     <application
         android:label="ctms_driver"
         android:name="${applicationName}"

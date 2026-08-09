@@ -78,9 +78,21 @@ class ApiClient {
     );
   }
 
-  Future<Map<String, dynamic>> post(String path, {Object? body, String? bearer}) {
+  /// [onSendProgress] is for an upload the driver is watching. Everything else
+  /// in this app is small enough that progress is noise.
+  Future<Map<String, dynamic>> post(
+    String path, {
+    Object? body,
+    String? bearer,
+    void Function(int sent, int total)? onSendProgress,
+  }) {
     return _send(
-      (options) => _dio.post<dynamic>(path, data: body, options: options),
+      (options) => _dio.post<dynamic>(
+        path,
+        data: body,
+        options: options,
+        onSendProgress: onSendProgress,
+      ),
       bearer: bearer,
     );
   }
