@@ -508,6 +508,84 @@ abstract class AppStrings {
   /// **'Start will unlock by itself. You do not need to do anything.'**
   String get tripStartWindowWaiting;
 
+  /// GPS pill — fixes are reaching the server
+  ///
+  /// In en, this message translates to:
+  /// **'Position sharing'**
+  String get gpsLive;
+
+  /// GPS pill — waiting for the first fix
+  ///
+  /// In en, this message translates to:
+  /// **'Finding position'**
+  String get gpsAcquiring;
+
+  /// GPS pill — the device itself has no fix
+  ///
+  /// In en, this message translates to:
+  /// **'No position signal'**
+  String get gpsNoSignal;
+
+  /// GPS pill — permission refused or location services disabled
+  ///
+  /// In en, this message translates to:
+  /// **'Position sharing is off'**
+  String get gpsDenied;
+
+  /// GPS pill — fixes held on the phone until the server takes them
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 position saved to send} other{{count} positions saved to send}}'**
+  String gpsBuffering(int count);
+
+  /// Screen-reader label for the GPS pill, so colour is never the only carrier
+  ///
+  /// In en, this message translates to:
+  /// **'Position status: {status}'**
+  String gpsSemantics(String status);
+
+  /// E2 — location is off or refused
+  ///
+  /// In en, this message translates to:
+  /// **'This trip cannot be tracked'**
+  String get gpsDeniedTitle;
+
+  /// E2 body — states the consequence without blocking the trip
+  ///
+  /// In en, this message translates to:
+  /// **'The office cannot see where the bus is. Your trip is not affected and nothing you record is lost.'**
+  String get gpsDeniedBody;
+
+  /// E2 recovery action
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get gpsOpenSettings;
+
+  /// C3 — queued, not yet sent. Never described as failed
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change waiting to send} other{{count} changes waiting to send}}'**
+  String syncPending(int count);
+
+  /// C3 — a replay pass is running
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Sending 1 change} other{Sending {count} changes}}'**
+  String syncSending(int count);
+
+  /// C3 — permanently refused by the server
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change could not be applied} other{{count} changes could not be applied}}'**
+  String syncFailed(int count);
+
+  /// C3 action on the failed banner
+  ///
+  /// In en, this message translates to:
+  /// **'Retry now'**
+  String get syncRetry;
+
   /// R1 blocked — the one reason a driver can act on
   ///
   /// In en, this message translates to:

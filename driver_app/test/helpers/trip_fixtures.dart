@@ -142,6 +142,42 @@ Map<String, dynamic> notClearedRefusal(List<String> reasons) => startRefusal(
       errors: {'reasons': reasons},
     );
 
+/// `POST /trips/{id}/positions`.
+///
+/// [data] is null when the server has already seen this idempotency key — it
+/// answers 200 with an empty payload and the message "This position was already
+/// recorded". That is the replay mechanism working, not a conflict.
+Map<String, dynamic> positionResponse({Object? data = _recorded}) {
+  return {
+    'success': true,
+    'message': 'Position recorded.',
+    'code': 201,
+    'data': data == _recorded
+        ? {
+            'id': 'loc-1',
+            'trip_id': 'trip-1',
+            'latitude': '12.9716000',
+            'longitude': '77.5946000',
+            'recorded_at': '2026-08-09T08:00:00.000000Z',
+          }
+        : data,
+  };
+}
+
+const _recorded = Object();
+
+/// A 409 from the ingestion pipeline's plausibility gate. The `reason` key is
+/// what separates it from the trip-not-running refusal, which carries none.
+Map<String, dynamic> positionRejected(String reason) {
+  return {
+    'success': false,
+    'message': 'Position rejected: $reason',
+    'data': null,
+    'errors': {'reason': reason},
+    'code': 409,
+  };
+}
+
 /// The reason string the backend actually returns for a missing inspection —
 /// the one and only reason a driver can act on themselves.
 const missingInspection = 'No pre-trip inspection has been completed today.';

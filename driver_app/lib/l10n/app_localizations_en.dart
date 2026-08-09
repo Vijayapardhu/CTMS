@@ -255,6 +255,80 @@ class AppStringsEn extends AppStrings {
       'Start will unlock by itself. You do not need to do anything.';
 
   @override
+  String get gpsLive => 'Position sharing';
+
+  @override
+  String get gpsAcquiring => 'Finding position';
+
+  @override
+  String get gpsNoSignal => 'No position signal';
+
+  @override
+  String get gpsDenied => 'Position sharing is off';
+
+  @override
+  String gpsBuffering(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count positions saved to send',
+      one: '1 position saved to send',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String gpsSemantics(String status) {
+    return 'Position status: $status';
+  }
+
+  @override
+  String get gpsDeniedTitle => 'This trip cannot be tracked';
+
+  @override
+  String get gpsDeniedBody =>
+      'The office cannot see where the bus is. Your trip is not affected and nothing you record is lost.';
+
+  @override
+  String get gpsOpenSettings => 'Open settings';
+
+  @override
+  String syncPending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes waiting to send',
+      one: '1 change waiting to send',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String syncSending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Sending $count changes',
+      one: 'Sending 1 change',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String syncFailed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes could not be applied',
+      one: '1 change could not be applied',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncRetry => 'Retry now';
+
+  @override
   String get tripStartInspection => 'Start inspection';
 
   @override

@@ -6,6 +6,7 @@ import '../../core/connectivity/connectivity_cubit.dart';
 import '../../core/connectivity/connectivity_service.dart';
 import '../../core/icons/app_icons.dart';
 import '../../core/widgets/persistent_banner.dart';
+import '../../core/widgets/sync_banner.dart';
 import '../../l10n/app_localizations.dart';
 
 /// The persistent chrome around the four tabs.
@@ -29,6 +30,10 @@ class AppShell extends StatelessWidget {
           // a property of the app, and a driver must see it from wherever they
           // happen to be standing.
           const OfflineBanner(),
+          // C3 sits under C2 and is a separate line deliberately: being
+          // offline and holding unsent work are different facts, and a driver
+          // in a tunnel with a full buffer needs both.
+          const SyncBanner(),
           Expanded(child: navigationShell),
         ],
       ),

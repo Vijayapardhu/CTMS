@@ -42,6 +42,15 @@ class FakeBackend implements HttpClientAdapter {
   int callsTo(String path) =>
       requests.where((r) => r.path.endsWith(path)).length;
 
+  /// Every JSON body sent to [path], oldest first.
+  List<Map<String, dynamic>> bodiesFor(String path) => requests
+      .where((r) => r.path.endsWith(path) && r.body is Map<String, dynamic>)
+      .map((r) => r.body! as Map<String, dynamic>)
+      .toList(growable: false);
+
+  /// The most recent JSON body sent to [path].
+  Map<String, dynamic>? bodyFor(String path) => bodiesFor(path).lastOrNull;
+
   String? bearerFor(String path) => requests
       .lastWhere((r) => r.path.endsWith(path),
           orElse: () => throw StateError('No request to $path'))

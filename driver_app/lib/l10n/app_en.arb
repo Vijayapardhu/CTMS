@@ -181,6 +181,60 @@
     "description": "R1 waiting — reassures that the early-start refusal resolves on its own"
   },
 
+  "gpsLive": "Position sharing",
+  "@gpsLive": { "description": "GPS pill — fixes are reaching the server" },
+
+  "gpsAcquiring": "Finding position",
+  "@gpsAcquiring": { "description": "GPS pill — waiting for the first fix" },
+
+  "gpsNoSignal": "No position signal",
+  "@gpsNoSignal": { "description": "GPS pill — the device itself has no fix" },
+
+  "gpsDenied": "Position sharing is off",
+  "@gpsDenied": { "description": "GPS pill — permission refused or location services disabled" },
+
+  "gpsBuffering": "{count, plural, =1{1 position saved to send} other{{count} positions saved to send}}",
+  "@gpsBuffering": {
+    "description": "GPS pill — fixes held on the phone until the server takes them",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "gpsSemantics": "Position status: {status}",
+  "@gpsSemantics": {
+    "description": "Screen-reader label for the GPS pill, so colour is never the only carrier",
+    "placeholders": { "status": { "type": "String" } }
+  },
+
+  "gpsDeniedTitle": "This trip cannot be tracked",
+  "@gpsDeniedTitle": { "description": "E2 — location is off or refused" },
+
+  "gpsDeniedBody": "The office cannot see where the bus is. Your trip is not affected and nothing you record is lost.",
+  "@gpsDeniedBody": { "description": "E2 body — states the consequence without blocking the trip" },
+
+  "gpsOpenSettings": "Open settings",
+  "@gpsOpenSettings": { "description": "E2 recovery action" },
+
+  "syncPending": "{count, plural, =1{1 change waiting to send} other{{count} changes waiting to send}}",
+  "@syncPending": {
+    "description": "C3 — queued, not yet sent. Never described as failed",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "syncSending": "{count, plural, =1{Sending 1 change} other{Sending {count} changes}}",
+  "@syncSending": {
+    "description": "C3 — a replay pass is running",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "syncFailed": "{count, plural, =1{1 change could not be applied} other{{count} changes could not be applied}}",
+  "@syncFailed": {
+    "description": "C3 — permanently refused by the server",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "syncRetry": "Retry now",
+  "@syncRetry": { "description": "C3 action on the failed banner" },
+
   "tripStartInspection": "Start inspection",
   "@tripStartInspection": { "description": "R1 blocked — the one reason a driver can act on" },
 

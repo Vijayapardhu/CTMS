@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/connectivity/connectivity_cubit.dart';
+import '../core/sync/sync_cubit.dart';
+import '../features/gps/presentation/bloc/gps_cubit.dart';
 import '../features/auth/presentation/bloc/session_bloc.dart';
 import '../features/trip/presentation/bloc/trip_bloc.dart';
 import '../l10n/app_localizations.dart';
@@ -63,6 +65,11 @@ class _CtmsDriverAppState extends State<CtmsDriverApp> {
         BlocProvider<SessionBloc>.value(value: _session),
         BlocProvider<ConnectivityCubit>.value(value: sl<ConnectivityCubit>()),
         BlocProvider<TripBloc>.value(value: sl<TripBloc>()),
+        // M6 and M3. The queue outlives every screen that enqueued into it,
+        // and the position stream belongs to the trip rather than to whichever
+        // tab the driver is looking at.
+        BlocProvider<SyncCubit>.value(value: sl<SyncCubit>()),
+        BlocProvider<GpsCubit>.value(value: sl<GpsCubit>()),
       ],
       child: ListenableBuilder(
         listenable: prefs,

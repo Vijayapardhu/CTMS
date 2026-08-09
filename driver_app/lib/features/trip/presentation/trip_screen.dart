@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router/routes.dart';
@@ -10,9 +11,13 @@ import '../../../core/design_system/ctms_colors.dart';
 import '../../../core/design_system/tokens.dart';
 import '../../../core/icons/app_icons.dart';
 import '../../../core/widgets/confirm_sheet.dart';
+import '../../../core/widgets/consequence_panel.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/reason_list.dart';
 import '../../../core/widgets/skeleton_loader.dart';
+import '../../gps/domain/gps_state.dart';
+import '../../gps/presentation/bloc/gps_cubit.dart';
+import '../../gps/presentation/widgets/gps_status_pill.dart';
 import '../../../l10n/app_localizations.dart';
 import '../domain/trip.dart';
 import '../domain/trip_state.dart';
@@ -35,10 +40,15 @@ class TripScreen extends StatefulWidget {
 }
 
 class _TripScreenState extends State<TripScreen> with WidgetsBindingObserver {
+  /// Held from `initState`, because `dispose` may not look up an inherited
+  /// widget and the stream still has to be stopped when the tree goes.
+  late final GpsCubit _gps;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _gps = context.read<GpsCubit>();
 
     // The bloc is app-scoped, so it may already hold today's trip from an
     // earlier visit to this tab. Only ask when there is nothing yet.
@@ -49,7 +59,26 @@ class _TripScreenState extends State<TripScreen> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    // M3 outlives this *screen* — the shell's indexed stack keeps it mounted
+    // while the driver reads the map, so a tab switch never reaches here. What
+    // does reach here is the app going away or the session ending, and letting
+    // the position stream run past either would keep the hardware awake for a
+    // trip nobody is driving.
+    _gps.stop();
     super.dispose();
+  }
+
+  /// Keeps M3 in step with M1.
+  ///
+  /// The stream belongs to the trip, not to this screen — a driver on the map
+  /// tab is still driving — so it is started and stopped from the state rather
+  /// than from `initState`/`dispose`.
+  void _followTrip(TripState state) {
+    if (state is TripRunning) {
+      _gps.start(state.value.id);
+    } else {
+      _gps.stop();
+    }
   }
 
   @override
@@ -67,7 +96,8 @@ class _TripScreenState extends State<TripScreen> with WidgetsBindingObserver {
 
     return Scaffold(
       appBar: AppBar(title: Text(strings.tabTrip)),
-      body: BlocBuilder<TripBloc, TripState>(
+      body: BlocConsumer<TripBloc, TripState>(
+        listener: (context, state) => _followTrip(state),
         builder: (context, state) {
           return RefreshIndicator(
             // Pull-to-refresh is always available, per R1. It never replaces
@@ -525,6 +555,19 @@ class _Running extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // M3, above everything: whether the office can see this bus is the
+        // first thing a driver should be able to check.
+        BlocBuilder<GpsCubit, GpsState>(
+          builder: (context, gps) => Align(
+            alignment: Alignment.centerLeft,
+            child: GpsStatusPill(state: gps),
+          ),
+        ),
+        const SizedBox(height: Spacing.md),
+        BlocBuilder<GpsCubit, GpsState>(
+          builder: (context, gps) =>
+              gps is GpsDenied ? const _GpsUnavailable() : const SizedBox.shrink(),
+        ),
         TripCard(state: state),
         const SizedBox(height: Spacing.lg),
         if (occupied != null && capacity != null)
@@ -618,6 +661,44 @@ class _CheckedAt extends StatelessWidget {
           .textTheme
           .bodySmall
           ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+    );
+  }
+}
+
+/// E2 — location is off or refused, during a running trip.
+///
+/// Deliberately a panel and not a dialog or a route. M3 says never block and
+/// never stop the trip: the bus is still running, the boardings still record,
+/// and the only thing lost is the office's view of where it is. That is worth
+/// stating plainly and worth offering a fix for, but not worth standing in
+/// front of a driver who is about to pull away.
+class _GpsUnavailable extends StatelessWidget {
+  const _GpsUnavailable();
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = AppStrings.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Spacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ConsequencePanel(
+            severity: ConsequenceSeverity.warning,
+            title: strings.gpsDeniedTitle,
+            body: strings.gpsDeniedBody,
+          ),
+          const SizedBox(height: Spacing.sm),
+          SizedBox(
+            height: Sizes.buttonHeight,
+            child: OutlinedButton(
+              onPressed: Geolocator.openAppSettings,
+              child: Text(strings.gpsOpenSettings),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -10,6 +10,11 @@ import 'package:ctms_driver/core/api/api_client.dart';
 import 'package:ctms_driver/core/connectivity/connectivity_cubit.dart';
 import 'package:ctms_driver/core/connectivity/connectivity_service.dart';
 import 'package:ctms_driver/core/storage/secure_store.dart';
+import 'package:ctms_driver/core/sync/drift_sync_queue.dart';
+import 'package:ctms_driver/core/sync/sync_cubit.dart';
+import 'package:ctms_driver/core/sync/sync_database.dart';
+import 'package:ctms_driver/features/gps/presentation/bloc/gps_cubit.dart';
+import 'package:ctms_driver/features/gps/domain/gps_state.dart';
 import 'package:ctms_driver/features/auth/domain/session_state.dart';
 import 'package:ctms_driver/features/auth/presentation/bloc/session_bloc.dart';
 import 'package:ctms_driver/core/widgets/evidence_card.dart';
@@ -21,6 +26,7 @@ import 'package:ctms_driver/features/inspection/presentation/inspection_flow.dar
 import 'package:ctms_driver/features/trip/domain/trip_state.dart';
 import 'package:ctms_driver/features/trip/presentation/bloc/trip_bloc.dart';
 import 'package:ctms_driver/l10n/app_localizations.dart';
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -28,6 +34,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'auth_fixtures.dart';
 import 'fake_backend.dart';
+import 'fake_location.dart';
 import 'test_doubles.dart';
 
 /// A [ConnectivityService] the test drives directly.
@@ -70,6 +77,7 @@ class TestApp {
     required this.store,
     required this.camera,
     required this.permissions,
+    required this.location,
   });
 
   final FakeConnectivity connectivity;
@@ -77,6 +85,7 @@ class TestApp {
   final InMemorySecureStore store;
   final FakeCamera camera;
   final FakePermissions permissions;
+  final FakeLocation location;
 
   SessionBloc get session => sl<SessionBloc>();
 
@@ -84,8 +93,15 @@ class TestApp {
 
   TripBloc get trip => sl<TripBloc>();
 
+  GpsCubit get gps => sl<GpsCubit>();
+
+  SyncCubit get sync => sl<SyncCubit>();
+
+  DriftSyncQueue get queue => sl<DriftSyncQueue>();
+
   Future<void> dispose() async {
     await connectivity.dispose();
+    await location.dispose();
     await resetDependencies();
   }
 }
@@ -110,6 +126,7 @@ Future<TestApp> registerTestDependencies({
   final connectivity = FakeConnectivity();
   final camera = FakeCamera();
   final permissions = FakePermissions();
+  final location = FakeLocation();
 
   if (signedIn) {
     // Written straight to the store, so `SessionStarted` takes the real
@@ -138,6 +155,11 @@ Future<TestApp> registerTestDependencies({
     retryDelays: const [],
     photoCapture: camera,
     permissions: permissions,
+    locationSource: location,
+    syncGap: Duration.zero,
+    // In memory: the queue's behaviour is the thing under test, and a real
+    // file would leak state from one test into the next.
+    syncDatabase: SyncDatabase.forTesting(NativeDatabase.memory()),
   );
 
   sl<ApiClient>().dio.httpClientAdapter = backend;
@@ -149,6 +171,7 @@ Future<TestApp> registerTestDependencies({
     store: store,
     camera: camera,
     permissions: permissions,
+    location: location,
   );
 }
 
@@ -229,6 +252,42 @@ Future<void> waitForTrip(
   }
 
   fail('The trip never reached the expected state. It is ${bloc.state}.');
+}
+
+/// Drives the app until M3 satisfies [matches].
+///
+/// A fix does more real work than any other event in the app: it writes a row
+/// to the queue, replays it, and reads the queue back. Every one of those is
+/// genuine asynchrony inside a fake-async test, so the same alternating turn
+/// as [waitForTrip] is the only thing that advances it.
+Future<void> waitForGps(
+  WidgetTester tester,
+  bool Function(GpsState) matches, {
+  int turns = 120,
+}) async {
+  final cubit = sl<GpsCubit>();
+
+  for (var turn = 0; turn < turns; turn++) {
+    if (matches(cubit.state)) {
+      await tester.pump();
+      return;
+    }
+
+    await tester.runAsync(() => Future<void>.delayed(_realTurn));
+    await tester.pump(_fakeTurn);
+  }
+
+  fail('The GPS stream never reached the expected state. '
+      'It is ${cubit.state}.');
+}
+
+/// Runs a replay pass with real asynchrony, then settles the tree.
+///
+/// The queue is a database; awaiting it straight from a test body suspends
+/// forever inside the fake-async zone.
+Future<void> drainQueue(WidgetTester tester) async {
+  await tester.runAsync(() => sl<SyncCubit>().sync());
+  await settle(tester);
 }
 
 /// Drives the app until the inspection bloc satisfies [matches].

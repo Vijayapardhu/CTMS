@@ -44,6 +44,25 @@ class TripApi {
     return Trip.fromJson(data is Map<String, dynamic> ? data : const {});
   }
 
+  /// `POST /trips/{id}/positions`
+  ///
+  /// Returns the raw envelope rather than a model, because the caller is the
+  /// sync engine and the only thing it reads is whether `data` came back null
+  /// — the server's way of saying it had already recorded this key.
+  ///
+  /// [idempotencyKey] is supplied by the queue and is the same on every retry
+  /// of the same fix. Minting one here would defeat the entire mechanism.
+  Future<Map<String, dynamic>> recordPosition(
+    String tripId,
+    Map<String, Object?> fix, {
+    required String idempotencyKey,
+  }) {
+    return _client.post(
+      '/trips/$tripId/positions',
+      body: {...fix, 'idempotency_key': idempotencyKey},
+    );
+  }
+
   /// `GET /buses/{id}/service-readiness` → `{ cleared, reasons[], inspection }`
   Future<ServiceReadiness> readiness(String busId) async {
     final body = await _client.get('/buses/$busId/service-readiness');

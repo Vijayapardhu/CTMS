@@ -9,6 +9,21 @@
          and pass an inspection. Only a failing critical item needs one. -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
+    <!-- M3. Coarse is declared alongside fine because a driver may grant only
+         the approximate one: the office still learns roughly where the bus is,
+         which is worth more than refusing to track at all. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- A trip runs for ninety minutes with the phone in a cradle and the
+         screen off. Without a foreground service the OS stops delivering
+         fixes, and the gap would look to the office like a bus that vanished.
+         Deliberately NOT ACCESS_BACKGROUND_LOCATION: the service runs only
+         while a trip is running and the driver can see it in the shade. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:label="ctms_driver"
         android:name="${applicationName}"
