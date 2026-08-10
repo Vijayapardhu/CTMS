@@ -176,7 +176,18 @@ and the layer that caught G3-3.
 
 ---
 
-## 7. Live verification, 2026-08-10
+## 7. Decisions the panel records rather than hides
+
+Three places where the panel deliberately offers less than the backend allows.
+Each is a decision, written down here so it is not mistaken for an oversight.
+
+| What | Why |
+|---|---|
+| **Route and stop editing** (`route.manage`, `schedule.manage`) | Placing stops needs a map and coordinates inside the service area. A route with three of its seven stops still looks like a route, and a half-built editor is worse than none. The endpoints stay OPERATIONS-gated on the server. |
+| **Changing an existing access level** | There is no endpoint. `UpdateUserRequest` does not accept `access_level`, and nothing else takes it. It is chosen at creation. A control here would be a button that silently did nothing. |
+| **Deleting anything** | The backend has no `DELETE /users/{id}` and no delete ability to guard one. Accounts are deactivated so the history referencing them still makes sense. |
+
+## 8. Live verification, 2026-08-10
 
 Four probe administrators, one per tier, confirmed by `/auth/me` before a single
 denial was trusted. Every mutating capability except the five `own` ones was
@@ -191,6 +202,29 @@ probed 111 denial cases
 
 Plus `evidence.create`, probed separately because it is a multipart upload:
 VIEWER → 403, SUPPORT → 201. Both directions.
+
+**Reads were probed the same way**, and this is where the registry was found
+wrong. All 40 read capabilities, at all four tiers:
+
+```
+checked 40 read capabilities at four tiers each
+  agreeing with the registry : 40
+  DISAGREEING               : 0
+```
+
+The first run of that sweep reported **one** disagreement. `manifest.read` was
+declared VIEWER because the route carries no tier — but
+`TrackingController::manifest` authorizes `operate`, not `view`, so the server
+admits it only from OPERATIONS or the trip's assigned driver. Middleware cannot
+express that and the generator cannot read it; only asking the server found it.
+The declaration was corrected to `OPERATIONS` + `assignedDriver` and the sweep
+now agrees throughout.
+
+The server being *stricter* than the registry is not a hole — but it is a link
+that 403s, which is its own kind of defect.
+
+One read remains unprobed: `inspection.read`, because the development database
+holds no inspection record to name.
 
 **Every probe sent a valid payload.** This is not a detail. FormRequest
 validation runs *before* the controller's policy check, so an unauthorised
@@ -218,7 +252,7 @@ needs four admins at `{level}@probe.ctms` and a running server.
 
 ---
 
-## 8. When it drifts
+## 9. When it drifts
 
 A backend change lands and the panel's tests go red. That is the system working.
 

@@ -1,7 +1,9 @@
 # CTMS Admin / Transport Operations Panel — specification
 
-**Status: DRAFT, pending freeze.** Nothing here has been implemented. No panel
-code exists and no backend file was changed in producing it.
+**Status: BUILT.** Every screen specified here is implemented and consuming
+real endpoints. `demo-walkthrough.md` runs through the working panel; the three
+places where it deliberately offers less than the backend allows are recorded
+in `capability-registry.md` §7 rather than left to be discovered.
 
 This specification was written by reading the backend, not by designing a
 dashboard and hoping the API would cooperate. Every endpoint named in these
@@ -43,6 +45,7 @@ defect (G3-3) that the workflow phases depend on.
 | `operational-workflows.md` | The ten workflows, their real states and transitions |
 | `authorization-states.md` | Screen and action states, and what each one says |
 | `capability-registry.md` | How the registry is generated, consumed and proven |
+| `demo-walkthrough.md` | A deterministic run-through, and the same panel at each tier |
 | `capability-map.json` | Generated from the router. Never edited |
 
 ## What this panel is
