@@ -17,6 +17,8 @@ import { AttendanceScreen } from '@/features/attendance/AttendanceScreen'
 import { AnnouncementsScreen } from '@/features/comms/AnnouncementsScreen'
 import { AlertsScreen } from '@/features/comms/AlertsScreen'
 import { ReportsScreen } from '@/features/reports/ReportsScreen'
+import { GovernanceScreen } from '@/features/governance/GovernanceScreen'
+import { AccountsScreen } from '@/features/governance/AccountsScreen'
 
 type ScreenSpec = {
   path: string
@@ -169,9 +171,30 @@ export const screens: ScreenSpec[] = [
     capability: 'reports.read',
     element: <ReportsScreen />,
   },
-  { path: '/admin/audit', title: 'Audit', icon: 'audit', slice: 'slice 8', capability: 'audit.read' },
-  { path: '/admin/access-log', title: 'Data Access', icon: 'accessLog', slice: 'phase 15', capability: 'audit.accessLog.read' },
-  { path: '/admin/accounts', title: 'Accounts', icon: 'accounts', slice: 'slice 8', capability: 'account.create' },
+  {
+    path: '/admin/audit',
+    title: 'Audit',
+    icon: 'audit',
+    slice: 'phase 12',
+    capability: 'audit.read',
+    element: <GovernanceScreen />,
+  },
+  {
+    path: '/admin/access-log',
+    title: 'Data Access',
+    icon: 'accessLog',
+    slice: 'phase 12',
+    capability: 'audit.accessLog.read',
+    element: <GovernanceScreen />,
+  },
+  {
+    path: '/admin/accounts',
+    title: 'Accounts',
+    icon: 'accounts',
+    slice: 'phase 13',
+    capability: 'account.create',
+    element: <AccountsScreen />,
+  },
 ]
 
 export function screenElement(screen: ScreenSpec) {
