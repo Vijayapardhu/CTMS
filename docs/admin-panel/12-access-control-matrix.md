@@ -49,7 +49,7 @@ No new role is created. The panel refuses to log in any user whose
 - **✓** — server-enforced allow
 - **—** — server-enforced deny (403)
 - **⚠** — **UI-hidden but NOT server-enforced.** The panel does not offer it,
-  and the server would accept it from anyone with a token. See G3-1.
+  and the server would accept it from any admin. See G3-2 — G3-1 is fixed.
 
 ## Navigation and read access
 
@@ -153,23 +153,35 @@ can list accounts. The panel exposes the list only under Administration and
 only to `SUPER_ADMIN`, because a VIEWER has no use for it — but this is a
 **UI choice, not a server rule**.
 
-## The eight that are not enforced
+## Formerly unenforced — now gated (G3-1, fixed)
 
-Repeated here so the implementer cannot miss them. Every one carries
-`RoleAuthorize:ADMIN` and **no** `RequireAccessLevel`, and its policy asks only
-`isAdmin()`. Verified by probe; see G3-1.
+Ten mutations carried `RoleAuthorize:ADMIN` with no level gate and admitted a
+VIEWER. All ten are now server-enforced.
+
+| Endpoint | Enforced at |
+|---|---|
+| `POST /trips/{id}/corrections` | OPERATIONS |
+| `POST /consolidations` | OPERATIONS |
+| `POST /consolidations/{id}/approve` | OPERATIONS |
+| `POST /consolidations/{id}/reject` | OPERATIONS |
+| `POST /consolidations/{id}/notify` | OPERATIONS |
+| `POST /consolidations/{id}/execute` | OPERATIONS |
+| `POST /preventive-maintenance` | OPERATIONS |
+| `DELETE /preventive-maintenance/{id}` | OPERATIONS |
+| `POST /attendance-discrepancies/{id}/review` | SUPPORT |
+| `POST /notification-log/{id}/resend` | SUPPORT |
+
+## Still not enforced — G3-2
+
+Three mutations have no role gate because they also serve the subject
+themselves, and their policies ask only `isAdmin()`. Route middleware cannot
+express "OPERATIONS or the subject", so these need a policy-level fix.
 
 | Endpoint | Panel shows it to | Server accepts it from |
 |---|---|---|
-| `POST /trips/{id}/corrections` | OPERATIONS+ | any admin |
-| `POST /attendance-discrepancies/{id}/review` | SUPPORT+ | any admin |
-| `POST /consolidations` | OPERATIONS+ | any admin |
-| `POST /consolidations/{id}/approve` | OPERATIONS+ | any admin |
-| `POST /consolidations/{id}/execute` | OPERATIONS+ | any admin |
-| `POST /consolidations/{id}/reject` | OPERATIONS+ | any admin |
-| `POST /preventive-maintenance` | OPERATIONS+ | any admin |
-| `DELETE /preventive-maintenance/{id}` | OPERATIONS+ | any admin |
-| `POST /notification-log/{id}/resend` | SUPPORT+ | any admin |
+| `PUT /students/{id}` | OPERATIONS+ | any admin, or the student |
+| `PUT /users/{id}` | SUPER_ADMIN | any admin, or the user |
+| `PATCH /drivers/{id}/status` | OPERATIONS+ | any admin, or the driver |
 
 ## Frontend rules
 

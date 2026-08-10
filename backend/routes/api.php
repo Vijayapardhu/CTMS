@@ -93,8 +93,10 @@ Route::prefix('v1')->group(function () {
         Route::middleware('role:ADMIN')->group(function () {
             Route::get('notification-log', [NotificationLogController::class, 'index']);
             Route::get('notification-log/health', [NotificationLogController::class, 'health']);
+            // Re-sending somebody else's message is day-to-day supervision,
+            // not read-only oversight.
             Route::post('notification-log/{id}/resend', [NotificationLogController::class, 'resend'])
-                ->middleware('throttle:writes');
+                ->middleware(['access:SUPPORT', 'throttle:writes']);
         });
 
         // ---- Users (FR-01) ----------------------------------------------
@@ -363,7 +365,9 @@ Route::prefix('v1')->group(function () {
         Route::middleware('role:ADMIN')->group(function () {
             Route::get('preventive-maintenance', [PreventiveMaintenanceController::class, 'index']);
 
-            Route::middleware('throttle:writes')->group(function () {
+            // Deciding when a vehicle is due off the road costs money and
+            // takes capacity out of the timetable.
+            Route::middleware(['access:OPERATIONS', 'throttle:writes'])->group(function () {
                 Route::post('preventive-maintenance', [PreventiveMaintenanceController::class, 'store']);
                 Route::delete('preventive-maintenance/{id}', [PreventiveMaintenanceController::class, 'destroy']);
             });
@@ -379,7 +383,10 @@ Route::prefix('v1')->group(function () {
             Route::get('consolidations/candidates', [ConsolidationController::class, 'candidates']);
             Route::get('consolidations/{id}', [ConsolidationController::class, 'show']);
 
-            Route::middleware('throttle:writes')->group(function () {
+            // BR-361 says manager-only, and until now "manager" meant any
+            // administrator at all. Merging two services changes where a bus
+            // goes and who is told about it.
+            Route::middleware(['access:OPERATIONS', 'throttle:writes'])->group(function () {
                 Route::post('consolidations', [ConsolidationController::class, 'store']);
                 Route::post('consolidations/{id}/approve', [ConsolidationController::class, 'approve']);
                 Route::post('consolidations/{id}/reject', [ConsolidationController::class, 'reject']);
@@ -394,8 +401,16 @@ Route::prefix('v1')->group(function () {
             Route::get('attendance-discrepancies', [TripRecoveryController::class, 'discrepancies']);
 
             Route::middleware('throttle:writes')->group(function () {
-                Route::post('trips/{id}/corrections', [TripRecoveryController::class, 'correct']);
-                Route::post('attendance-discrepancies/{id}/review', [TripRecoveryController::class, 'review']);
+                // BR-258. The attendance record is the evidence of what a
+                // driver did; amending it afterwards is an operations
+                // decision, and emphatically not one for read-only oversight.
+                Route::post('trips/{id}/corrections', [TripRecoveryController::class, 'correct'])
+                    ->middleware('access:OPERATIONS');
+
+                // BR-266. Settling a disagreement about who was aboard is
+                // day-to-day supervision.
+                Route::post('attendance-discrepancies/{id}/review', [TripRecoveryController::class, 'review'])
+                    ->middleware('access:SUPPORT');
             });
         });
 

@@ -1,8 +1,9 @@
 # Backend gap register
 
-What the frozen backend does not do, what each gap costs the panel, and the
-smallest thing that would close it. **No backend file was changed to produce
-this document.** Each gap is classified:
+What the backend does not do, what each gap costs the panel, and the smallest
+thing that would close it. No backend file was changed to *produce* this
+register; G3-1 has since been fixed and is marked as such. Each gap is
+classified:
 
 | Class | Meaning |
 |---|---|
@@ -13,9 +14,17 @@ this document.** Each gap is classified:
 
 ---
 
-## G3-1 — A VIEWER can perform eight mutations
+## G3-1 — A VIEWER could perform ten mutations — **FIXED**
 
-**Severity: high. This is the most important finding of the discovery pass.**
+**Severity was high. Closed by `fix(auth): enforce admin access levels on
+mutations`.** Kept here in full because the reasoning is why the tests exist.
+
+> **Correction to the discovery pass.** The probe tested eight routes and this
+> register originally said eight; the access matrix said nine. Enumerating
+> every mutating route mechanically found **ten** —
+> `POST /consolidations/{id}/notify` and `.../reject` were both missed. All ten
+> are now gated, and a test asserts the *rule* rather than the list, so an
+> eleventh cannot appear unnoticed.
 
 Authorization runs on two axes. `RoleAuthorize` and the policies decide *role*;
 `RequireAccessLevel` decides *access level*. Every policy in `app/Policies`
@@ -23,10 +32,11 @@ asks only `isAdmin()` — none of them consults the access level. That is by
 design and is documented in `RequireAccessLevel`'s own docblock.
 
 The consequence: **a route with `RoleAuthorize:ADMIN` and no
-`RequireAccessLevel` is open to every admin, including a VIEWER.** Eight
-mutating routes are in that state.
+`RequireAccessLevel` is open to every admin, including a VIEWER.** Ten mutating
+routes were in that state.
 
-Verified by probe, VIEWER against OPERATIONS, controls included:
+Verified by probe on eight of them, VIEWER against OPERATIONS, controls
+included — the remaining two were found by enumerating the router:
 
 ```text
 POST   /preventive-maintenance                      VIEWER=422 OPERATIONS=422   admits viewer
@@ -54,19 +64,46 @@ it afterwards would make it worthless for the one purpose it exists to serve".
 `POST /attendance-discrepancies/{id}/review` closes a dispute about whether a
 student was on a bus. Read-only oversight should not be able to do either.
 
-**Cost to the panel.** The access matrix in `12-access-control-matrix.md`
-records what the backend *enforces*, not what it ought to. The panel will hide
-these controls from a VIEWER, but hiding is not enforcement — anyone with a
-token and `curl` reaches them. The matrix marks all eight
-`UI-HIDDEN / NOT SERVER-ENFORCED` so nobody mistakes one for the other.
+**Cost to the panel, before the fix.** The access matrix records what the
+backend *enforces*, not what it ought to. Hiding a control is not enforcement —
+anyone with a token and `curl` reached them.
 
-**Smallest fix.** Add `RequireAccessLevel` to the eight routes. No policy,
-service or schema change; two of them arguably want `SUPPORT`
-(`notification-log resend`, `attendance-discrepancies review`) and six want
-`OPERATIONS`. That is a route-file edit and eight tests.
+**The fix.** `RequireAccessLevel` on all ten routes. No policy, service or
+schema change.
 
-**Not done here.** This phase is specification only, and the backend is frozen.
-Raised for a decision.
+**Done.** Six routes gated at `OPERATIONS` (trip corrections, all four
+consolidation mutations plus create, both preventive-maintenance writes) and
+two at `SUPPORT` (attendance-dispute review, notification resend). No policy,
+service or schema change. `AdminAccessLevelTest` covers all four levels
+against every route, plus a rule test that walks the router and fails if any
+`RoleAuthorize:ADMIN` mutation lacks a level gate.
+
+**Related, and NOT fixed — see G3-2.**
+
+---
+
+## G3-2 — Three self-service mutations still admit any admin
+
+Found while fixing G3-1. These carry no role gate at all, because they also
+serve the subject themselves:
+
+```text
+PUT   /students/{id}          StudentPolicy::update      isAdmin() || own record
+PUT   /users/{id}             UserPolicy::update         isAdmin() || self
+PATCH /drivers/{id}/status    DriverPolicy::changeStatus isAdmin() || self
+```
+
+A VIEWER reaches all three, because the policies ask only `isAdmin()`.
+
+**Why this was not fixed with the rest.** Route middleware cannot express
+"OPERATIONS **or** the subject themselves". Adding `access:OPERATIONS` would
+stop a student editing their own contact details and a driver marking
+themselves off duty — both deliberate features. The fix belongs in the three
+policies, which means changing how policies and access levels relate, and that
+is a larger decision than a route-file edit.
+
+**Panel impact:** none. The panel offers these only at `OPERATIONS`, and the
+access matrix marks them ⚠. **Raised for a decision.**
 
 ---
 
@@ -230,7 +267,8 @@ No behaviour change on either side; recorded so the next person does not add a
 
 | ID | Class | Gap | MVP impact |
 |---|---|---|---|
-| G3-1 | **G3** | VIEWER can perform 8 mutations | Panel hides; server does not enforce |
+| G3-1 | ~~G3~~ | ~~VIEWER can perform 10 mutations~~ | **FIXED** — server-enforced |
+| G3-2 | **G3** | 3 self-service mutations admit any admin | Panel hides; needs a policy-level fix |
 | G2-1 | G2 | No fleet-wide live endpoint | Bounded polling, 12-trip cap |
 | G2-2 | G2 | No fleet-wide inspection list | A11 is today's failures only |
 | G1-1 | G1 | No dashboard aggregation | 6 parallel gets, per-tile loading |

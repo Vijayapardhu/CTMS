@@ -682,7 +682,7 @@
                 "tags": [
                     "Attendance Discrepancies"
                 ],
-                "description": "Roles: ADMIN,. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
+                "description": "Roles: ADMIN,. Requires administrator tier SUPPORT or above. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
                 "parameters": [
                     {
                         "name": "id",
@@ -2659,7 +2659,7 @@
                 "tags": [
                     "Consolidations"
                 ],
-                "description": "Roles: ADMIN,. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
+                "description": "Roles: ADMIN,. Requires administrator tier OPERATIONS or above. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -2876,7 +2876,7 @@
                 "tags": [
                     "Consolidations"
                 ],
-                "description": "Roles: ADMIN,. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
+                "description": "Roles: ADMIN,. Requires administrator tier OPERATIONS or above. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
                 "parameters": [
                     {
                         "name": "id",
@@ -2959,7 +2959,7 @@
                 "tags": [
                     "Consolidations"
                 ],
-                "description": "Roles: ADMIN,. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
+                "description": "Roles: ADMIN,. Requires administrator tier OPERATIONS or above. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
                 "parameters": [
                     {
                         "name": "id",
@@ -3042,7 +3042,7 @@
                 "tags": [
                     "Consolidations"
                 ],
-                "description": "Roles: ADMIN,. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
+                "description": "Roles: ADMIN,. Requires administrator tier OPERATIONS or above. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
                 "parameters": [
                     {
                         "name": "id",
@@ -3125,7 +3125,7 @@
                 "tags": [
                     "Consolidations"
                 ],
-                "description": "Roles: ADMIN,. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
+                "description": "Roles: ADMIN,. Requires administrator tier OPERATIONS or above. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
                 "parameters": [
                     {
                         "name": "id",
@@ -6330,7 +6330,7 @@
                 "tags": [
                     "Notification Log"
                 ],
-                "description": "Roles: ADMIN,. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
+                "description": "Roles: ADMIN,. Requires administrator tier SUPPORT or above. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
                 "parameters": [
                     {
                         "name": "id",
@@ -7076,7 +7076,7 @@
                 "tags": [
                     "Preventive Maintenance"
                 ],
-                "description": "Roles: ADMIN,. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
+                "description": "Roles: ADMIN,. Requires administrator tier OPERATIONS or above. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -7207,7 +7207,7 @@
                 "tags": [
                     "Preventive Maintenance"
                 ],
-                "description": "Roles: ADMIN,. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
+                "description": "Roles: ADMIN,. Requires administrator tier OPERATIONS or above. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
                 "parameters": [
                     {
                         "name": "id",
@@ -11221,7 +11221,7 @@
                 "tags": [
                     "Trips"
                 ],
-                "description": "Roles: ADMIN,. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
+                "description": "Roles: ADMIN,. Requires administrator tier OPERATIONS or above. Rate limited by api (120/min) and writes (60/min); the stricter applies. Record-level scope is enforced by policy and is not visible in this document — an endpoint listed here may still return 403 for a record the caller does not own.",
                 "parameters": [
                     {
                         "name": "id",
