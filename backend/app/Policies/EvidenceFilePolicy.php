@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\AccessLevel;
 use App\Models\EvidenceFile;
 use App\Models\User;
 use App\Models\VehicleIncident;
@@ -18,9 +19,14 @@ class EvidenceFilePolicy
 {
     public function create(User $actor): bool
     {
-        // Drivers upload from the roadside; operations uploads on their behalf
-        // when a paper report comes in. Riders never do.
-        return $actor->isDriver() || $actor->isAdmin();
+        // Drivers upload from the roadside.
+        if ($actor->isDriver()) {
+            return true;
+        }
+
+        // Operations uploads on their behalf when a paper report comes in —
+        // which is a supervisor's job, not an observer's. Riders never do.
+        return $actor->hasAccessLevel(AccessLevel::SUPPORT);
     }
 
     /**

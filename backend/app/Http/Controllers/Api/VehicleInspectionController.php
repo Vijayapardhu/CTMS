@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\AccessLevel;
 use App\Enums\InspectionItem;
 use App\Enums\InspectionOutcome;
 use App\Exceptions\AuthorizationException;
@@ -156,8 +157,11 @@ class VehicleInspectionController extends Controller
             return $driver;
         }
 
-        if (! $user->isAdmin()) {
-            throw new AuthorizationException('Only drivers and administrators can submit an inspection.');
+        // Recording an inspection clears a bus for service or takes it off the
+        // road. Standing in for a driver here carries the same weight as
+        // returning a vehicle to service, so it asks for the same tier.
+        if (! $user->hasAccessLevel(AccessLevel::OPERATIONS)) {
+            throw new AuthorizationException('Only drivers and transport operations can submit an inspection.');
         }
 
         $validated = $request->validate([

@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\AccessLevel;
 use App\Models\User;
 use App\Models\VehicleIncident;
 
@@ -31,7 +32,31 @@ class VehicleIncidentPolicy
 
     public function create(User $actor): bool
     {
-        return $actor->isDriver() || $actor->isAdmin();
+        // Any driver, from the roadside. A system that makes somebody wonder
+        // whether they may report an emergency has already failed.
+        if ($actor->isDriver()) {
+            return true;
+        }
+
+        // From the office it is a supervisor's act, not an observer's.
+        return $actor->hasAccessLevel(AccessLevel::SUPPORT);
+    }
+
+    /**
+     * Adding to the running commentary on an incident.
+     *
+     * Its own ability rather than `view`, which is what the controller asked
+     * for until G3-3: reading an incident and writing on its record are not
+     * the same permission, and conflating them let read-only oversight
+     * annotate an emergency.
+     */
+    public function addNote(User $actor, VehicleIncident $incident): bool
+    {
+        if ((string) $incident->reported_by_id === (string) $actor->getKey()) {
+            return true;
+        }
+
+        return $actor->hasAccessLevel(AccessLevel::SUPPORT);
     }
 
     /**
@@ -48,7 +73,13 @@ class VehicleIncidentPolicy
      */
     public function cancel(User $actor, VehicleIncident $incident): bool
     {
-        return $actor->isAdmin()
-            || (string) $incident->reported_by_id === (string) $actor->getKey();
+        // The person who raised a false alarm may withdraw it.
+        if ((string) $incident->reported_by_id === (string) $actor->getKey()) {
+            return true;
+        }
+
+        // Withdrawing somebody else's alert cancels something others may
+        // already have acted on.
+        return $actor->hasAccessLevel(AccessLevel::SUPPORT);
     }
 }

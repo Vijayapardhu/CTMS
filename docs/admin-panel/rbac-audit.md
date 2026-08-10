@@ -9,7 +9,24 @@ is reported, not fixed.
 
 ---
 
-## 1. The headline finding
+## 1. The headline finding — **FIXED**
+
+Closed by `fix(auth): enforce operational tiers on driver-shared endpoints`.
+Verified against the live backend with database state, not status codes:
+
+```text
+              complete a running trip      trip state after
+VIEWER        403                          RUNNING
+SUPPORT       403                          RUNNING
+OPERATIONS    200                          COMPLETED
+DRIVER        200  (their own trip)        COMPLETED
+
+              raise incident   add note
+VIEWER        403 (count 1→1)  403
+SUPPORT       201 (count 1→2)  201
+```
+
+The original finding is kept below because it is why the tests exist.
 
 > **A `VIEWER` completed a running trip.**
 
@@ -54,7 +71,7 @@ say `isAdmin()`, which every administrator satisfies.
 
 Operations. Not oversight. The implementation says any admin.
 
-**Classified G3-3. Not fixed — see §6.**
+**Classified G3-3. FIXED — see §6.**
 
 ---
 
@@ -232,7 +249,24 @@ Raising an incident and adding a note stay at SUPPORT deliberately: a system
 that makes somebody wonder whether they may report an emergency has already
 failed, and `VehicleIncidentPolicy` says exactly that.
 
-**Not implemented.** Reported for a decision, per §25 and §32 of the brief.
+**Implemented.** `TripPolicy::operate` now asks for the assigned driver or
+`OPERATIONS`; `VehicleIncidentPolicy::create` and `::cancel` for a driver or the
+reporter, else `SUPPORT`; `EvidenceFilePolicy::create` for a driver else
+`SUPPORT`; `VehicleInspectionController::resolveInspectingDriver` for
+`OPERATIONS` when an administrator stands in.
+
+`IncidentController::addNote` authorised `view`, so reading an incident carried
+the right to write on its record. It now authorises a new `addNote` ability —
+changing `view` would have broken every read.
+
+18 tests in `DriverOperationBoundaryTest`, including a mechanical sweep that
+fails if any trip mutation admits a VIEWER. 1098 → 1116, none removed.
+
+**One ordering note discovered while testing.** For endpoints using a
+FormRequest, validation runs before the controller reaches its policy, so an
+unauthorised caller sending an invalid payload sees 422 rather than 403. The
+authorisation is still enforced — it is simply not the first thing to refuse.
+The tests send valid payloads for exactly this reason.
 
 ### No other backend change is required
 

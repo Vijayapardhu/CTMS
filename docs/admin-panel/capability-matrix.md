@@ -114,29 +114,30 @@ the subject". The route table understates these; the server is stricter.
 
 ---
 
-## ⚠ Not server-enforced — G3-3
+## Driver-shared endpoints — policy-enforced (G3-3, fixed)
 
-These have **no role gate and no level gate**, and their policies ask only
-`isAdmin()`. Every administrator reaches them, including `VIEWER`. Proven by
-probe; see `rbac-audit.md` §1.
+These carry no role gate, because the driver app must reach them from a bus.
+Their policies now ask for the driver doing their own job **or** an
+administrator at the tier the operation costs. The route table understates
+them; the server is stricter.
 
-| Endpoint | Panel offers to | Server accepts from |
+| Endpoint | Subject exception | Tier |
 |---|---|---|
-| `POST /trips/{id}/start` | OPERATIONS+ | any admin, or the assigned driver |
-| `POST /trips/{id}/complete` | OPERATIONS+ | any admin, or the assigned driver |
-| `POST /trips/{id}/positions` | not offered | any admin, or the assigned driver |
-| `POST /trips/{id}/board`, `/alight` | not offered | any admin, or the assigned driver |
-| `POST /trips/{id}/stops/{id}/arrive`, `/skip` | not offered | any admin, or the assigned driver |
-| `POST /trips/{id}/left-behind` | not offered | any admin, or the assigned driver |
-| `POST /buses/{id}/inspections` | not offered | any admin, or a driver |
-| `POST /incidents` | SUPPORT+ | any admin, or a driver |
-| `POST /incidents/{id}/notes` | SUPPORT+ | any admin, or a driver |
-| `POST /incidents/{id}/cancel` | SUPPORT+ | any admin, or the reporter |
-| `POST /evidence` | SUPPORT+ | any authenticated user |
+| `POST /trips/{id}/start` | the assigned driver | OPERATIONS |
+| `POST /trips/{id}/complete` | the assigned driver | OPERATIONS |
+| `POST /trips/{id}/positions` | the assigned driver | OPERATIONS |
+| `POST /trips/{id}/board`, `/alight` | the assigned driver | OPERATIONS |
+| `POST /trips/{id}/stops/{id}/arrive`, `/skip` | the assigned driver | OPERATIONS |
+| `POST /trips/{id}/left-behind` | the assigned driver | OPERATIONS |
+| `POST /buses/{id}/inspections` | any driver | OPERATIONS |
+| `POST /incidents` | any driver | SUPPORT |
+| `POST /incidents/{id}/notes` | the reporter | SUPPORT |
+| `POST /incidents/{id}/cancel` | the reporter | SUPPORT |
+| `POST /evidence` | any driver | SUPPORT |
 
-**The panel gates these at the tier the backend *intends*.** Until G3-3 is
-fixed, that gating is a courtesy, not a control, and this table is the record of
-which is which.
+**No panel screen offers the trip-operation endpoints.** Boarding students and
+marking arrivals from an office laptop would destroy the evidence value of the
+attendance record, whoever is permitted to do it.
 
 **No panel screen offers the driver-operational endpoints.** Boarding students
 and marking arrivals from an office laptop would destroy the evidence value of

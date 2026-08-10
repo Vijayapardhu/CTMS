@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\AccessLevel;
 use App\Models\Trip;
 use App\Models\User;
 
@@ -53,13 +54,18 @@ class TripPolicy
      */
     public function operate(User $actor, Trip $trip): bool
     {
-        if ($actor->isAdmin()) {
+        // The driver of this trip, running their own bus.
+        if ($actor->isDriver()
+            && $actor->driver !== null
+            && (string) $actor->driver->getKey() === (string) $trip->driver_id) {
             return true;
         }
 
-        return $actor->isDriver()
-            && $actor->driver !== null
-            && (string) $actor->driver->getKey() === (string) $trip->driver_id;
+        // An administrator standing in for a failed handset. "Operations",
+        // as the docblock above has always said — not every administrator.
+        // Until this asked for a tier, an account created for read-only
+        // oversight could complete a running trip, and did: G3-3.
+        return $actor->hasAccessLevel(AccessLevel::OPERATIONS);
     }
 
     /**

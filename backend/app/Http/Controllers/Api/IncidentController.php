@@ -210,7 +210,9 @@ class IncidentController extends Controller
     {
         $incident = $this->findIncident($id);
 
-        $this->authorize('view', $incident);
+        // Its own ability: reading an incident and writing on its record are
+        // different permissions (G3-3).
+        $this->authorize('addNote', $incident);
 
         $validated = $request->validate([
             'note' => ['required', 'string', 'min:3', 'max:2000'],
