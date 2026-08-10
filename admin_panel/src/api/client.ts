@@ -38,6 +38,15 @@ type RequestOptions = {
   signal?: AbortSignal
   /** Internal: stops a refreshed request from refreshing again. */
   retried?: boolean
+  /**
+   * Never attempt reauthentication for this request.
+   *
+   * Required for `/auth/refresh` itself. Without it a rejected refresh token
+   * produces a 401 on the refresh call, which asks for a refresh, which is
+   * already in flight — and the single-flight promise then awaits itself. The
+   * app hangs on "Signing you in…" forever rather than returning to login.
+   */
+  skipReauth?: boolean
 }
 
 function url(path: string, query?: RequestOptions['query']): string {
@@ -92,7 +101,7 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
 
   if (response.ok) return body as Envelope<T>
 
-  if (response.status === 401 && !options.retried) {
+  if (response.status === 401 && !options.retried && !options.skipReauth) {
     if (await reauthenticate()) {
       return request<T>(path, { ...options, retried: true })
     }
