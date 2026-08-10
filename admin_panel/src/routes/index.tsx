@@ -16,6 +16,7 @@ import { RecoveryScreen } from '@/features/recovery/RecoveryScreen'
 import { AttendanceScreen } from '@/features/attendance/AttendanceScreen'
 import { AnnouncementsScreen } from '@/features/comms/AnnouncementsScreen'
 import { AlertsScreen } from '@/features/comms/AlertsScreen'
+import { ReportsScreen } from '@/features/reports/ReportsScreen'
 
 type ScreenSpec = {
   path: string
@@ -152,7 +153,22 @@ export const screens: ScreenSpec[] = [
     capability: 'announcements.read',
     element: <AnnouncementsScreen />,
   },
-  { path: '/reports', title: 'Reports', icon: 'reports', slice: 'slice 8', capability: 'reports.read' },
+  {
+    path: '/reports',
+    title: 'Reports',
+    icon: 'reports',
+    slice: 'phase 11',
+    capability: 'reports.read',
+    element: <ReportsScreen />,
+  },
+  {
+    path: '/reports/:kind',
+    title: 'Report',
+    icon: 'reports',
+    slice: 'phase 11',
+    capability: 'reports.read',
+    element: <ReportsScreen />,
+  },
   { path: '/admin/audit', title: 'Audit', icon: 'audit', slice: 'slice 8', capability: 'audit.read' },
   { path: '/admin/access-log', title: 'Data Access', icon: 'accessLog', slice: 'phase 15', capability: 'audit.accessLog.read' },
   { path: '/admin/accounts', title: 'Accounts', icon: 'accounts', slice: 'slice 8', capability: 'account.create' },
