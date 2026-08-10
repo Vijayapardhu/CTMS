@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { CAPABILITIES } from '@/auth/capabilities'
 import { navItems } from '@/app/navigation'
 import { screens } from '@/routes'
+import { CORRECTABLE_FIELDS } from '@/features/trips/api'
 
 /**
  * The integration pass, as assertions rather than a checklist.
@@ -111,6 +112,24 @@ describe('every screen', () => {
       .map((screen) => screen.path)
 
     expect(orphans).toEqual([])
+  })
+})
+
+describe('the correction dialog', () => {
+  it('offers only fields the backend will accept', () => {
+    // The panel and `TripRecoveryService::CORRECTABLE` have to agree. When
+    // they did not, choosing "Notes" or either odometer field produced a 500
+    // from the database instead of a correction. The backend list is the
+    // authority; this is the tripwire on this side.
+    const backend = readFileSync(
+      join(process.cwd(), '..', 'backend', 'app', 'Services', 'Trips', 'TripRecoveryService.php'),
+      'utf-8',
+    )
+    const block = backend.slice(backend.indexOf('const CORRECTABLE'))
+    const allowed = [...block.slice(0, block.indexOf(']')).matchAll(/'([a-z_]+)'/g)].map((m) => m[1])
+
+    expect(allowed.length).toBeGreaterThan(0)
+    expect(CORRECTABLE_FIELDS.map((field) => field.value).sort()).toEqual([...allowed].sort())
   })
 })
 

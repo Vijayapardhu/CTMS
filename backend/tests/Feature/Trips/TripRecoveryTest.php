@@ -14,6 +14,7 @@ use App\Models\TripCorrection;
 use App\Models\User;
 use App\Services\Trips\TripRecoveryService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -447,5 +448,67 @@ class TripRecoveryTest extends TestCase
         $this->assertDatabaseHas('audit_logs', [
             'action' => 'ATTENDANCE_DISCREPANCY_RAISED',
         ]);
+    }
+
+    // ---------------------------------------------------------------------
+    // BR-258 — EVERY CORRECTABLE FIELD MUST ACTUALLY BE CORRECTABLE
+    // ---------------------------------------------------------------------
+
+    /**
+     * `CORRECTABLE` named three fields that are not columns on `trips`.
+     *
+     * The list is what the request validates against and what the panel offers
+     * in its correction dialog, so a transport head choosing "Notes" or either
+     * odometer field got a 500 from the database rather than a correction.
+     * Found by building the demonstration environment; this is the mechanical
+     * check that stops it recurring.
+     */
+    #[Test]
+    public function every_correctable_field_is_a_real_column_on_trips(): void
+    {
+        $columns = Schema::getColumnListing((new Trip)->getTable());
+
+        foreach (TripRecoveryService::correctableFields() as $field) {
+            $this->assertContains(
+                $field,
+                $columns,
+                "`{$field}` is offered as correctable but is not a column on `trips`.",
+            );
+        }
+    }
+
+    #[Test]
+    public function every_correctable_field_can_be_corrected_end_to_end(): void
+    {
+        $admin = $this->createAdmin();
+        [, $trip] = $this->completedTrip(aboard: 5);
+
+        $values = [
+            'occupied_seat_count' => 12,
+            'booked_seat_count' => 20,
+        ];
+
+        foreach (TripRecoveryService::correctableFields() as $field) {
+            $this->postJson("/api/v1/trips/{$trip->id}/corrections", [
+                'field' => $field,
+                'value' => $values[$field] ?? 1,
+                'reason' => 'Checked against the depot log.',
+            ], $this->authHeader($admin))->assertStatus(201);
+        }
+    }
+
+    #[Test]
+    public function a_field_that_is_not_correctable_is_refused_before_it_reaches_the_database(): void
+    {
+        $admin = $this->createAdmin();
+        [, $trip] = $this->completedTrip(aboard: 5);
+
+        // 422, not 500. The refusal belongs in validation, where it can say
+        // which fields are allowed.
+        $this->postJson("/api/v1/trips/{$trip->id}/corrections", [
+            'field' => 'odometer_end',
+            'value' => 45120,
+            'reason' => 'A field the trip does not have.',
+        ], $this->authHeader($admin))->assertStatus(422);
     }
 }

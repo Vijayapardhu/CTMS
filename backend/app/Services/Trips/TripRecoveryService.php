@@ -26,12 +26,23 @@ class TripRecoveryService
      * narrow: `status`, attribution and timestamps are not on it, because
      * those are the fields somebody would want to change to hide something.
      */
+    /**
+     * The fields a correction may touch.
+     *
+     * Every one of these must be a real column on `trips`. This list also
+     * feeds the request's validation rule and the panel's correction dialog,
+     * so a name that is not a column becomes a 500 from the database instead
+     * of a refusal — which is what `odometer_start`, `odometer_end` and
+     * `notes` did until a demonstration build tripped over them. A trip has no
+     * odometer and no notes column; those readings live on the inspection and
+     * the maintenance ticket.
+     *
+     * `TripRecoveryTest::every_correctable_field_is_a_real_column_on_trips`
+     * is the mechanical check that stops this recurring.
+     */
     private const CORRECTABLE = [
         'occupied_seat_count',
         'booked_seat_count',
-        'odometer_start',
-        'odometer_end',
-        'notes',
     ];
 
     public function __construct(private readonly AuditLogger $audit) {}

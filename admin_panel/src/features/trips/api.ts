@@ -116,15 +116,21 @@ export function correctedByName(correction: TripCorrection): string {
 }
 
 /**
- * The fields `TripRecoveryService::CORRECTABLE` allows. Anything else is a 422,
- * so the form offers exactly these and nothing more.
+ * The fields `TripRecoveryService::CORRECTABLE` allows.
+ *
+ * Exactly these, and nothing more. The list used to carry `odometer_start`,
+ * `odometer_end` and `notes` as well — none of which are columns on `trips`,
+ * so choosing one produced a 500 from the database rather than a correction.
+ * A demonstration build tripped over it; the backend list was reduced to the
+ * two real columns and this follows.
+ *
+ * A trip has no odometer and no notes column. Those readings live on the
+ * inspection and the maintenance ticket, where they are corrected in their own
+ * right.
  */
 export const CORRECTABLE_FIELDS = [
   { value: 'occupied_seat_count', label: 'Occupied seats' },
   { value: 'booked_seat_count', label: 'Booked seats' },
-  { value: 'odometer_start', label: 'Odometer at start' },
-  { value: 'odometer_end', label: 'Odometer at end' },
-  { value: 'notes', label: 'Notes' },
 ] as const
 
 /**

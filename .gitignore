@@ -47,3 +47,8 @@ vendor/
 .DS_Store
 Thumbs.db
 *.swp
+
+# The demonstration template is committed on purpose: it is how somebody
+# reproduces the environment. It carries no credential — the working copy it
+# is copied to, which does carry an application key, stays ignored above.
+!backend/.env.demo.example
