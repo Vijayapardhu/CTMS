@@ -6,6 +6,8 @@ import { DashboardScreen } from '@/features/dashboard/DashboardScreen'
 import { TripsScreen } from '@/features/trips/TripsScreen'
 import { TripDetailScreen } from '@/features/trips/TripDetailScreen'
 import { LiveOperationsScreen } from '@/features/live/LiveOperationsScreen'
+import { FleetScreen } from '@/features/fleet/FleetScreen'
+import { BusDetailScreen } from '@/features/fleet/BusDetailScreen'
 
 type ScreenSpec = {
   path: string
@@ -59,8 +61,22 @@ export const screens: ScreenSpec[] = [
     element: <TripDetailScreen />,
   },
   { path: '/routes', title: 'Routes', icon: 'routes', slice: 'slice 5', requires: AccessLevel.VIEWER },
-  { path: '/buses', title: 'Buses', icon: 'buses', slice: 'slice 5', requires: AccessLevel.VIEWER },
-  { path: '/buses/:id', title: 'Bus', icon: 'buses', slice: 'slice 5', requires: AccessLevel.VIEWER },
+  {
+    path: '/buses',
+    title: 'Buses',
+    icon: 'buses',
+    slice: 'slice 5',
+    requires: AccessLevel.VIEWER,
+    element: <FleetScreen />,
+  },
+  {
+    path: '/buses/:id',
+    title: 'Bus',
+    icon: 'buses',
+    slice: 'slice 5',
+    requires: AccessLevel.VIEWER,
+    element: <BusDetailScreen />,
+  },
   { path: '/drivers', title: 'Drivers', icon: 'drivers', slice: 'slice 7', requires: AccessLevel.VIEWER },
   { path: '/inspections', title: 'Inspections', icon: 'inspections', slice: 'slice 7', requires: AccessLevel.VIEWER },
   { path: '/maintenance', title: 'Maintenance', icon: 'maintenance', slice: 'slice 6', requires: AccessLevel.VIEWER },
