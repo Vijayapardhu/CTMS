@@ -49,7 +49,7 @@ export const navigation: NavSection[] = [
     title: 'Safety',
     items: [
       { label: 'Incidents', path: '/incidents', icon: 'incidents', capability: 'incidents.read' },
-      { label: 'Replacements', path: '/replacements', icon: 'swap', capability: 'replacements.read' },
+      { label: 'Recovery', path: '/replacements', icon: 'swap', capability: 'replacements.read' },
     ],
   },
   {

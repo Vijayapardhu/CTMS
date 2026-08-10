@@ -12,6 +12,7 @@ import { IncidentsScreen } from '@/features/incidents/IncidentsScreen'
 import { IncidentDetailScreen } from '@/features/incidents/IncidentDetailScreen'
 import { MaintenanceScreen } from '@/features/maintenance/MaintenanceScreen'
 import { MaintenanceDetailScreen } from '@/features/maintenance/MaintenanceDetailScreen'
+import { RecoveryScreen } from '@/features/recovery/RecoveryScreen'
 
 type ScreenSpec = {
   path: string
@@ -115,7 +116,14 @@ export const screens: ScreenSpec[] = [
     capability: 'incident.read',
     element: <IncidentDetailScreen />,
   },
-  { path: '/replacements', title: 'Replacements', icon: 'swap', slice: 'slice 5 of the RBAC plan', capability: 'replacements.read' },
+  {
+    path: '/replacements',
+    title: 'Recovery',
+    icon: 'swap',
+    slice: 'phase 8',
+    capability: 'replacements.read',
+    element: <RecoveryScreen />,
+  },
   { path: '/students', title: 'Students', icon: 'students', slice: 'slice 7', capability: 'students.read' },
   { path: '/alerts', title: 'Alerts', icon: 'alerts', slice: 'slice 8', capability: 'notifications.read' },
   { path: '/announcements', title: 'Announcements', icon: 'announcements', slice: 'slice 8', capability: 'announcements.read' },
