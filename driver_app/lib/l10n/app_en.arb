@@ -265,6 +265,102 @@
   "mapRouteUnavailable": "Route could not be loaded — the bus position is still live.",
   "@mapRouteUnavailable": { "description": "R2 — stops failed to load; distinct from the map failing" },
 
+  "sosTitle": "Emergency",
+  "@sosTitle": { "description": "P17 title" },
+
+  "sosPrompt": "Hold the button to alert the transport office.",
+  "@sosPrompt": { "description": "P17 instruction above the control" },
+
+  "sosHold": "SOS",
+  "@sosHold": { "description": "Label on the hold-to-activate control" },
+
+  "sosHolding": "Keep holding",
+  "@sosHolding": { "description": "Shown while the hold is in progress" },
+
+  "sosNoDetailsNeeded": "You do not need to type anything. Your bus and position are sent automatically.",
+  "@sosNoDetailsNeeded": { "description": "P17 — reassures that no form follows" },
+
+  "sosSentTitle": "Help has been alerted",
+  "@sosSentTitle": { "description": "P17 — the server accepted the alert" },
+
+  "sosSentBody": "The transport office has your alert.",
+  "@sosSentBody": { "description": "Fallback when the server sent no message" },
+
+  "sosQueuedTitle": "Saved — not yet sent",
+  "@sosQueuedTitle": { "description": "P17 — no signal; the alert is held on the phone" },
+
+  "sosQueuedBody": "Your phone is holding this alert and will send it as soon as there is signal. Call the office now if you can.",
+  "@sosQueuedBody": { "description": "P17 queued body — never claims the alert was sent" },
+
+  "sosNoNumber": "No emergency number is configured on this device.",
+  "@sosNoNumber": { "description": "Shown instead of call/SMS when no number is set" },
+
+  "sosCall": "Call the office",
+  "@sosCall": { "description": "Native dialler fallback" },
+
+  "sosSms": "Send a text with my position",
+  "@sosSms": { "description": "Native SMS fallback, pre-filled with coordinates" },
+
+  "sosOpen": "SOS",
+  "@sosOpen": { "description": "Entry point on the running trip" },
+
+  "incidentTitle": "Report a problem",
+  "@incidentTitle": { "description": "P18 title" },
+
+  "incidentOpen": "Report a problem",
+  "@incidentOpen": { "description": "Entry point on the running trip" },
+
+  "incidentWhatHappened": "What has happened?",
+  "@incidentWhatHappened": { "description": "P18 type picker heading" },
+
+  "incidentNeedsPhoto": "A photograph is required",
+  "@incidentNeedsPhoto": { "description": "Marks a type the server will refuse without evidence" },
+
+  "incidentDescription": "What happened?",
+  "@incidentDescription": { "description": "P18 description field" },
+
+  "incidentDescriptionHint": "A sentence is enough.",
+  "@incidentDescriptionHint": { "description": "Keeps the driver from writing an essay" },
+
+  "incidentEvidenceRequired": "A photograph is required for {label}",
+  "@incidentEvidenceRequired": {
+    "description": "Names what the photograph is for",
+    "placeholders": { "label": { "type": "String" } }
+  },
+
+  "incidentCanContinue": "The bus can keep going",
+  "@incidentCanContinue": { "description": "vehicle_can_continue" },
+
+  "incidentCanContinueHint": "Turn this off if the bus cannot be driven.",
+  "@incidentCanContinueHint": { "description": "Explains the consequence of the switch" },
+
+  "incidentSubmit": "Report it",
+  "@incidentSubmit": { "description": "P18 submit action" },
+
+  "incidentReported": "Reported",
+  "@incidentReported": { "description": "Fallback when the server sent no message" },
+
+  "incidentBusOutOfService": "Bus out of service",
+  "@incidentBusOutOfService": { "description": "Shown when the server grounded the vehicle" },
+
+  "incidentMaintenanceOpened": "A maintenance ticket has been opened. Do not continue this trip.",
+  "@incidentMaintenanceOpened": { "description": "The consequence, in the server's terms" },
+
+  "incidentBackToTrip": "Back to trip",
+  "@incidentBackToTrip": { "description": "Leaves the incident screen" },
+
+  "incidentQueuedTitle": "Saved — not yet sent",
+  "@incidentQueuedTitle": { "description": "P18 — held on the phone" },
+
+  "incidentQueuedBody": "This report will be sent when you have signal.",
+  "@incidentQueuedBody": { "description": "P18 queued body" },
+
+  "incidentTypesUnavailableTitle": "Cannot load the problem list",
+  "@incidentTypesUnavailableTitle": { "description": "P18 — the types read failed" },
+
+  "incidentTypesUnavailableBody": "The list of problem types comes from the office and could not be read. Your trip is not affected.",
+  "@incidentTypesUnavailableBody": { "description": "P18 types failure body" },
+
   "opsOnBoard": "ON BOARD",
   "@opsOnBoard": { "description": "Label above the occupancy figure" },
 

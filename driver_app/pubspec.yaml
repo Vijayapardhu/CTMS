@@ -61,6 +61,7 @@ dependencies:
   drift_flutter: 0.2.0
   geolocator: ^14.0.2
   google_maps_flutter: ^2.14.2
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

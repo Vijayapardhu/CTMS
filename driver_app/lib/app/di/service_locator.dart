@@ -24,7 +24,9 @@ import '../../features/auth/data/session_manager.dart';
 import '../../features/auth/data/session_store.dart';
 import '../../features/auth/presentation/bloc/session_bloc.dart';
 import '../../features/evidence/data/photo_capture.dart';
+import '../../core/sos/sos_service.dart';
 import '../../features/gps/data/location_source.dart';
+import '../../features/incidents/data/incident_api.dart';
 import '../../features/operations/data/operations_api.dart';
 import '../../features/operations/presentation/bloc/operations_cubit.dart';
 import '../../features/tracking/data/tracking_api.dart';
@@ -229,6 +231,24 @@ Future<void> configureDependencies(
       ),
     );
 
+  // An incident or an SOS replays through the same engine, under the key it
+  // was written down with.
+  final incidents = IncidentApi(sl<ApiClient>());
+  engine.register(
+    SyncKinds.incident,
+    (action) => sl<ApiClient>().post('/incidents', body: action.payload),
+  );
+
+  // Application-level, deliberately. A driver must be able to raise this with
+  // no trip, no fix and no network, so it belongs to no screen and to no other
+  // machine.
+  sl.registerSingleton<SosService>(SosService(
+    api: incidents,
+    queue: queue,
+    sync: sl<SyncCubit>(),
+    logger: sl<LoggerService>(),
+  ));
+
   sl.registerSingleton<OperationsCubit>(OperationsCubit(
     api: operations,
     queue: queue,
@@ -250,6 +270,7 @@ Future<void> configureDependencies(
 
 /// Clears every registration. Used between tests and on a full restart.
 Future<void> resetDependencies() async {
+  if (sl.isRegistered<SosService>()) await sl<SosService>().close();
   if (sl.isRegistered<OperationsCubit>()) await sl<OperationsCubit>().close();
   if (sl.isRegistered<TrackingBloc>()) await sl<TrackingBloc>().close();
   if (sl.isRegistered<GpsCubit>()) await sl<GpsCubit>().close();

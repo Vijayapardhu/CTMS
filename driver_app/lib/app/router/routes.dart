@@ -18,6 +18,8 @@ abstract final class Routes {
   /// Pushed over the trip tab, inside the shell — a driver mid-inspection
   /// keeps the tab bar and can still check the map.
   static const inspection = 'inspection';
+  static const sos = 'sos';
+  static const incident = 'incident';
   static const inspectionPath = '$trip/inspection/:busId';
 
   static const splash = '/splash';

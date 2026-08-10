@@ -605,6 +605,58 @@ class _Running extends StatelessWidget {
         // The same controls the map carries. A driver must never have to open
         // the map to operate the bus.
         TripControls(tripId: trip.id),
+        const SizedBox(height: Spacing.xl),
+        const _ProblemActions(),
+      ],
+    );
+  }
+}
+
+/// The two ways out of normal operation.
+///
+/// Kept below the ordinary controls and visually separate from them: an
+/// emergency is not another trip action. SOS carries the danger colour and
+/// nothing else on the screen does, so the difference between "normal" and
+/// "emergency" is legible at a glance without turning the screen red.
+class _ProblemActions extends StatelessWidget {
+  const _ProblemActions();
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = AppStrings.of(context);
+    final colors = context.ctms;
+
+    return Row(
+      children: [
+        Expanded(
+          child: SizedBox(
+            height: Sizes.buttonProminent,
+            child: OutlinedButton.icon(
+              onPressed: () => context.pushNamed(Routes.incident),
+              icon: const AppIconView(AppIcon.breakdown, size: IconSize.md),
+              label: Text(strings.incidentOpen),
+            ),
+          ),
+        ),
+        const SizedBox(width: Spacing.md),
+        SizedBox(
+          width: Sizes.counterButton,
+          height: Sizes.buttonProminent,
+          child: FilledButton(
+            onPressed: () => context.pushNamed(Routes.sos),
+            style: FilledButton.styleFrom(
+              backgroundColor: colors.critical,
+              foregroundColor: colors.onCritical,
+            ),
+            child: Text(
+              strings.sosOpen,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
       ],
     );
   }

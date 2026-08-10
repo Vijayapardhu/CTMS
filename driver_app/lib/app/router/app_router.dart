@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/services/analytics_service.dart';
@@ -12,6 +13,13 @@ import '../../features/auth/presentation/bloc/session_bloc.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/session_expired_screen.dart';
 import '../../features/auth/presentation/splash_screen.dart';
+import '../../core/api/api_client.dart';
+import '../../core/sync/drift_sync_queue.dart';
+import '../../core/sync/sync_cubit.dart';
+import '../../features/incidents/data/incident_api.dart';
+import '../../features/incidents/presentation/bloc/incident_cubit.dart';
+import '../../features/incidents/presentation/incident_screen.dart';
+import '../../features/incidents/presentation/sos_screen.dart';
 import '../../features/inspection/presentation/inspection_entry.dart';
 import '../../features/map/presentation/map_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
@@ -82,6 +90,23 @@ GoRouter buildRouter({
                 name: Routes.trip,
                 builder: (context, state) => const TripScreen(),
                 routes: [
+                  GoRoute(
+                    path: 'sos',
+                    name: Routes.sos,
+                    builder: (context, state) => const SosScreen(),
+                  ),
+                  GoRoute(
+                    path: 'incident',
+                    name: Routes.incident,
+                    builder: (context, state) => BlocProvider<IncidentCubit>(
+                      create: (_) => IncidentCubit(
+                        api: IncidentApi(sl<ApiClient>()),
+                        queue: sl<DriftSyncQueue>(),
+                        sync: sl<SyncCubit>(),
+                      )..load(),
+                      child: const IncidentScreen(),
+                    ),
+                  ),
                   GoRoute(
                     path: 'inspection/:busId',
                     name: Routes.inspection,

@@ -640,6 +640,192 @@ abstract class AppStrings {
   /// **'Route could not be loaded — the bus position is still live.'**
   String get mapRouteUnavailable;
 
+  /// P17 title
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency'**
+  String get sosTitle;
+
+  /// P17 instruction above the control
+  ///
+  /// In en, this message translates to:
+  /// **'Hold the button to alert the transport office.'**
+  String get sosPrompt;
+
+  /// Label on the hold-to-activate control
+  ///
+  /// In en, this message translates to:
+  /// **'SOS'**
+  String get sosHold;
+
+  /// Shown while the hold is in progress
+  ///
+  /// In en, this message translates to:
+  /// **'Keep holding'**
+  String get sosHolding;
+
+  /// P17 — reassures that no form follows
+  ///
+  /// In en, this message translates to:
+  /// **'You do not need to type anything. Your bus and position are sent automatically.'**
+  String get sosNoDetailsNeeded;
+
+  /// P17 — the server accepted the alert
+  ///
+  /// In en, this message translates to:
+  /// **'Help has been alerted'**
+  String get sosSentTitle;
+
+  /// Fallback when the server sent no message
+  ///
+  /// In en, this message translates to:
+  /// **'The transport office has your alert.'**
+  String get sosSentBody;
+
+  /// P17 — no signal; the alert is held on the phone
+  ///
+  /// In en, this message translates to:
+  /// **'Saved — not yet sent'**
+  String get sosQueuedTitle;
+
+  /// P17 queued body — never claims the alert was sent
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone is holding this alert and will send it as soon as there is signal. Call the office now if you can.'**
+  String get sosQueuedBody;
+
+  /// Shown instead of call/SMS when no number is set
+  ///
+  /// In en, this message translates to:
+  /// **'No emergency number is configured on this device.'**
+  String get sosNoNumber;
+
+  /// Native dialler fallback
+  ///
+  /// In en, this message translates to:
+  /// **'Call the office'**
+  String get sosCall;
+
+  /// Native SMS fallback, pre-filled with coordinates
+  ///
+  /// In en, this message translates to:
+  /// **'Send a text with my position'**
+  String get sosSms;
+
+  /// Entry point on the running trip
+  ///
+  /// In en, this message translates to:
+  /// **'SOS'**
+  String get sosOpen;
+
+  /// P18 title
+  ///
+  /// In en, this message translates to:
+  /// **'Report a problem'**
+  String get incidentTitle;
+
+  /// Entry point on the running trip
+  ///
+  /// In en, this message translates to:
+  /// **'Report a problem'**
+  String get incidentOpen;
+
+  /// P18 type picker heading
+  ///
+  /// In en, this message translates to:
+  /// **'What has happened?'**
+  String get incidentWhatHappened;
+
+  /// Marks a type the server will refuse without evidence
+  ///
+  /// In en, this message translates to:
+  /// **'A photograph is required'**
+  String get incidentNeedsPhoto;
+
+  /// P18 description field
+  ///
+  /// In en, this message translates to:
+  /// **'What happened?'**
+  String get incidentDescription;
+
+  /// Keeps the driver from writing an essay
+  ///
+  /// In en, this message translates to:
+  /// **'A sentence is enough.'**
+  String get incidentDescriptionHint;
+
+  /// Names what the photograph is for
+  ///
+  /// In en, this message translates to:
+  /// **'A photograph is required for {label}'**
+  String incidentEvidenceRequired(String label);
+
+  /// vehicle_can_continue
+  ///
+  /// In en, this message translates to:
+  /// **'The bus can keep going'**
+  String get incidentCanContinue;
+
+  /// Explains the consequence of the switch
+  ///
+  /// In en, this message translates to:
+  /// **'Turn this off if the bus cannot be driven.'**
+  String get incidentCanContinueHint;
+
+  /// P18 submit action
+  ///
+  /// In en, this message translates to:
+  /// **'Report it'**
+  String get incidentSubmit;
+
+  /// Fallback when the server sent no message
+  ///
+  /// In en, this message translates to:
+  /// **'Reported'**
+  String get incidentReported;
+
+  /// Shown when the server grounded the vehicle
+  ///
+  /// In en, this message translates to:
+  /// **'Bus out of service'**
+  String get incidentBusOutOfService;
+
+  /// The consequence, in the server's terms
+  ///
+  /// In en, this message translates to:
+  /// **'A maintenance ticket has been opened. Do not continue this trip.'**
+  String get incidentMaintenanceOpened;
+
+  /// Leaves the incident screen
+  ///
+  /// In en, this message translates to:
+  /// **'Back to trip'**
+  String get incidentBackToTrip;
+
+  /// P18 — held on the phone
+  ///
+  /// In en, this message translates to:
+  /// **'Saved — not yet sent'**
+  String get incidentQueuedTitle;
+
+  /// P18 queued body
+  ///
+  /// In en, this message translates to:
+  /// **'This report will be sent when you have signal.'**
+  String get incidentQueuedBody;
+
+  /// P18 — the types read failed
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot load the problem list'**
+  String get incidentTypesUnavailableTitle;
+
+  /// P18 types failure body
+  ///
+  /// In en, this message translates to:
+  /// **'The list of problem types comes from the office and could not be read. Your trip is not affected.'**
+  String get incidentTypesUnavailableBody;
+
   /// Label above the occupancy figure
   ///
   /// In en, this message translates to:

@@ -256,4 +256,8 @@ abstract final class SyncKinds {
   /// happens to be in a dead spot.
   static const board = 'board';
   static const alight = 'alight';
+
+  /// An incident or an SOS. Written down before it is sent, and replayed under
+  /// the key it was written with.
+  static const incident = 'incident';
 }

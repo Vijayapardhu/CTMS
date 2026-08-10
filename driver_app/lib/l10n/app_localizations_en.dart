@@ -348,6 +348,107 @@ class AppStringsEn extends AppStrings {
       'Route could not be loaded — the bus position is still live.';
 
   @override
+  String get sosTitle => 'Emergency';
+
+  @override
+  String get sosPrompt => 'Hold the button to alert the transport office.';
+
+  @override
+  String get sosHold => 'SOS';
+
+  @override
+  String get sosHolding => 'Keep holding';
+
+  @override
+  String get sosNoDetailsNeeded =>
+      'You do not need to type anything. Your bus and position are sent automatically.';
+
+  @override
+  String get sosSentTitle => 'Help has been alerted';
+
+  @override
+  String get sosSentBody => 'The transport office has your alert.';
+
+  @override
+  String get sosQueuedTitle => 'Saved — not yet sent';
+
+  @override
+  String get sosQueuedBody =>
+      'Your phone is holding this alert and will send it as soon as there is signal. Call the office now if you can.';
+
+  @override
+  String get sosNoNumber => 'No emergency number is configured on this device.';
+
+  @override
+  String get sosCall => 'Call the office';
+
+  @override
+  String get sosSms => 'Send a text with my position';
+
+  @override
+  String get sosOpen => 'SOS';
+
+  @override
+  String get incidentTitle => 'Report a problem';
+
+  @override
+  String get incidentOpen => 'Report a problem';
+
+  @override
+  String get incidentWhatHappened => 'What has happened?';
+
+  @override
+  String get incidentNeedsPhoto => 'A photograph is required';
+
+  @override
+  String get incidentDescription => 'What happened?';
+
+  @override
+  String get incidentDescriptionHint => 'A sentence is enough.';
+
+  @override
+  String incidentEvidenceRequired(String label) {
+    return 'A photograph is required for $label';
+  }
+
+  @override
+  String get incidentCanContinue => 'The bus can keep going';
+
+  @override
+  String get incidentCanContinueHint =>
+      'Turn this off if the bus cannot be driven.';
+
+  @override
+  String get incidentSubmit => 'Report it';
+
+  @override
+  String get incidentReported => 'Reported';
+
+  @override
+  String get incidentBusOutOfService => 'Bus out of service';
+
+  @override
+  String get incidentMaintenanceOpened =>
+      'A maintenance ticket has been opened. Do not continue this trip.';
+
+  @override
+  String get incidentBackToTrip => 'Back to trip';
+
+  @override
+  String get incidentQueuedTitle => 'Saved — not yet sent';
+
+  @override
+  String get incidentQueuedBody =>
+      'This report will be sent when you have signal.';
+
+  @override
+  String get incidentTypesUnavailableTitle => 'Cannot load the problem list';
+
+  @override
+  String get incidentTypesUnavailableBody =>
+      'The list of problem types comes from the office and could not be read. Your trip is not affected.';
+
+  @override
   String get opsOnBoard => 'ON BOARD';
 
   @override
