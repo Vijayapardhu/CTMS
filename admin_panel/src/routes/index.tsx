@@ -3,6 +3,8 @@ import { Placeholder } from '@/components/Placeholder'
 import type { AppIconName } from '@/icons/registry'
 import { AccessLevel } from '@/auth/accessLevel'
 import { DashboardScreen } from '@/features/dashboard/DashboardScreen'
+import { TripsScreen } from '@/features/trips/TripsScreen'
+import { TripDetailScreen } from '@/features/trips/TripDetailScreen'
 
 type ScreenSpec = {
   path: string
@@ -32,8 +34,22 @@ export const screens: ScreenSpec[] = [
     element: <DashboardScreen />,
   },
   { path: '/live', title: 'Live Operations', icon: 'live', slice: 'slice 4', requires: AccessLevel.VIEWER },
-  { path: '/trips', title: 'Trips', icon: 'trips', slice: 'slice 3', requires: AccessLevel.VIEWER },
-  { path: '/trips/:id', title: 'Trip', icon: 'trips', slice: 'slice 3', requires: AccessLevel.VIEWER },
+  {
+    path: '/trips',
+    title: 'Trips',
+    icon: 'trips',
+    slice: 'slice 3',
+    requires: AccessLevel.VIEWER,
+    element: <TripsScreen />,
+  },
+  {
+    path: '/trips/:id',
+    title: 'Trip',
+    icon: 'trips',
+    slice: 'slice 3',
+    requires: AccessLevel.VIEWER,
+    element: <TripDetailScreen />,
+  },
   { path: '/routes', title: 'Routes', icon: 'routes', slice: 'slice 5', requires: AccessLevel.VIEWER },
   { path: '/buses', title: 'Buses', icon: 'buses', slice: 'slice 5', requires: AccessLevel.VIEWER },
   { path: '/buses/:id', title: 'Bus', icon: 'buses', slice: 'slice 5', requires: AccessLevel.VIEWER },
