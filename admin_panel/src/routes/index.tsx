@@ -10,6 +10,8 @@ import { FleetScreen } from '@/features/fleet/FleetScreen'
 import { BusDetailScreen } from '@/features/fleet/BusDetailScreen'
 import { IncidentsScreen } from '@/features/incidents/IncidentsScreen'
 import { IncidentDetailScreen } from '@/features/incidents/IncidentDetailScreen'
+import { MaintenanceScreen } from '@/features/maintenance/MaintenanceScreen'
+import { MaintenanceDetailScreen } from '@/features/maintenance/MaintenanceDetailScreen'
 
 type ScreenSpec = {
   path: string
@@ -81,7 +83,22 @@ export const screens: ScreenSpec[] = [
   },
   { path: '/drivers', title: 'Drivers', icon: 'drivers', slice: 'slice 7', capability: 'drivers.read' },
   { path: '/inspections', title: 'Inspections', icon: 'inspections', slice: 'slice 7', capability: 'bus.readiness.read' },
-  { path: '/maintenance', title: 'Maintenance', icon: 'maintenance', slice: 'slice 6', capability: 'maintenance.read' },
+  {
+    path: '/maintenance',
+    title: 'Maintenance',
+    icon: 'maintenance',
+    slice: 'phase 7',
+    capability: 'maintenance.read',
+    element: <MaintenanceScreen />,
+  },
+  {
+    path: '/maintenance/:id',
+    title: 'Maintenance ticket',
+    icon: 'maintenance',
+    slice: 'phase 7',
+    capability: 'maintenance.ticket.read',
+    element: <MaintenanceDetailScreen />,
+  },
   {
     path: '/incidents',
     title: 'Incidents',
