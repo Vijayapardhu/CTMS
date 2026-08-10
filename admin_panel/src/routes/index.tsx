@@ -19,6 +19,10 @@ import { AlertsScreen } from '@/features/comms/AlertsScreen'
 import { ReportsScreen } from '@/features/reports/ReportsScreen'
 import { GovernanceScreen } from '@/features/governance/GovernanceScreen'
 import { AccountsScreen } from '@/features/governance/AccountsScreen'
+import { DriversScreen } from '@/features/people/DriversScreen'
+import { StudentsScreen } from '@/features/people/StudentsScreen'
+import { RoutesScreen } from '@/features/routes/RoutesScreen'
+import { InspectionsScreen } from '@/features/fleet/InspectionsScreen'
 
 type ScreenSpec = {
   path: string
@@ -71,7 +75,14 @@ export const screens: ScreenSpec[] = [
     capability: 'trip.read',
     element: <TripDetailScreen />,
   },
-  { path: '/routes', title: 'Routes', icon: 'routes', slice: 'slice 5', capability: 'routes.read' },
+  {
+    path: '/routes',
+    title: 'Routes',
+    icon: 'routes',
+    slice: 'phase 13',
+    capability: 'routes.read',
+    element: <RoutesScreen />,
+  },
   {
     path: '/buses',
     title: 'Buses',
@@ -88,8 +99,22 @@ export const screens: ScreenSpec[] = [
     capability: 'bus.read',
     element: <BusDetailScreen />,
   },
-  { path: '/drivers', title: 'Drivers', icon: 'drivers', slice: 'slice 7', capability: 'drivers.read' },
-  { path: '/inspections', title: 'Inspections', icon: 'inspections', slice: 'slice 7', capability: 'bus.readiness.read' },
+  {
+    path: '/drivers',
+    title: 'Drivers',
+    icon: 'drivers',
+    slice: 'phase 13',
+    capability: 'drivers.read',
+    element: <DriversScreen />,
+  },
+  {
+    path: '/inspections',
+    title: 'Inspections',
+    icon: 'inspections',
+    slice: 'phase 13',
+    capability: 'bus.readiness.read',
+    element: <InspectionsScreen />,
+  },
   {
     path: '/maintenance',
     title: 'Maintenance',
@@ -138,7 +163,14 @@ export const screens: ScreenSpec[] = [
     capability: 'attendance.read',
     element: <AttendanceScreen />,
   },
-  { path: '/students', title: 'Students', icon: 'students', slice: 'slice 7', capability: 'students.read' },
+  {
+    path: '/students',
+    title: 'Students',
+    icon: 'students',
+    slice: 'phase 13',
+    capability: 'students.read',
+    element: <StudentsScreen />,
+  },
   {
     path: '/alerts',
     title: 'Alerts',

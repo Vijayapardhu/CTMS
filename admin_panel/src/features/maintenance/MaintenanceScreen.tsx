@@ -392,10 +392,18 @@ function PreventiveTab() {
   )
 }
 
-/** Raising work. SUPPORT and above — `RequireAccessLevel:SUPPORT` on the route. */
+/**
+ * Raising work. SUPPORT and above — `RequireAccessLevel:SUPPORT` on the route.
+ *
+ * A11 links here with `?bus_id=…&compose=1` when somebody raises a ticket from
+ * a failed readiness check. Two screens, one intent, and no invented endpoint
+ * that does both.
+ */
 function OpenTicketButton() {
-  const [open, setOpen] = useState(false)
-  const [busId, setBusId] = useState('')
+  const [params] = useSearchParams()
+  const prefilledBus = params.get('bus_id') ?? ''
+  const [open, setOpen] = useState(params.get('compose') === '1')
+  const [busId, setBusId] = useState(prefilledBus)
   const [issue, setIssue] = useState('')
   const [priority, setPriority] = useState<MaintenancePriority>('MEDIUM')
 
