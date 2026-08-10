@@ -82,9 +82,10 @@ against every route, plus a rule test that walks the router and fails if any
 
 ---
 
-## G3-2 — Three self-service mutations still admit any admin
+## G3-2 — Three self-service mutations admitted any admin — **FIXED**
 
-Found while fixing G3-1. These carry no role gate at all, because they also
+Found while fixing G3-1. Closed by `fix(auth): close self-service
+authorization boundary`. These carry no role gate at all, because they also
 serve the subject themselves:
 
 ```text
@@ -95,15 +96,32 @@ PATCH /drivers/{id}/status    DriverPolicy::changeStatus isAdmin() || self
 
 A VIEWER reaches all three, because the policies ask only `isAdmin()`.
 
-**Why this was not fixed with the rest.** Route middleware cannot express
+**Why it needed a different fix.** Route middleware cannot express
 "OPERATIONS **or** the subject themselves". Adding `access:OPERATIONS` would
 stop a student editing their own contact details and a driver marking
-themselves off duty — both deliberate features. The fix belongs in the three
-policies, which means changing how policies and access levels relate, and that
-is a larger decision than a route-file edit.
+themselves off duty — both deliberate features.
 
-**Panel impact:** none. The panel offers these only at `OPERATIONS`, and the
-access matrix marks them ⚠. **Raised for a decision.**
+**The fix.** The three policies now ask `hasAccessLevel()` instead of
+`isAdmin()`, after the subject check:
+
+```text
+PUT   /users/{id}          the subject, or SUPER_ADMIN
+PUT   /students/{id}       the student, or OPERATIONS
+PATCH /drivers/{id}/status the driver,  or OPERATIONS
+```
+
+`SUPER_ADMIN` for an account because creating and deactivating accounts
+already live there; `OPERATIONS` for the other two because seating a student on
+a route and assigning a driver a bus already do.
+
+The privilege fields were never exposed and still are not: `UpdateUserRequest`
+does not accept `role`, `is_active`, `is_system` or `access_level` at all, and
+`StudentController` strips the paid entitlement for a non-admin caller.
+`SelfServiceBoundaryTest` proves both, and that self-service still works.
+
+**OpenAPI does not change.** The generated document reads route middleware, and
+says in its own description that record-level scope is enforced by policy and is
+not visible there. This fix is invisible to it by design.
 
 ---
 
@@ -268,7 +286,7 @@ No behaviour change on either side; recorded so the next person does not add a
 | ID | Class | Gap | MVP impact |
 |---|---|---|---|
 | G3-1 | ~~G3~~ | ~~VIEWER can perform 10 mutations~~ | **FIXED** — server-enforced |
-| G3-2 | **G3** | 3 self-service mutations admit any admin | Panel hides; needs a policy-level fix |
+| G3-2 | ~~G3~~ | ~~3 self-service mutations admit any admin~~ | **FIXED** — policy-level, server-enforced |
 | G2-1 | G2 | No fleet-wide live endpoint | Bounded polling, 12-trip cap |
 | G2-2 | G2 | No fleet-wide inspection list | A11 is today's failures only |
 | G1-1 | G1 | No dashboard aggregation | 6 parallel gets, per-tile loading |

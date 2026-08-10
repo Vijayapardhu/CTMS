@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\AccessLevel;
 use App\Models\Student;
 use App\Models\User;
 
@@ -36,11 +37,14 @@ class StudentPolicy
      */
     public function update(User $actor, Student $student): bool
     {
-        if ($actor->isAdmin()) {
+        if ($actor->isStudent() && $student->user_id === $actor->getKey()) {
             return true;
         }
 
-        return $actor->isStudent() && $student->user_id === $actor->getKey();
+        // Everything else on a student's record — the paid entitlement, the
+        // registration number — is an operations decision, exactly as seating
+        // them on a route and changing their status already are.
+        return $actor->hasAccessLevel(AccessLevel::OPERATIONS);
     }
 
     /**

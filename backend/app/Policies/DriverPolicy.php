@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\AccessLevel;
 use App\Models\Driver;
 use App\Models\User;
 
@@ -38,13 +39,14 @@ class DriverPolicy
 
     public function changeStatus(User $actor, Driver $driver): bool
     {
-        if ($actor->isAdmin()) {
+        // A driver may mark themselves available or off duty; the state
+        // machine in the service decides whether the specific move is legal.
+        if ($actor->isDriver() && $driver->user_id === $actor->getKey()) {
             return true;
         }
 
-        // A driver may mark themselves available or off duty; the state
-        // machine in the service decides whether the specific move is legal.
-        return $actor->isDriver() && $driver->user_id === $actor->getKey();
+        // Standing somebody else down takes a bus off the road with them.
+        return $actor->hasAccessLevel(AccessLevel::OPERATIONS);
     }
 
     public function assignBus(User $actor, Driver $driver): bool

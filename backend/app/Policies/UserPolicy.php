@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\AccessLevel;
 use App\Models\User;
 
 /**
@@ -37,7 +38,18 @@ class UserPolicy
             return false;
         }
 
-        return $actor->is($target) || $actor->isAdmin();
+        // Anybody may edit their own contact details. Which fields that
+        // actually covers is UpdateUserRequest's business, and `role` and
+        // `is_active` are deliberately not among them.
+        if ($actor->is($target)) {
+            return true;
+        }
+
+        // Editing somebody else's account is account administration, which is
+        // where creating accounts and deactivating them already live. An
+        // administrator holding read-only oversight is not an account
+        // administrator.
+        return $actor->hasAccessLevel(AccessLevel::SUPER_ADMIN);
     }
 
     /**

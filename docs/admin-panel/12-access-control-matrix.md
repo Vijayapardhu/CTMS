@@ -48,8 +48,8 @@ No new role is created. The panel refuses to log in any user whose
 
 - **✓** — server-enforced allow
 - **—** — server-enforced deny (403)
-- **⚠** — **UI-hidden but NOT server-enforced.** The panel does not offer it,
-  and the server would accept it from any admin. See G3-2 — G3-1 is fixed.
+- **⚠** — subject-scoped: enforced in the policy rather than by route
+  middleware, so the route table alone understates it. See G3-2.
 
 ## Navigation and read access
 
@@ -171,17 +171,22 @@ VIEWER. All ten are now server-enforced.
 | `POST /attendance-discrepancies/{id}/review` | SUPPORT |
 | `POST /notification-log/{id}/resend` | SUPPORT |
 
-## Still not enforced — G3-2
+## Subject-scoped mutations — G3-2, fixed
 
 Three mutations have no role gate because they also serve the subject
-themselves, and their policies ask only `isAdmin()`. Route middleware cannot
-express "OPERATIONS or the subject", so these need a policy-level fix.
+themselves. Route middleware cannot express "tier X **or** the subject", so
+these are enforced in the policy instead — and now consult the access level
+rather than asking only `isAdmin()`.
 
-| Endpoint | Panel shows it to | Server accepts it from |
-|---|---|---|
-| `PUT /students/{id}` | OPERATIONS+ | any admin, or the student |
-| `PUT /users/{id}` | SUPER_ADMIN | any admin, or the user |
-| `PATCH /drivers/{id}/status` | OPERATIONS+ | any admin, or the driver |
+| Endpoint | Server accepts it from |
+|---|---|
+| `PUT /users/{id}` | the subject, or SUPER_ADMIN |
+| `PUT /students/{id}` | the student, or OPERATIONS |
+| `PATCH /drivers/{id}/status` | the driver, or OPERATIONS |
+
+These are the only endpoints where the panel's gate and the server's are not
+the same middleware, so they are worth remembering: the server is stricter than
+the route table looks.
 
 ## Frontend rules
 
