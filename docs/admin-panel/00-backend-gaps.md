@@ -167,6 +167,37 @@ existing service code and one policy check. **Phase 2, not MVP.**
 
 ---
 
+## G2-3 — The backend has no CORS layer
+
+Found while running the panel in a browser for the first time. There is no
+`config/cors.php` and no `HandleCors` middleware: the driver app is a native
+client, so nothing ever needed one.
+
+**Cost.** A browser on any origin other than the API's cannot call it. The
+first real sign-in attempt returned "The CTMS server could not be reached" —
+the network-failure path rendering correctly, for a reason that has nothing to
+do with the network.
+
+**Resolved for development without touching the backend.** Vite proxies `/api`
+to the backend in both `dev` and `preview`, and the panel's API base is
+relative, so the browser only ever talks to its own origin. `CTMS_BACKEND`
+overrides the proxy target.
+
+**Not resolved for deployment.** Serving the panel from a different origin to
+the API needs one of:
+
+1. Laravel serves the built panel, same origin — no CORS at all, and the
+   simplest thing that works
+2. A reverse proxy in front of both, same origin — the same answer, at the
+   infrastructure layer
+3. `HandleCors` plus a `config/cors.php` allowing exactly the panel's origin
+   with credentials — a real backend change
+
+**Classified G2**, and it is a deployment decision rather than a code defect.
+The prototype runs today on option 1's logic via the dev proxy.
+
+---
+
 ## G2-2 — No fleet-wide inspection list
 
 The only inspection reads are `GET /inspections/checklist`,
@@ -288,6 +319,7 @@ No behaviour change on either side; recorded so the next person does not add a
 | G3-1 | ~~G3~~ | ~~VIEWER can perform 10 mutations~~ | **FIXED** — server-enforced |
 | G3-2 | ~~G3~~ | ~~3 self-service mutations admit any admin~~ | **FIXED** — policy-level, server-enforced |
 | G2-1 | G2 | No fleet-wide live endpoint | Bounded polling, 12-trip cap |
+| G2-3 | G2 | Backend has no CORS layer | Dev proxy; deployment needs a decision |
 | G2-2 | G2 | No fleet-wide inspection list | A11 is today's failures only |
 | G1-1 | G1 | No dashboard aggregation | 6 parallel gets, per-tile loading |
 | G1-2 | G1 | Incidents lack severity/date filters | Open queue only, sorted client-side |

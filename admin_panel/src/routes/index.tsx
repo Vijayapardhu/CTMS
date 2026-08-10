@@ -1,6 +1,8 @@
+import type { ReactNode } from 'react'
 import { Placeholder } from '@/components/Placeholder'
 import type { AppIconName } from '@/icons/registry'
 import { AccessLevel } from '@/auth/accessLevel'
+import { DashboardScreen } from '@/features/dashboard/DashboardScreen'
 
 type ScreenSpec = {
   path: string
@@ -9,6 +11,8 @@ type ScreenSpec = {
   slice: string
   /** The least privileged level that may reach this screen. */
   requires: AccessLevel
+  /** Built. Absent means the placeholder still stands. */
+  element?: ReactNode
 }
 
 /**
@@ -19,7 +23,14 @@ type ScreenSpec = {
  * it. The slice named is the one that fills the screen.
  */
 export const screens: ScreenSpec[] = [
-  { path: '/', title: 'Dashboard', icon: 'dashboard', slice: 'slice 2', requires: AccessLevel.VIEWER },
+  {
+    path: '/',
+    title: 'Dashboard',
+    icon: 'dashboard',
+    slice: 'slice 2',
+    requires: AccessLevel.VIEWER,
+    element: <DashboardScreen />,
+  },
   { path: '/live', title: 'Live Operations', icon: 'live', slice: 'slice 4', requires: AccessLevel.VIEWER },
   { path: '/trips', title: 'Trips', icon: 'trips', slice: 'slice 3', requires: AccessLevel.VIEWER },
   { path: '/trips/:id', title: 'Trip', icon: 'trips', slice: 'slice 3', requires: AccessLevel.VIEWER },
@@ -40,5 +51,5 @@ export const screens: ScreenSpec[] = [
 ]
 
 export function screenElement(screen: ScreenSpec) {
-  return <Placeholder title={screen.title} icon={screen.icon} slice={screen.slice} />
+  return screen.element ?? <Placeholder title={screen.title} icon={screen.icon} slice={screen.slice} />
 }

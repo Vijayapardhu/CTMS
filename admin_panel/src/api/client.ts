@@ -50,7 +50,12 @@ type RequestOptions = {
 }
 
 function url(path: string, query?: RequestOptions['query']): string {
-  const target = new URL(config.apiBaseUrl + (path.startsWith('/') ? path : `/${path}`))
+  // Resolved against this origin when the base is relative, which is how the
+  // proxied development setup works.
+  const target = new URL(
+    config.apiBaseUrl + (path.startsWith('/') ? path : `/${path}`),
+    globalThis.location?.origin ?? 'http://localhost',
+  )
 
   for (const [key, value] of Object.entries(query ?? {})) {
     if (value !== undefined && value !== null && value !== '') {

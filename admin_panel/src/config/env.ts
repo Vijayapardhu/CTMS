@@ -18,7 +18,13 @@ export type AppConfig = {
   apiHost: string
 }
 
-const DEVELOPMENT_API = 'http://localhost:8000/api/v1'
+/**
+ * Relative by default, so the browser talks only to its own origin and the
+ * dev server proxies `/api` to the backend. The backend has no CORS layer,
+ * which is fine for the native driver app and fatal for a browser on another
+ * origin.
+ */
+const DEVELOPMENT_API = '/api/v1'
 
 function readEnvironment(raw: string | undefined): Environment {
   switch (raw) {
@@ -41,7 +47,8 @@ export function readConfig(env: ImportMetaEnv = import.meta.env): AppConfig {
 
   let apiHost = apiBaseUrl
   try {
-    apiHost = new URL(apiBaseUrl).host
+    // A relative base resolves against this origin — the proxied case.
+    apiHost = new URL(apiBaseUrl, globalThis.location?.origin ?? 'http://localhost').host
   } catch {
     // Left as the raw string. A malformed URL is worth showing in full.
   }
