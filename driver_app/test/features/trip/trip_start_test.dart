@@ -299,7 +299,8 @@ void main() {
   });
 
   group('offline', () {
-    testWidgets('Start is disabled with no connection', (tester) async {
+    testWidgets('no connection warns, but never bars the attempt',
+        (tester) async {
       await openReadyTrip(tester);
 
       app.connectivity.emit(Reachability.offline);
@@ -308,8 +309,27 @@ void main() {
       final button =
           tester.widget<ButtonStyleButton>(find.byKey(startTripKey));
 
-      expect(button.onPressed, isNull);
-      expect(find.textContaining('need a connection'), findsOneWidget);
+      expect(
+        button.onPressed,
+        isNotNull,
+        reason: 'the flag only clears on a successful call, and this button '
+            'is the call — disabling it strands a driver in a depot',
+      );
+      expect(find.textContaining('may not get through'), findsOneWidget);
+    });
+
+    testWidgets('an attempt that really fails says so, and stays put',
+        (tester) async {
+      await openReadyTrip(tester);
+
+      app.connectivity.emit(Reachability.offline);
+      await settle(tester);
+      app.backend.offline('/start');
+
+      await confirmStart(tester);
+
+      expect(app.trip.state, isA<TripReady>());
+      expect(find.text('RUNNING'), findsNothing);
     });
   });
 

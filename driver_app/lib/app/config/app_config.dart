@@ -19,7 +19,22 @@ class AppConfig {
   final String apiBaseUrl;
   final bool enableVerboseLogging;
 
+  /// The emulator's route back to the developer's own machine. Fine for
+  /// development, and a released build still carrying it reaches nothing at
+  /// all on a real handset.
+  static const developmentApiBaseUrl = 'http://10.0.2.2:8000/api/v1';
+
   bool get isProduction => flavor == Flavor.production;
+
+  /// A production build that was never told where the server is.
+  ///
+  /// Cheaper to catch in the start-up log than in a demo, where it presents
+  /// as every screen failing to load for no visible reason.
+  bool get isMisconfigured => isProduction && apiBaseUrl == developmentApiBaseUrl;
+
+  /// The host alone, for showing a tester which backend they are on without
+  /// putting a full URL in a list tile.
+  String get apiHost => Uri.tryParse(apiBaseUrl)?.host ?? apiBaseUrl;
 
   /// The developer-mode toggle is available off production only. A driver must
   /// not be able to reach diagnostics that could alter trip state.
@@ -36,10 +51,9 @@ class AppConfig {
 
     return AppConfig(
       flavor: flavor,
-      // 10.0.2.2 is the host machine from an Android emulator.
       apiBaseUrl: const String.fromEnvironment(
         'API_BASE_URL',
-        defaultValue: 'http://10.0.2.2:8000/api/v1',
+        defaultValue: developmentApiBaseUrl,
       ),
       enableVerboseLogging: flavor != Flavor.production,
     );

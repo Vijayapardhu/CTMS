@@ -47,10 +47,17 @@ class AppStringsEn extends AppStrings {
   String get goToTrip => 'Go to Trip';
 
   @override
-  String get comingSoon => 'Not built yet';
+  String get settingsAbout => 'About';
 
   @override
-  String get comingSoonBody => 'This screen is part of a later slice.';
+  String aboutVersion(String version, String build) {
+    return 'Version $version ($build)';
+  }
+
+  @override
+  String aboutEnvironment(String flavor, String host) {
+    return '$flavor build · $host';
+  }
 
   @override
   String get settingsAppearance => 'Appearance';
@@ -626,14 +633,15 @@ class AppStringsEn extends AppStrings {
   String get tripStart => 'START TRIP';
 
   @override
-  String get tripStartOffline => 'You need a connection to start.';
+  String get tripStartOffline =>
+      'No connection right now — starting may not get through.';
 
   @override
   String get tripStartConfirmTitle => 'Start this trip?';
 
   @override
   String get tripStartConfirmBody =>
-      'Students will be told the bus is on its way.';
+      'Students will be told the bus is on its way, and this phone will share its position with the office until you complete the trip.';
 
   @override
   String get tripStartConfirm => 'Start trip';

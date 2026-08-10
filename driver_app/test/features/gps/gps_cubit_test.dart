@@ -1,4 +1,5 @@
 import 'package:ctms_driver/core/api/api_client.dart';
+import 'package:ctms_driver/core/services/permission_service.dart';
 import 'package:ctms_driver/core/connectivity/connectivity_service.dart';
 import 'package:ctms_driver/core/sync/drift_sync_queue.dart';
 import 'package:ctms_driver/core/sync/sync_cubit.dart';
@@ -45,6 +46,7 @@ void main() {
   late FakeLocation location;
   late _Reach reach;
   late SyncCubit sync;
+  late FakePermissions permissions;
   late GpsCubit gps;
 
   setUp(() {
@@ -77,11 +79,13 @@ void main() {
     );
 
     sync = SyncCubit(queue: queue, engine: engine, connectivity: reach);
+    permissions = FakePermissions();
     gps = GpsCubit(
       source: location,
       queue: queue,
       sync: sync,
       logger: SilentLogger(),
+      permissions: permissions,
     );
   });
 
@@ -296,6 +300,48 @@ void main() {
 
       expect(gps.state, isA<GpsIdle>());
       expect(await queue.count(), 0);
+    });
+  });
+
+  group('the service the driver can see', () {
+    test('starting asks for the notification permission', () async {
+      await gps.start('trip-1');
+
+      // Android 13 hides the foreground-service notification without it, and
+      // a trip tracked with nothing in the shade is invisible tracking.
+      expect(permissions.requested, contains(AppPermission.notifications));
+    });
+
+    test('a refused notification does not stop the trip being tracked',
+        () async {
+      permissions.answer = PermissionStatus.permanentlyDenied;
+
+      await gps.start('trip-1');
+      await fix();
+
+      expect(permissions.requested, contains(AppPermission.notifications));
+      expect(
+        gps.state,
+        isNot(isA<GpsDenied>()),
+        reason: 'the notification is how the driver sees the service, not how '
+            'the office sees the bus',
+      );
+      expect(gps.state.lastFix, isNotNull);
+    });
+
+    test('location refused is not covered up by asking about notifications',
+        () async {
+      location.access = LocationAccess.denied;
+
+      await gps.start('trip-1');
+
+      expect(gps.state, isA<GpsDenied>());
+      expect(
+        permissions.requested,
+        isEmpty,
+        reason: 'there is no service to make visible when there is no fix to '
+            'share, and a second dialog on top of a refusal is noise',
+      );
     });
   });
 }

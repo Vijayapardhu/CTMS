@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../../app/config/app_config.dart';
 import '../../../app/di/service_locator.dart';
 import '../../../core/api/api_failure.dart';
 import '../../../app/settings/app_preferences.dart';
@@ -89,6 +91,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
 
             const Divider(),
+            _SectionHeader(strings.settingsAbout),
+            const _AboutTile(),
+
+            const Divider(),
             const _SignOutTile(),
             const _SignOutEverywhereTile(),
           ],
@@ -153,6 +159,43 @@ class _AccountTile extends StatelessWidget {
                 ),
               ),
           ],
+        );
+      },
+    );
+  }
+}
+
+/// Which build this is, and — off production — which backend it talks to.
+///
+/// The first question support asks is "what version are you on", and a driver
+/// should not have to find that in the Play Store. The environment line is
+/// hidden on production because a driver has no use for it and it would only
+/// be one more thing on screen.
+class _AboutTile extends StatelessWidget {
+  const _AboutTile();
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = AppStrings.of(context);
+    final config = sl<AppConfig>();
+
+    return FutureBuilder<PackageInfo>(
+      future: PackageInfo.fromPlatform(),
+      builder: (context, snapshot) {
+        final info = snapshot.data;
+
+        return ListTile(
+          leading: const AppIconView(AppIcon.info),
+          // Absent while the platform channel answers, and on a host that has
+          // no such channel at all. Neither is worth an error.
+          title: Text(
+            info == null
+                ? strings.tabMe
+                : strings.aboutVersion(info.version, info.buildNumber),
+          ),
+          subtitle: config.isProduction
+              ? null
+              : Text(strings.aboutEnvironment(config.flavor.name, config.apiHost)),
         );
       },
     );

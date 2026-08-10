@@ -418,8 +418,14 @@ class _StartTrip extends StatelessWidget {
             // and `FilledButton.icon` builds a private subclass that a type
             // finder cannot see.
             key: startTripKey,
-            onPressed:
-                offline || starting ? null : () => _confirm(context, strings),
+            // Deliberately not disabled when the connectivity flag says
+            // offline. That flag only clears on a successful call, and this
+            // button is the call — a driver in a depot with one bar would
+            // find the one action they need greyed out with no way to try it.
+            // The attempt is the only evidence of reachability worth having,
+            // and a genuine failure lands on the refusal line below, which is
+            // the server's own words or the network's.
+            onPressed: starting ? null : () => _confirm(context, strings),
             icon: starting
                 ? const SizedBox.square(
                     dimension: IconSize.sm,

@@ -30,10 +30,21 @@
   "goToTrip": "Go to Trip",
   "@goToTrip": { "description": "Returns the driver to the default tab" },
 
-  "comingSoon": "Not built yet",
-  "@comingSoon": { "description": "Placeholder title on a screen with no feature slice yet" },
-  "comingSoonBody": "This screen is part of a later slice.",
-  "@comingSoonBody": { "description": "Placeholder body on a screen with no feature slice yet" },
+
+  "settingsAbout": "About",
+  "@settingsAbout": { "description": "R4 section header for build identity" },
+
+  "aboutVersion": "Version {version} ({build})",
+  "@aboutVersion": {
+    "description": "R4 — the build a driver is running, for support calls",
+    "placeholders": { "version": { "type": "String" }, "build": { "type": "String" } }
+  },
+
+  "aboutEnvironment": "{flavor} build · {host}",
+  "@aboutEnvironment": {
+    "description": "R4 — shown off production only, so a tester knows which backend they are on",
+    "placeholders": { "flavor": { "type": "String" }, "host": { "type": "String" } }
+  },
 
   "settingsAppearance": "Appearance",
   "@settingsAppearance": { "description": "Heading for the theme setting" },
@@ -511,13 +522,13 @@
   "tripStart": "START TRIP",
   "@tripStart": { "description": "R1 ready — the primary action, 64dp" },
 
-  "tripStartOffline": "You need a connection to start.",
-  "@tripStartOffline": { "description": "Why START TRIP is disabled with no connection" },
+  "tripStartOffline": "No connection right now — starting may not get through.",
+  "@tripStartOffline": { "description": "A caution beside START TRIP, never a gate. The attempt is what proves reachability" },
 
   "tripStartConfirmTitle": "Start this trip?",
   "@tripStartConfirmTitle": { "description": "S2 title" },
 
-  "tripStartConfirmBody": "Students will be told the bus is on its way.",
+  "tripStartConfirmBody": "Students will be told the bus is on its way, and this phone will share its position with the office until you complete the trip.",
   "@tripStartConfirmBody": { "description": "S2 body — what starting causes outside the phone" },
 
   "tripStartConfirm": "Start trip",

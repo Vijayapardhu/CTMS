@@ -24,6 +24,13 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <!-- Android 13 withholds the foreground-service notification unless this
+         is granted, and a trip tracked with nothing in the shade is precisely
+         the invisible background tracking the declarations above exist to
+         avoid. Asked for at trip start, never at launch; a refusal costs the
+         driver visibility of the service, not the trip. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:label="CTMS Driver"
         android:name="${applicationName}"

@@ -210,6 +210,7 @@ Future<void> configureDependencies(
       queue: queue,
       sync: sl<SyncCubit>(),
       logger: sl<LoggerService>(),
+      permissions: sl<PermissionService>(),
     ));
 
   // Queued boardings replay through the same engine as positions, under the

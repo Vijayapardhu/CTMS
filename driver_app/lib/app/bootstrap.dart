@@ -40,6 +40,15 @@ Future<void> bootstrap({
         'api': resolved.apiBaseUrl,
       });
 
+      if (resolved.isMisconfigured) {
+        // Not fatal — the app still runs, and refusing to start would be a
+        // worse failure than one that says exactly what is wrong.
+        logger.error(
+          'Production build is pointing at the development API. Pass '
+          '--dart-define=API_BASE_URL=<server> when building for release.',
+        );
+      }
+
       runApp(builder?.call() ?? const CtmsDriverApp());
     },
     _onUncaught,

@@ -166,17 +166,23 @@ abstract class AppStrings {
   /// **'Go to Trip'**
   String get goToTrip;
 
-  /// Placeholder title on a screen with no feature slice yet
+  /// R4 section header for build identity
   ///
   /// In en, this message translates to:
-  /// **'Not built yet'**
-  String get comingSoon;
+  /// **'About'**
+  String get settingsAbout;
 
-  /// Placeholder body on a screen with no feature slice yet
+  /// R4 — the build a driver is running, for support calls
   ///
   /// In en, this message translates to:
-  /// **'This screen is part of a later slice.'**
-  String get comingSoonBody;
+  /// **'Version {version} ({build})'**
+  String aboutVersion(String version, String build);
+
+  /// R4 — shown off production only, so a tester knows which backend they are on
+  ///
+  /// In en, this message translates to:
+  /// **'{flavor} build · {host}'**
+  String aboutEnvironment(String flavor, String host);
 
   /// Heading for the theme setting
   ///
@@ -1054,10 +1060,10 @@ abstract class AppStrings {
   /// **'START TRIP'**
   String get tripStart;
 
-  /// Why START TRIP is disabled with no connection
+  /// A caution beside START TRIP, never a gate. The attempt is what proves reachability
   ///
   /// In en, this message translates to:
-  /// **'You need a connection to start.'**
+  /// **'No connection right now — starting may not get through.'**
   String get tripStartOffline;
 
   /// S2 title
@@ -1069,7 +1075,7 @@ abstract class AppStrings {
   /// S2 body — what starting causes outside the phone
   ///
   /// In en, this message translates to:
-  /// **'Students will be told the bus is on its way.'**
+  /// **'Students will be told the bus is on its way, and this phone will share its position with the office until you complete the trip.'**
   String get tripStartConfirmBody;
 
   /// S2 confirm action

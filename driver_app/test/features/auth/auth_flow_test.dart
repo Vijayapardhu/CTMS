@@ -188,6 +188,13 @@ void main() {
       await settle(tester);
     }
 
+    /// The two ways out live at the foot of the tab, below the account, the
+    /// theme choices and the build identity. Scrolled to, as a driver would.
+    Future<void> scrollToSignOut(WidgetTester tester) async {
+      await tester.drag(find.byType(ListView), const Offset(0, -1200));
+      await settle(tester);
+    }
+
     testWidgets('sign out asks first, then returns to login', (tester) async {
       app = await registerTestDependencies(signedIn: true);
       await pumpApp(tester);
@@ -196,6 +203,7 @@ void main() {
       app.backend.on('/auth/logout',
           status: 200, body: {'success': true, 'message': 'ok', 'data': null});
 
+      await scrollToSignOut(tester);
       await tester.tap(find.text('Sign out'));
       await settle(tester);
 
@@ -214,6 +222,7 @@ void main() {
       await pumpApp(tester);
       await openMeTab(tester);
 
+      await scrollToSignOut(tester);
       await tester.tap(find.text('Sign out'));
       await settle(tester);
       await tester.tap(find.text('Cancel'));

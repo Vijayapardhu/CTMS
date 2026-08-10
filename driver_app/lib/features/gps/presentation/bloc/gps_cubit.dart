@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/services/logger_service.dart';
+import '../../../../core/services/permission_service.dart';
 import '../../../../core/sync/drift_sync_queue.dart';
 import '../../../../core/sync/sync_cubit.dart';
 import '../../../../core/sync/sync_engine.dart';
@@ -23,11 +24,13 @@ class GpsCubit extends Cubit<GpsState> {
     required DriftSyncQueue queue,
     required SyncCubit sync,
     required LoggerService logger,
+    PermissionService? permissions,
     Duration noFixAfter = const Duration(seconds: 30),
   })  : _source = source,
         _queue = queue,
         _sync = sync,
         _logger = logger,
+        _permissions = permissions,
         _noFixAfter = noFixAfter,
         super(const GpsIdle());
 
@@ -35,6 +38,11 @@ class GpsCubit extends Cubit<GpsState> {
   final DriftSyncQueue _queue;
   final SyncCubit _sync;
   final LoggerService _logger;
+
+  /// Only ever used for the notification permission, and only to keep the
+  /// foreground service visible. Location access is the [LocationSource]'s
+  /// own business.
+  final PermissionService? _permissions;
 
   /// M3: no fix for this long and the pill goes grey. The driver is told the
   /// device has nothing, rather than watching "finding position" indefinitely.
@@ -61,6 +69,14 @@ class GpsCubit extends Cubit<GpsState> {
       ));
       return;
     }
+
+    // Android 13 hides the foreground-service notification unless this is
+    // granted, and a bus tracked with nothing in the shade is the invisible
+    // tracking this app is built not to do. Deliberately best-effort: the
+    // answer is not read, because a refusal costs the driver sight of the
+    // service, not the trip, and stopping to argue about it at the moment
+    // they pull away would be the worse trade.
+    await _permissions?.request(AppPermission.notifications);
 
     emit(const GpsAcquiring());
     _armNoFixTimer();
