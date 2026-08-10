@@ -5,6 +5,7 @@ import { AccessLevel } from '@/auth/accessLevel'
 import { DashboardScreen } from '@/features/dashboard/DashboardScreen'
 import { TripsScreen } from '@/features/trips/TripsScreen'
 import { TripDetailScreen } from '@/features/trips/TripDetailScreen'
+import { LiveOperationsScreen } from '@/features/live/LiveOperationsScreen'
 
 type ScreenSpec = {
   path: string
@@ -33,7 +34,14 @@ export const screens: ScreenSpec[] = [
     requires: AccessLevel.VIEWER,
     element: <DashboardScreen />,
   },
-  { path: '/live', title: 'Live Operations', icon: 'live', slice: 'slice 4', requires: AccessLevel.VIEWER },
+  {
+    path: '/live',
+    title: 'Live Operations',
+    icon: 'live',
+    slice: 'slice 4',
+    requires: AccessLevel.VIEWER,
+    element: <LiveOperationsScreen />,
+  },
   {
     path: '/trips',
     title: 'Trips',

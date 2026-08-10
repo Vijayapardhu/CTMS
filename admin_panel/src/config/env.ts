@@ -11,7 +11,9 @@ export type Environment = 'development' | 'staging' | 'production'
 export type AppConfig = {
   environment: Environment
   apiBaseUrl: string
-  mapsBrowserKey: string
+  /** The BROWSER Maps key. Never the server key, never the Android key. */
+  mapsApiKey: string
+  hasMap: boolean
   isProduction: boolean
   /** A production build that was never told where the server is. */
   isMisconfigured: boolean
@@ -56,7 +58,8 @@ export function readConfig(env: ImportMetaEnv = import.meta.env): AppConfig {
   return {
     environment,
     apiBaseUrl,
-    mapsBrowserKey: env.VITE_GOOGLE_MAPS_BROWSER_KEY || '',
+    mapsApiKey: env.VITE_GOOGLE_MAPS_API_KEY || '',
+    hasMap: Boolean(env.VITE_GOOGLE_MAPS_API_KEY),
     isProduction,
     isMisconfigured: isProduction && apiBaseUrl === DEVELOPMENT_API,
     apiHost,
