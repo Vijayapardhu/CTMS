@@ -8,6 +8,8 @@ import { TripDetailScreen } from '@/features/trips/TripDetailScreen'
 import { LiveOperationsScreen } from '@/features/live/LiveOperationsScreen'
 import { FleetScreen } from '@/features/fleet/FleetScreen'
 import { BusDetailScreen } from '@/features/fleet/BusDetailScreen'
+import { IncidentsScreen } from '@/features/incidents/IncidentsScreen'
+import { IncidentDetailScreen } from '@/features/incidents/IncidentDetailScreen'
 
 type ScreenSpec = {
   path: string
@@ -80,8 +82,22 @@ export const screens: ScreenSpec[] = [
   { path: '/drivers', title: 'Drivers', icon: 'drivers', slice: 'slice 7', capability: 'drivers.read' },
   { path: '/inspections', title: 'Inspections', icon: 'inspections', slice: 'slice 7', capability: 'bus.readiness.read' },
   { path: '/maintenance', title: 'Maintenance', icon: 'maintenance', slice: 'slice 6', capability: 'maintenance.read' },
-  { path: '/incidents', title: 'Incidents', icon: 'incidents', slice: 'slice 6', capability: 'incidents.read' },
-  { path: '/incidents/:id', title: 'Incident', icon: 'incidents', slice: 'slice 6', capability: 'incident.read' },
+  {
+    path: '/incidents',
+    title: 'Incidents',
+    icon: 'incidents',
+    slice: 'phase 6',
+    capability: 'incidents.read',
+    element: <IncidentsScreen />,
+  },
+  {
+    path: '/incidents/:id',
+    title: 'Incident',
+    icon: 'incidents',
+    slice: 'phase 6',
+    capability: 'incident.read',
+    element: <IncidentDetailScreen />,
+  },
   { path: '/replacements', title: 'Replacements', icon: 'swap', slice: 'slice 5 of the RBAC plan', capability: 'replacements.read' },
   { path: '/students', title: 'Students', icon: 'students', slice: 'slice 7', capability: 'students.read' },
   { path: '/alerts', title: 'Alerts', icon: 'alerts', slice: 'slice 8', capability: 'notifications.read' },

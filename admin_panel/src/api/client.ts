@@ -115,6 +115,46 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
   throw failureFrom(response.status, body)
 }
 
+/**
+ * A read that returns bytes rather than an envelope — evidence, essentially.
+ *
+ * It goes through this module so it inherits the one token source and the one
+ * refresh, rather than a screen reaching for the token itself. The response is
+ * private (`Cache-Control: private, no-store`, `Content-Disposition:
+ * attachment`) and the caller is expected to hold it in an object URL and
+ * revoke it, never to turn it into a shareable link.
+ */
+export async function requestBlob(path: string, options: RequestOptions = {}): Promise<Blob> {
+  const token = accessToken()
+
+  let response: Response
+  try {
+    response = await fetch(url(path, options.query), {
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      signal: options.signal,
+    })
+  } catch {
+    throw new ApiFailure('network', 'The CTMS server could not be reached.')
+  }
+
+  if (response.ok) return response.blob()
+
+  if (response.status === 401 && !options.retried && !options.skipReauth) {
+    if (await reauthenticate()) return requestBlob(path, { ...options, retried: true })
+  }
+
+  let body: unknown = null
+  try {
+    body = await response.json()
+  } catch {
+    /* a binary endpoint refusing need not answer in JSON */
+  }
+
+  throw failureFrom(response.status, body)
+}
+
 /** A paginated read, with the envelope's own total rather than a row count. */
 export async function requestPage<T>(path: string, options: RequestOptions = {}): Promise<Page<T>> {
   const envelope = await request<T[]>(path, options)
