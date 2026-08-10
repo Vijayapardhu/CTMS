@@ -1,11 +1,9 @@
 import { NavLink } from 'react-router-dom'
 import { Icon } from '@/icons/Icon'
 import { navigation } from '@/app/navigation'
-import { AccessLevel, meets } from '@/auth/accessLevel'
+import { useSession } from '@/auth/SessionProvider'
 
 type Props = {
-  /** Null while the session is still resolving — nothing is offered yet. */
-  level: AccessLevel | null
   collapsed: boolean
 }
 
@@ -17,7 +15,9 @@ type Props = {
  * them; an item that was never there teaches them nothing at all, which is
  * correct.
  */
-export function Sidebar({ level, collapsed }: Props) {
+export function Sidebar({ collapsed }: Props) {
+  const { can } = useSession()
+
   const width = collapsed ? 'w-[var(--size-sidebar-collapsed)]' : 'w-[var(--size-sidebar)]'
 
   return (
@@ -32,7 +32,7 @@ export function Sidebar({ level, collapsed }: Props) {
 
       <div className="flex flex-col gap-lg py-sm">
         {navigation.map((section, index) => {
-          const items = section.items.filter((item) => meets(level, item.requires))
+          const items = section.items.filter((item) => can(item.capability))
           if (items.length === 0) return null
 
           return (

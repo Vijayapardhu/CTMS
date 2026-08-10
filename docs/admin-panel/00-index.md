@@ -42,6 +42,7 @@ defect (G3-3) that the workflow phases depend on.
 | `capability-matrix.md` | Every capability id, endpoint and enforced tier |
 | `operational-workflows.md` | The ten workflows, their real states and transitions |
 | `authorization-states.md` | Screen and action states, and what each one says |
+| `capability-registry.md` | How the registry is generated, consumed and proven |
 | `capability-map.json` | Generated from the router. Never edited |
 
 ## What this panel is

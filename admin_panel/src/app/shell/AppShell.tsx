@@ -1,10 +1,8 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Sidebar } from './Sidebar'
 import { TopBar } from './TopBar'
-import type { AccessLevel } from '@/auth/accessLevel'
 
 type Props = {
-  level: AccessLevel | null
   user?: { name: string; levelLabel: string } | null
   onSignOut?: () => void
   children: ReactNode
@@ -18,7 +16,7 @@ type Props = {
  * the offline banner — when it arrives in a later slice — pushes content down
  * instead of covering the control somebody is reaching for.
  */
-export function AppShell({ level, user, onSignOut, children }: Props) {
+export function AppShell({ user, onSignOut, children }: Props) {
   // Below 1280 the sidebar collapses to icons. Desktop-first: this is a
   // laptop application, and shrinking it into a phone layout would make the
   // tables it exists for unusable.
@@ -38,7 +36,7 @@ export function AppShell({ level, user, onSignOut, children }: Props) {
 
   return (
     <div className="flex h-full">
-      <Sidebar level={level} collapsed={collapsed} />
+      <Sidebar collapsed={collapsed} />
 
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar

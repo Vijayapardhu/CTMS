@@ -2,7 +2,8 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { configureClient, request } from '@/api/client'
 import { ApiFailure } from '@/api/failure'
 import { logger } from '@/app/logger'
-import { AccessLevel, CAPABILITY, meets, type Capability } from './accessLevel'
+import { AccessLevel, meets } from './accessLevel'
+import { can as evaluate, type CapabilityId, type ResourceScope } from './capabilities'
 import { parseTokens, parseUser, refreshStore, type AdminUser, type Tokens } from './session'
 
 /** M-SESSION, from 04-state-machines.md. */
@@ -21,7 +22,9 @@ type SessionValue = {
   signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
   acknowledgeExpiry: () => void
-  can: (capability: Capability) => boolean
+  /** Re-read the access level from the server. */
+  revalidate: () => Promise<void>
+  can: (capability: CapabilityId, resource?: ResourceScope) => boolean
   hasAccess: (level: AccessLevel) => boolean
   signInFailure: string | null
   signingIn: boolean
@@ -173,6 +176,39 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     }
   }, [adopt, clear, reauthenticate])
 
+  /**
+   * Ask the server what this account may do now.
+   *
+   * The access level is not a fact about the session, it is a fact about the
+   * account, and somebody else can change it. Re-read on focus and after every
+   * token refresh; the server's answer replaces the local one rather than
+   * merging with it. If the demotion makes the current screen forbidden, the
+   * route guard renders that in place — no redirect, no reload.
+   */
+  const revalidate = useCallback(async () => {
+    if (!tokens.current) return
+
+    try {
+      const me = await request<Record<string, unknown>>('/auth/me')
+      const fresh = parseUser(me.data)
+
+      // adopt() also rejects a token that is no longer an ADMIN's.
+      adopt(fresh, null)
+    } catch {
+      // A failed revalidation is not a demotion. The existing level stands
+      // until the server actually answers.
+    }
+  }, [adopt])
+
+  useEffect(() => {
+    if (status !== 'authenticated') return
+
+    const onFocus = () => void revalidate()
+    window.addEventListener('focus', onFocus)
+
+    return () => window.removeEventListener('focus', onFocus)
+  }, [status, revalidate])
+
   const signIn = useCallback(
     async (email: string, password: string) => {
       setSigningIn(true)
@@ -218,17 +254,20 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       status,
       user: status === 'authenticated' ? user : null,
       level,
+      revalidate,
       signIn,
       signOut,
       acknowledgeExpiry: () => setStatus('unauthenticated'),
-      // `can` reports what the panel will OFFER. The server decides what
-      // happens; a 403 that arrives anyway is a bug in this table.
-      can: (capability) => meets(level, CAPABILITY[capability] ?? AccessLevel.SUPER_ADMIN),
+      // `can` reports what the panel will OFFER, from the generated
+      // registry. The server decides what happens; a 403 arriving anyway
+      // means the registry is wrong, which is why it is generated.
+      can: (capability, resource) =>
+        evaluate({ userId: user?.id ?? null, role: user?.role ?? null, level }, capability, resource),
       hasAccess: (required) => meets(level, required),
       signInFailure,
       signingIn,
     }
-  }, [status, user, signIn, signOut, signInFailure, signingIn])
+  }, [status, user, signIn, signOut, signInFailure, signingIn, revalidate])
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
 }

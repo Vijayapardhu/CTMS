@@ -1,12 +1,12 @@
 import type { AppIconName } from '@/icons/registry'
-import { AccessLevel } from '@/auth/accessLevel'
+import type { CapabilityId } from '@/auth/capabilities'
 
 export type NavItem = {
   label: string
   path: string
   icon: AppIconName
-  /** The least privileged level that may reach this screen. */
-  requires: AccessLevel
+  /** The capability that makes this screen reachable. */
+  capability: CapabilityId
 }
 
 export type NavSection = {
@@ -16,57 +16,62 @@ export type NavSection = {
 }
 
 /**
- * The information architecture from 02-screen-api-matrix.md, verified against
- * the router before it was written down.
+ * The information architecture, gated by capability rather than by level.
  *
- * `requires` is the *navigation* gate. It is not a security control — the
- * server decides — but a sidebar that offers a screen returning 403 teaches
- * people the product is broken for them.
+ * One source of truth: the sidebar, the router and every action ask the same
+ * registry. Three independent permission systems is how a screen ends up
+ * reachable with every control on it forbidden.
+ *
+ * Items the operator cannot reach are **absent**, not disabled.
  */
 export const navigation: NavSection[] = [
   {
-    items: [{ label: 'Dashboard', path: '/', icon: 'dashboard', requires: AccessLevel.VIEWER }],
+    items: [{ label: 'Dashboard', path: '/', icon: 'dashboard', capability: 'dashboard.read' }],
   },
   {
     title: 'Operations',
     items: [
-      { label: 'Live Operations', path: '/live', icon: 'live', requires: AccessLevel.VIEWER },
-      { label: 'Trips', path: '/trips', icon: 'trips', requires: AccessLevel.VIEWER },
-      { label: 'Routes', path: '/routes', icon: 'routes', requires: AccessLevel.VIEWER },
+      { label: 'Live Operations', path: '/live', icon: 'live', capability: 'live.read' },
+      { label: 'Trips', path: '/trips', icon: 'trips', capability: 'trips.read' },
+      { label: 'Routes', path: '/routes', icon: 'routes', capability: 'routes.read' },
     ],
   },
   {
     title: 'Fleet',
     items: [
-      { label: 'Buses', path: '/buses', icon: 'buses', requires: AccessLevel.VIEWER },
-      { label: 'Drivers', path: '/drivers', icon: 'drivers', requires: AccessLevel.VIEWER },
-      { label: 'Inspections', path: '/inspections', icon: 'inspections', requires: AccessLevel.VIEWER },
-      { label: 'Maintenance', path: '/maintenance', icon: 'maintenance', requires: AccessLevel.VIEWER },
+      { label: 'Buses', path: '/buses', icon: 'buses', capability: 'fleet.read' },
+      { label: 'Drivers', path: '/drivers', icon: 'drivers', capability: 'drivers.read' },
+      { label: 'Inspections', path: '/inspections', icon: 'inspections', capability: 'bus.readiness.read' },
+      { label: 'Maintenance', path: '/maintenance', icon: 'maintenance', capability: 'maintenance.read' },
     ],
   },
   {
     title: 'Safety',
-    items: [{ label: 'Incidents', path: '/incidents', icon: 'incidents', requires: AccessLevel.VIEWER }],
+    items: [
+      { label: 'Incidents', path: '/incidents', icon: 'incidents', capability: 'incidents.read' },
+      { label: 'Replacements', path: '/replacements', icon: 'swap', capability: 'replacements.read' },
+    ],
   },
   {
     title: 'People',
-    items: [{ label: 'Students', path: '/students', icon: 'students', requires: AccessLevel.VIEWER }],
+    items: [{ label: 'Students', path: '/students', icon: 'students', capability: 'students.read' }],
   },
   {
     title: 'Communication',
     items: [
-      { label: 'Alerts', path: '/alerts', icon: 'alerts', requires: AccessLevel.VIEWER },
-      { label: 'Announcements', path: '/announcements', icon: 'announcements', requires: AccessLevel.VIEWER },
+      { label: 'Alerts', path: '/alerts', icon: 'alerts', capability: 'notifications.read' },
+      { label: 'Announcements', path: '/announcements', icon: 'announcements', capability: 'announcements.read' },
     ],
   },
   {
-    items: [{ label: 'Reports', path: '/reports', icon: 'reports', requires: AccessLevel.VIEWER }],
+    items: [{ label: 'Reports', path: '/reports', icon: 'reports', capability: 'reports.read' }],
   },
   {
     title: 'Administration',
     items: [
-      { label: 'Audit', path: '/admin/audit', icon: 'audit', requires: AccessLevel.SUPER_ADMIN },
-      { label: 'Accounts', path: '/admin/accounts', icon: 'accounts', requires: AccessLevel.SUPER_ADMIN },
+      { label: 'Audit', path: '/admin/audit', icon: 'audit', capability: 'audit.read' },
+      { label: 'Data Access', path: '/admin/access-log', icon: 'accessLog', capability: 'audit.accessLog.read' },
+      { label: 'Accounts', path: '/admin/accounts', icon: 'accounts', capability: 'account.create' },
     ],
   },
 ]

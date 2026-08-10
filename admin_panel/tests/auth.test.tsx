@@ -9,7 +9,7 @@ import { setMockLevel } from '@/mocks/handlers'
 import { errorResponse, meResponse, tokenResponse, userJson } from '@/mocks/fixtures'
 import { AccessLevel } from '@/auth/accessLevel'
 import { SessionProvider, useSession } from '@/auth/SessionProvider'
-import { RequireLevel } from '@/auth/RequireLevel'
+import { RequireCapability } from '@/auth/RequireCapability'
 import { LoginScreen } from '@/auth/LoginScreen'
 import { AppShell } from '@/app/shell/AppShell'
 import { Placeholder } from '@/components/Placeholder'
@@ -47,7 +47,6 @@ function Screen() {
 
   return (
     <AppShell
-      level={level}
       user={{ name: user!.fullName, levelLabel: level ?? '' }}
       onSignOut={() => void signOut()}
     >
@@ -56,9 +55,9 @@ function Screen() {
         <Route
           path="/admin/audit"
           element={
-            <RequireLevel level={AccessLevel.SUPER_ADMIN}>
+            <RequireCapability capability="audit.read">
               <Placeholder title="Audit" icon="audit" slice="slice 8" />
-            </RequireLevel>
+            </RequireCapability>
           }
         />
       </Routes>
@@ -203,6 +202,41 @@ describe('navigation by access level', () => {
     // signed in, they simply may not be here.
     expect(await screen.findByText(/don’t have permission/i)).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Sign in' })).not.toBeInTheDocument()
+  })
+
+  it('loses a capability when the server demotes the account mid-session', async () => {
+    setMockLevel(AccessLevel.SUPER_ADMIN)
+    window.sessionStorage.setItem('ctms.admin.refresh', 'refresh-1')
+
+    render(<Harness />)
+    expect(await screen.findByRole('link', { name: /audit/i })).toBeInTheDocument()
+
+    // The transport office lowers this account to read-only. The token in the
+    // browser is unchanged and still perfectly valid — only the server's answer
+    // moved. Revalidation on focus is what makes the panel notice.
+    server.use(http.get(`${API}/auth/me`, () => HttpResponse.json(meResponse(AccessLevel.VIEWER))))
+    window.dispatchEvent(new Event('focus'))
+
+    await waitFor(() =>
+      expect(screen.queryByRole('link', { name: /audit/i })).not.toBeInTheDocument(),
+    )
+    // Demoted, not signed out: they keep the work they were doing.
+    expect(screen.getByRole('heading', { name: 'Dashboard' })).toBeInTheDocument()
+  })
+
+  it('keeps the level it has when revalidation fails', async () => {
+    setMockLevel(AccessLevel.SUPER_ADMIN)
+    window.sessionStorage.setItem('ctms.admin.refresh', 'refresh-1')
+
+    render(<Harness />)
+    await screen.findByRole('link', { name: /audit/i })
+
+    // A flaky network is not a demotion. Dropping privileges on a failed
+    // request would make the panel unusable on a bad connection.
+    server.use(http.get(`${API}/auth/me`, () => HttpResponse.error()))
+    window.dispatchEvent(new Event('focus'))
+
+    await waitFor(() => expect(screen.getByRole('link', { name: /audit/i })).toBeInTheDocument())
   })
 
   it('offers no navigation at all before the level is known', async () => {

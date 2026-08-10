@@ -1,1607 +1,2861 @@
-[
- {
-  "method": "GET",
-  "path": "/announcements",
-  "action": "AnnouncementController@index",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/announcements",
-  "action": "AnnouncementController@store",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/announcements/{id}",
-  "action": "AnnouncementController@show",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "PUT",
-  "path": "/announcements/{id}",
-  "action": "AnnouncementController@update",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/announcements/{id}/publish",
-  "action": "AnnouncementController@publish",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/announcements/{id}/withdraw",
-  "action": "AnnouncementController@withdraw",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/attendance-discrepancies",
-  "action": "TripRecoveryController@discrepancies",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/attendance-discrepancies/{id}/review",
-  "action": "TripRecoveryController@review",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPPORT",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/audit-logs",
-  "action": "AuditController@index",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPER_ADMIN",
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/audit-logs/{id}",
-  "action": "AuditController@show",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPER_ADMIN",
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/auth/change-password",
-  "action": "PasswordController@change",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/auth/login",
-  "action": "AuthController@login",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": false,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/auth/logout",
-  "action": "AuthController@logout",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/auth/logout-all",
-  "action": "AuthController@logoutAll",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/auth/me",
-  "action": "AuthController@me",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/auth/refresh",
-  "action": "AuthController@refresh",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": false,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/auth/register",
-  "action": "AuthController@register",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": false,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/buses",
-  "action": "BusController@index",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/buses",
-  "action": "BusController@store",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "DELETE",
-  "path": "/buses/{busId}/documents/{documentId}",
-  "action": "BusDocumentController@destroy",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "PUT",
-  "path": "/buses/{busId}/documents/{documentId}",
-  "action": "BusDocumentController@update",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "DELETE",
-  "path": "/buses/{id}",
-  "action": "BusController@destroy",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/buses/{id}",
-  "action": "BusController@show",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "PUT",
-  "path": "/buses/{id}",
-  "action": "BusController@update",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/buses/{id}/documents",
-  "action": "BusDocumentController@index",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/buses/{id}/documents",
-  "action": "BusDocumentController@store",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/buses/{id}/inspections",
-  "action": "VehicleInspectionController@index",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/buses/{id}/inspections",
-  "action": "VehicleInspectionController@store",
-  "roles": [
-   "DRIVER",
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/buses/{id}/service-readiness",
-  "action": "VehicleInspectionController@readiness",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "PATCH",
-  "path": "/buses/{id}/status",
-  "action": "BusController@updateStatus",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/consolidations",
-  "action": "ConsolidationController@index",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/consolidations",
-  "action": "ConsolidationController@store",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/consolidations/candidates",
-  "action": "ConsolidationController@candidates",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/consolidations/{id}",
-  "action": "ConsolidationController@show",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/consolidations/{id}/approve",
-  "action": "ConsolidationController@approve",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/consolidations/{id}/execute",
-  "action": "ConsolidationController@execute",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/consolidations/{id}/notify",
-  "action": "ConsolidationController@notify",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/consolidations/{id}/reject",
-  "action": "ConsolidationController@reject",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/data-access-logs",
-  "action": "AuditController@accessLogs",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPER_ADMIN",
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/drivers",
-  "action": "DriverController@index",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/drivers",
-  "action": "DriverController@store",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "DELETE",
-  "path": "/drivers/{id}",
-  "action": "DriverController@destroy",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/drivers/{id}",
-  "action": "DriverController@show",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "PUT",
-  "path": "/drivers/{id}",
-  "action": "DriverController@update",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "DELETE",
-  "path": "/drivers/{id}/assign-bus",
-  "action": "DriverController@unassignBus",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/drivers/{id}/assign-bus",
-  "action": "DriverController@assignBus",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "PATCH",
-  "path": "/drivers/{id}/status",
-  "action": "DriverController@updateStatus",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/evidence",
-  "action": "EvidenceController@store",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/evidence/categories",
-  "action": "EvidenceController@categories",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/evidence/{id}",
-  "action": "EvidenceController@show",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/fleet/documents/expiring",
-  "action": "BusDocumentController@expiring",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/geo/geocode",
-  "action": "GeoController@geocode",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/geo/places",
-  "action": "GeoController@places",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/geo/reverse",
-  "action": "GeoController@reverse",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/geo/status",
-  "action": "GeoController@status",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/incidents",
-  "action": "IncidentController@index",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/incidents",
-  "action": "IncidentController@store",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/incidents/types",
-  "action": "IncidentController@types",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/incidents/{id}",
-  "action": "IncidentController@show",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/incidents/{id}/acknowledge",
-  "action": "IncidentController@acknowledge",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPPORT",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/incidents/{id}/cancel",
-  "action": "IncidentController@cancel",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/incidents/{id}/close",
-  "action": "IncidentController@close",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/incidents/{id}/notes",
-  "action": "IncidentController@addNote",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/incidents/{id}/resolve",
-  "action": "IncidentController@resolve",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPPORT",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/inspections/checklist",
-  "action": "VehicleInspectionController@checklist",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/inspections/{id}",
-  "action": "VehicleInspectionController@show",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/maintenance-tickets",
-  "action": "MaintenanceController@index",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/maintenance-tickets",
-  "action": "MaintenanceController@store",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPPORT",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/maintenance-tickets/{id}",
-  "action": "MaintenanceController@show",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/maintenance-tickets/{id}/assign",
-  "action": "MaintenanceController@assign",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPPORT",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/maintenance-tickets/{id}/cancel",
-  "action": "MaintenanceController@cancel",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/maintenance-tickets/{id}/complete",
-  "action": "MaintenanceController@complete",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/maintenance-tickets/{id}/schedule",
-  "action": "MaintenanceController@schedule",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPPORT",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/maintenance-tickets/{id}/start",
-  "action": "MaintenanceController@start",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPPORT",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/notification-devices",
-  "action": "NotificationDeviceController@index",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/notification-devices",
-  "action": "NotificationDeviceController@store",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/notification-devices/revoke-all",
-  "action": "NotificationDeviceController@revokeAll",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "DELETE",
-  "path": "/notification-devices/{id}",
-  "action": "NotificationDeviceController@destroy",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/notification-log",
-  "action": "NotificationLogController@index",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/notification-log/health",
-  "action": "NotificationLogController@health",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/notification-log/{id}/resend",
-  "action": "NotificationLogController@resend",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPPORT",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/notification-preferences",
-  "action": "NotificationPreferenceController@index",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "PUT",
-  "path": "/notification-preferences",
-  "action": "NotificationPreferenceController@update",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/notifications",
-  "action": "NotificationController@index",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/notifications/read-all",
-  "action": "NotificationController@markAllRead",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/notifications/unread-count",
-  "action": "NotificationController@unreadCount",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "DELETE",
-  "path": "/notifications/{id}",
-  "action": "NotificationController@destroy",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/notifications/{id}",
-  "action": "NotificationController@show",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "PATCH",
-  "path": "/notifications/{id}/read",
-  "action": "NotificationController@markRead",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "PATCH",
-  "path": "/notifications/{id}/unread",
-  "action": "NotificationController@markUnread",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/preventive-maintenance",
-  "action": "PreventiveMaintenanceController@index",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/preventive-maintenance",
-  "action": "PreventiveMaintenanceController@store",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "DELETE",
-  "path": "/preventive-maintenance/{id}",
-  "action": "PreventiveMaintenanceController@destroy",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/replacements",
-  "action": "ReplacementController@index",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/replacements/{id}",
-  "action": "ReplacementController@show",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/replacements/{id}/approve",
-  "action": "ReplacementController@approve",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/replacements/{id}/arrived",
-  "action": "ReplacementController@markArrived",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPPORT",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/replacements/{id}/dispatch",
-  "action": "ReplacementController@dispatchReplacement",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPPORT",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/replacements/{id}/reject",
-  "action": "ReplacementController@reject",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/reports/attendance",
-  "action": "ReportController@attendance",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/reports/fleet",
-  "action": "ReportController@fleet",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/reports/incidents",
-  "action": "ReportController@incidents",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/reports/maintenance",
-  "action": "ReportController@maintenance",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/reports/occupancy",
-  "action": "ReportController@occupancy",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/reports/trips",
-  "action": "ReportController@trips",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/retention-runs",
-  "action": "AuditController@retentionRuns",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPER_ADMIN",
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "GET",
-  "path": "/routes",
-  "action": "RouteController@index",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/routes",
-  "action": "RouteController@store",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "DELETE",
-  "path": "/routes/{id}",
-  "action": "RouteController@destroy",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/routes/{id}",
-  "action": "RouteController@show",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "PUT",
-  "path": "/routes/{id}",
-  "action": "RouteController@update",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "PATCH",
-  "path": "/routes/{id}/status",
-  "action": "RouteController@updateStatus",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/routes/{id}/stops",
-  "action": "RouteController@listStops",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/routes/{id}/stops",
-  "action": "RouteController@addStop",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "DELETE",
-  "path": "/routes/{routeId}/stops/{stopId}",
-  "action": "RouteController@deleteStop",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "PUT",
-  "path": "/routes/{routeId}/stops/{stopId}",
-  "action": "RouteController@updateStop",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/schedules",
-  "action": "ScheduleController@index",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/schedules",
-  "action": "ScheduleController@store",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "DELETE",
-  "path": "/schedules/{id}",
-  "action": "ScheduleController@destroy",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/schedules/{id}",
-  "action": "ScheduleController@show",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "PUT",
-  "path": "/schedules/{id}",
-  "action": "ScheduleController@update",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "PATCH",
-  "path": "/schedules/{id}/status",
-  "action": "ScheduleController@setActive",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/service-calendar",
-  "action": "ServiceCalendarController@index",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/service-calendar",
-  "action": "ServiceCalendarController@store",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "DELETE",
-  "path": "/service-calendar/{id}",
-  "action": "ServiceCalendarController@destroy",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/students",
-  "action": "StudentController@index",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/students",
-  "action": "StudentController@store",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "DELETE",
-  "path": "/students/{id}",
-  "action": "StudentController@destroy",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/students/{id}",
-  "action": "StudentController@show",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "PUT",
-  "path": "/students/{id}",
-  "action": "StudentController@update",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "DELETE",
-  "path": "/students/{id}/assign-transport",
-  "action": "StudentController@clearTransport",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/students/{id}/assign-transport",
-  "action": "StudentController@assignTransport",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "PATCH",
-  "path": "/students/{id}/status",
-  "action": "StudentController@updateStatus",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/trips",
-  "action": "TripController@index",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/trips",
-  "action": "TripController@store",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/trips/generate",
-  "action": "TripController@generate",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/trips/{id}",
-  "action": "TripController@show",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/trips/{id}/alight",
-  "action": "TrackingController@alight",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/trips/{id}/board",
-  "action": "TrackingController@board",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/trips/{id}/cancel",
-  "action": "TripController@cancel",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/trips/{id}/complete",
-  "action": "TripController@complete",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/trips/{id}/corrections",
-  "action": "TripRecoveryController@corrections",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/trips/{id}/corrections",
-  "action": "TripRecoveryController@correct",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/trips/{id}/eta",
-  "action": "TrackingController@eta",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/trips/{id}/left-behind",
-  "action": "TrackingController@leftBehind",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/trips/{id}/live",
-  "action": "TrackingController@live",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/trips/{id}/positions",
-  "action": "TrackingController@recordPosition",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/trips/{id}/reassign",
-  "action": "TripController@reassign",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "OPERATIONS",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/trips/{id}/start",
-  "action": "TripController@start",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/trips/{id}/stops/{stopId}/arrive",
-  "action": "TrackingController@markArrived",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/trips/{id}/stops/{stopId}/manifest",
-  "action": "TrackingController@manifest",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/trips/{id}/stops/{stopId}/skip",
-  "action": "TrackingController@skipStop",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/users",
-  "action": "UserController@index",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "POST",
-  "path": "/users",
-  "action": "AuthController@register",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPER_ADMIN",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "GET",
-  "path": "/users/{id}",
-  "action": "UserController@show",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": false
- },
- {
-  "method": "PUT",
-  "path": "/users/{id}",
-  "action": "UserController@update",
-  "roles": null,
-  "minimumAccess": null,
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "PATCH",
-  "path": "/users/{id}/status",
-  "action": "UserController@setActiveState",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPER_ADMIN",
-  "authenticated": true,
-  "mutates": true
- },
- {
-  "method": "POST",
-  "path": "/users/{id}/subject-access-export",
-  "action": "AuditController@subjectAccessExport",
-  "roles": [
-   "ADMIN"
-  ],
-  "minimumAccess": "SUPER_ADMIN",
-  "authenticated": true,
-  "mutates": true
- }
-]
+{
+  "generatedFrom": "php artisan route:list",
+  "routeCount": 158,
+  "capabilityCount": 107,
+  "accessLevels": [
+    "VIEWER",
+    "SUPPORT",
+    "OPERATIONS",
+    "SUPER_ADMIN"
+  ],
+  "scopes": {
+    "tier": "The access level is the whole rule.",
+    "assignedDriver": "The driver assigned to that trip, otherwise the tier.",
+    "anyDriver": "Any driver, otherwise the tier.",
+    "reporter": "The person who raised it, otherwise the tier.",
+    "subject": "The record's own subject, otherwise the tier.",
+    "own": "Own record only. There is no administrative path."
+  },
+  "capabilities": [
+    {
+      "id": "account.create",
+      "resource": "account",
+      "action": "create",
+      "method": "POST",
+      "path": "/users",
+      "minimumAccessLevel": "SUPER_ADMIN",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPER_ADMIN",
+      "provenance": "RequireAccessLevel:SUPER_ADMIN"
+    },
+    {
+      "id": "account.setActive",
+      "resource": "account",
+      "action": "setActive",
+      "method": "PATCH",
+      "path": "/users/{id}/status",
+      "minimumAccessLevel": "SUPER_ADMIN",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPER_ADMIN",
+      "provenance": "RequireAccessLevel:SUPER_ADMIN"
+    },
+    {
+      "id": "account.update",
+      "resource": "account",
+      "action": "update",
+      "method": "PUT",
+      "path": "/users/{id}",
+      "minimumAccessLevel": "SUPER_ADMIN",
+      "scope": "subject",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "UserPolicy::update — G3-2"
+    },
+    {
+      "id": "accounts.read",
+      "resource": "accounts",
+      "action": "read",
+      "method": "GET",
+      "path": "/users",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "RoleAuthorize:ADMIN — panel restricts to SUPER_ADMIN by choice"
+    },
+    {
+      "id": "announcement.create",
+      "resource": "announcement",
+      "action": "create",
+      "method": "POST",
+      "path": "/announcements",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "announcement.publish",
+      "resource": "announcement",
+      "action": "publish",
+      "method": "POST",
+      "path": "/announcements/{id}/publish",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "announcement.update",
+      "resource": "announcement",
+      "action": "update",
+      "method": "PUT",
+      "path": "/announcements/{id}",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "announcement.withdraw",
+      "resource": "announcement",
+      "action": "withdraw",
+      "method": "POST",
+      "path": "/announcements/{id}/withdraw",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "announcements.read",
+      "resource": "announcements",
+      "action": "read",
+      "method": "GET",
+      "path": "/announcements",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "AnnouncementPolicy::viewAny"
+    },
+    {
+      "id": "attendance.read",
+      "resource": "attendance",
+      "action": "read",
+      "method": "GET",
+      "path": "/attendance-discrepancies",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "RoleAuthorize:ADMIN"
+    },
+    {
+      "id": "attendance.review",
+      "resource": "attendance",
+      "action": "review",
+      "method": "POST",
+      "path": "/attendance-discrepancies/{id}/review",
+      "minimumAccessLevel": "SUPPORT",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPPORT",
+      "provenance": "RequireAccessLevel:SUPPORT"
+    },
+    {
+      "id": "audit.accessLog.read",
+      "resource": "audit",
+      "action": "accessLog.read",
+      "method": "GET",
+      "path": "/data-access-logs",
+      "minimumAccessLevel": "SUPER_ADMIN",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPER_ADMIN",
+      "provenance": "RequireAccessLevel:SUPER_ADMIN"
+    },
+    {
+      "id": "audit.entry.read",
+      "resource": "audit",
+      "action": "entry.read",
+      "method": "GET",
+      "path": "/audit-logs/{id}",
+      "minimumAccessLevel": "SUPER_ADMIN",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPER_ADMIN",
+      "provenance": "RequireAccessLevel:SUPER_ADMIN"
+    },
+    {
+      "id": "audit.read",
+      "resource": "audit",
+      "action": "read",
+      "method": "GET",
+      "path": "/audit-logs",
+      "minimumAccessLevel": "SUPER_ADMIN",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPER_ADMIN",
+      "provenance": "RequireAccessLevel:SUPER_ADMIN"
+    },
+    {
+      "id": "audit.retention.read",
+      "resource": "audit",
+      "action": "retention.read",
+      "method": "GET",
+      "path": "/retention-runs",
+      "minimumAccessLevel": "SUPER_ADMIN",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPER_ADMIN",
+      "provenance": "RequireAccessLevel:SUPER_ADMIN"
+    },
+    {
+      "id": "bus.changeStatus",
+      "resource": "bus",
+      "action": "changeStatus",
+      "method": "PATCH",
+      "path": "/buses/{id}/status",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "bus.create",
+      "resource": "bus",
+      "action": "create",
+      "method": "POST",
+      "path": "/buses",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "bus.delete",
+      "resource": "bus",
+      "action": "delete",
+      "method": "DELETE",
+      "path": "/buses/{id}",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "bus.document.create",
+      "resource": "bus",
+      "action": "document.create",
+      "method": "POST",
+      "path": "/buses/{id}/documents",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "bus.documents.read",
+      "resource": "bus",
+      "action": "documents.read",
+      "method": "GET",
+      "path": "/buses/{id}/documents",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "BusPolicy::view"
+    },
+    {
+      "id": "bus.inspections.read",
+      "resource": "bus",
+      "action": "inspections.read",
+      "method": "GET",
+      "path": "/buses/{id}/inspections",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "BusPolicy::view"
+    },
+    {
+      "id": "bus.read",
+      "resource": "bus",
+      "action": "read",
+      "method": "GET",
+      "path": "/buses/{id}",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "BusPolicy::view"
+    },
+    {
+      "id": "bus.readiness.read",
+      "resource": "bus",
+      "action": "readiness.read",
+      "method": "GET",
+      "path": "/buses/{id}/service-readiness",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "BusPolicy::view"
+    },
+    {
+      "id": "bus.update",
+      "resource": "bus",
+      "action": "update",
+      "method": "PUT",
+      "path": "/buses/{id}",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "consolidation.approve",
+      "resource": "consolidation",
+      "action": "approve",
+      "method": "POST",
+      "path": "/consolidations/{id}/approve",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS — G3-1"
+    },
+    {
+      "id": "consolidation.create",
+      "resource": "consolidation",
+      "action": "create",
+      "method": "POST",
+      "path": "/consolidations",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS — G3-1"
+    },
+    {
+      "id": "consolidation.execute",
+      "resource": "consolidation",
+      "action": "execute",
+      "method": "POST",
+      "path": "/consolidations/{id}/execute",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS — G3-1"
+    },
+    {
+      "id": "consolidation.notify",
+      "resource": "consolidation",
+      "action": "notify",
+      "method": "POST",
+      "path": "/consolidations/{id}/notify",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS — G3-1"
+    },
+    {
+      "id": "consolidation.reject",
+      "resource": "consolidation",
+      "action": "reject",
+      "method": "POST",
+      "path": "/consolidations/{id}/reject",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS — G3-1"
+    },
+    {
+      "id": "consolidations.read",
+      "resource": "consolidations",
+      "action": "read",
+      "method": "GET",
+      "path": "/consolidations",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "RoleAuthorize:ADMIN"
+    },
+    {
+      "id": "dashboard.read",
+      "resource": "dashboard",
+      "action": "read",
+      "method": "GET",
+      "path": "/trips",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "composed; no dashboard endpoint (G1-1)"
+    },
+    {
+      "id": "driver.assignBus",
+      "resource": "driver",
+      "action": "assignBus",
+      "method": "POST",
+      "path": "/drivers/{id}/assign-bus",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "driver.create",
+      "resource": "driver",
+      "action": "create",
+      "method": "POST",
+      "path": "/drivers",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "driver.read",
+      "resource": "driver",
+      "action": "read",
+      "method": "GET",
+      "path": "/drivers/{id}",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "DriverPolicy::view"
+    },
+    {
+      "id": "driver.setStatus",
+      "resource": "driver",
+      "action": "setStatus",
+      "method": "PATCH",
+      "path": "/drivers/{id}/status",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "subject",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "DriverPolicy::changeStatus — G3-2"
+    },
+    {
+      "id": "drivers.read",
+      "resource": "drivers",
+      "action": "read",
+      "method": "GET",
+      "path": "/drivers",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "RoleAuthorize:ADMIN"
+    },
+    {
+      "id": "eta.read",
+      "resource": "eta",
+      "action": "read",
+      "method": "GET",
+      "path": "/trips/{id}/eta",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "TripPolicy::view"
+    },
+    {
+      "id": "evidence.create",
+      "resource": "evidence",
+      "action": "create",
+      "method": "POST",
+      "path": "/evidence",
+      "minimumAccessLevel": "SUPPORT",
+      "scope": "anyDriver",
+      "mutates": true,
+      "driverAllowed": true,
+      "middlewareAccess": null,
+      "provenance": "EvidenceFilePolicy::create — G3-3"
+    },
+    {
+      "id": "evidence.read",
+      "resource": "evidence",
+      "action": "read",
+      "method": "GET",
+      "path": "/evidence/{id}",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "EvidenceFilePolicy::view"
+    },
+    {
+      "id": "fleet.documents.expiring.read",
+      "resource": "fleet",
+      "action": "documents.expiring.read",
+      "method": "GET",
+      "path": "/fleet/documents/expiring",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "authenticated"
+    },
+    {
+      "id": "fleet.read",
+      "resource": "fleet",
+      "action": "read",
+      "method": "GET",
+      "path": "/buses",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "BusPolicy::viewAny"
+    },
+    {
+      "id": "incident.acknowledge",
+      "resource": "incident",
+      "action": "acknowledge",
+      "method": "POST",
+      "path": "/incidents/{id}/acknowledge",
+      "minimumAccessLevel": "SUPPORT",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPPORT",
+      "provenance": "RequireAccessLevel:SUPPORT"
+    },
+    {
+      "id": "incident.cancel",
+      "resource": "incident",
+      "action": "cancel",
+      "method": "POST",
+      "path": "/incidents/{id}/cancel",
+      "minimumAccessLevel": "SUPPORT",
+      "scope": "reporter",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "VehicleIncidentPolicy::cancel — G3-3"
+    },
+    {
+      "id": "incident.close",
+      "resource": "incident",
+      "action": "close",
+      "method": "POST",
+      "path": "/incidents/{id}/close",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "incident.create",
+      "resource": "incident",
+      "action": "create",
+      "method": "POST",
+      "path": "/incidents",
+      "minimumAccessLevel": "SUPPORT",
+      "scope": "anyDriver",
+      "mutates": true,
+      "driverAllowed": true,
+      "middlewareAccess": null,
+      "provenance": "VehicleIncidentPolicy::create — G3-3, DriverOperationBoundaryTest"
+    },
+    {
+      "id": "incident.note.create",
+      "resource": "incident",
+      "action": "note.create",
+      "method": "POST",
+      "path": "/incidents/{id}/notes",
+      "minimumAccessLevel": "SUPPORT",
+      "scope": "reporter",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "VehicleIncidentPolicy::addNote — G3-3"
+    },
+    {
+      "id": "incident.read",
+      "resource": "incident",
+      "action": "read",
+      "method": "GET",
+      "path": "/incidents/{id}",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "VehicleIncidentPolicy::view"
+    },
+    {
+      "id": "incident.resolve",
+      "resource": "incident",
+      "action": "resolve",
+      "method": "POST",
+      "path": "/incidents/{id}/resolve",
+      "minimumAccessLevel": "SUPPORT",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPPORT",
+      "provenance": "RequireAccessLevel:SUPPORT"
+    },
+    {
+      "id": "incident.types.read",
+      "resource": "incident",
+      "action": "types.read",
+      "method": "GET",
+      "path": "/incidents/types",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "authenticated"
+    },
+    {
+      "id": "incidents.read",
+      "resource": "incidents",
+      "action": "read",
+      "method": "GET",
+      "path": "/incidents",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "VehicleIncidentPolicy::viewAny"
+    },
+    {
+      "id": "inspection.read",
+      "resource": "inspection",
+      "action": "read",
+      "method": "GET",
+      "path": "/inspections/{id}",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "BusPolicy::view"
+    },
+    {
+      "id": "inspection.record",
+      "resource": "inspection",
+      "action": "record",
+      "method": "POST",
+      "path": "/buses/{id}/inspections",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "anyDriver",
+      "mutates": true,
+      "driverAllowed": true,
+      "middlewareAccess": null,
+      "provenance": "VehicleInspectionController::resolveInspectingDriver — G3-3"
+    },
+    {
+      "id": "live.read",
+      "resource": "live",
+      "action": "read",
+      "method": "GET",
+      "path": "/trips/{id}/live",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "TripPolicy::view"
+    },
+    {
+      "id": "maintenance.assign",
+      "resource": "maintenance",
+      "action": "assign",
+      "method": "POST",
+      "path": "/maintenance-tickets/{id}/assign",
+      "minimumAccessLevel": "SUPPORT",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPPORT",
+      "provenance": "RequireAccessLevel:SUPPORT"
+    },
+    {
+      "id": "maintenance.cancel",
+      "resource": "maintenance",
+      "action": "cancel",
+      "method": "POST",
+      "path": "/maintenance-tickets/{id}/cancel",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "maintenance.complete",
+      "resource": "maintenance",
+      "action": "complete",
+      "method": "POST",
+      "path": "/maintenance-tickets/{id}/complete",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "maintenance.open",
+      "resource": "maintenance",
+      "action": "open",
+      "method": "POST",
+      "path": "/maintenance-tickets",
+      "minimumAccessLevel": "SUPPORT",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPPORT",
+      "provenance": "RequireAccessLevel:SUPPORT"
+    },
+    {
+      "id": "maintenance.read",
+      "resource": "maintenance",
+      "action": "read",
+      "method": "GET",
+      "path": "/maintenance-tickets",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "MaintenanceTicketPolicy::viewAny"
+    },
+    {
+      "id": "maintenance.schedule",
+      "resource": "maintenance",
+      "action": "schedule",
+      "method": "POST",
+      "path": "/maintenance-tickets/{id}/schedule",
+      "minimumAccessLevel": "SUPPORT",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPPORT",
+      "provenance": "RequireAccessLevel:SUPPORT"
+    },
+    {
+      "id": "maintenance.start",
+      "resource": "maintenance",
+      "action": "start",
+      "method": "POST",
+      "path": "/maintenance-tickets/{id}/start",
+      "minimumAccessLevel": "SUPPORT",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPPORT",
+      "provenance": "RequireAccessLevel:SUPPORT"
+    },
+    {
+      "id": "maintenance.ticket.read",
+      "resource": "maintenance",
+      "action": "ticket.read",
+      "method": "GET",
+      "path": "/maintenance-tickets/{id}",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "MaintenanceTicketPolicy::view"
+    },
+    {
+      "id": "manifest.read",
+      "resource": "manifest",
+      "action": "read",
+      "method": "GET",
+      "path": "/trips/{id}/stops/{stopId}/manifest",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "TripPolicy::view"
+    },
+    {
+      "id": "notification.log.read",
+      "resource": "notification",
+      "action": "log.read",
+      "method": "GET",
+      "path": "/notification-log",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "RoleAuthorize:ADMIN"
+    },
+    {
+      "id": "notification.resend",
+      "resource": "notification",
+      "action": "resend",
+      "method": "POST",
+      "path": "/notification-log/{id}/resend",
+      "minimumAccessLevel": "SUPPORT",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPPORT",
+      "provenance": "RequireAccessLevel:SUPPORT"
+    },
+    {
+      "id": "notifications.read",
+      "resource": "notifications",
+      "action": "read",
+      "method": "GET",
+      "path": "/notifications",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "own inbox"
+    },
+    {
+      "id": "personalData.export",
+      "resource": "personalData",
+      "action": "export",
+      "method": "POST",
+      "path": "/users/{id}/subject-access-export",
+      "minimumAccessLevel": "SUPER_ADMIN",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPER_ADMIN",
+      "provenance": "RequireAccessLevel:SUPER_ADMIN"
+    },
+    {
+      "id": "preventive.create",
+      "resource": "preventive",
+      "action": "create",
+      "method": "POST",
+      "path": "/preventive-maintenance",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS — G3-1"
+    },
+    {
+      "id": "preventive.delete",
+      "resource": "preventive",
+      "action": "delete",
+      "method": "DELETE",
+      "path": "/preventive-maintenance/{id}",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS — G3-1"
+    },
+    {
+      "id": "preventive.read",
+      "resource": "preventive",
+      "action": "read",
+      "method": "GET",
+      "path": "/preventive-maintenance",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "RoleAuthorize:ADMIN"
+    },
+    {
+      "id": "replacement.approve",
+      "resource": "replacement",
+      "action": "approve",
+      "method": "POST",
+      "path": "/replacements/{id}/approve",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "replacement.arrived",
+      "resource": "replacement",
+      "action": "arrived",
+      "method": "POST",
+      "path": "/replacements/{id}/arrived",
+      "minimumAccessLevel": "SUPPORT",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPPORT",
+      "provenance": "RequireAccessLevel:SUPPORT"
+    },
+    {
+      "id": "replacement.dispatch",
+      "resource": "replacement",
+      "action": "dispatch",
+      "method": "POST",
+      "path": "/replacements/{id}/dispatch",
+      "minimumAccessLevel": "SUPPORT",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "SUPPORT",
+      "provenance": "RequireAccessLevel:SUPPORT"
+    },
+    {
+      "id": "replacement.read",
+      "resource": "replacement",
+      "action": "read",
+      "method": "GET",
+      "path": "/replacements/{id}",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "RoleAuthorize:ADMIN"
+    },
+    {
+      "id": "replacement.reject",
+      "resource": "replacement",
+      "action": "reject",
+      "method": "POST",
+      "path": "/replacements/{id}/reject",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "replacements.read",
+      "resource": "replacements",
+      "action": "read",
+      "method": "GET",
+      "path": "/replacements",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "RoleAuthorize:ADMIN"
+    },
+    {
+      "id": "reports.read",
+      "resource": "reports",
+      "action": "read",
+      "method": "GET",
+      "path": "/reports/trips",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "RoleAuthorize:ADMIN"
+    },
+    {
+      "id": "route.manage",
+      "resource": "route",
+      "action": "manage",
+      "method": "POST",
+      "path": "/routes",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "route.stops.read",
+      "resource": "route",
+      "action": "stops.read",
+      "method": "GET",
+      "path": "/routes/{id}/stops",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "RoutePolicy::view"
+    },
+    {
+      "id": "routes.read",
+      "resource": "routes",
+      "action": "read",
+      "method": "GET",
+      "path": "/routes",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "RoutePolicy::viewAny"
+    },
+    {
+      "id": "schedule.manage",
+      "resource": "schedule",
+      "action": "manage",
+      "method": "POST",
+      "path": "/schedules",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "schedules.read",
+      "resource": "schedules",
+      "action": "read",
+      "method": "GET",
+      "path": "/schedules",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "SchedulePolicy::viewAny"
+    },
+    {
+      "id": "self.changePassword",
+      "resource": "self",
+      "action": "changePassword",
+      "method": "POST",
+      "path": "/auth/change-password",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "own",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "own account"
+    },
+    {
+      "id": "self.logout",
+      "resource": "self",
+      "action": "logout",
+      "method": "POST",
+      "path": "/auth/logout",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "own",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "own session"
+    },
+    {
+      "id": "self.logoutAll",
+      "resource": "self",
+      "action": "logoutAll",
+      "method": "POST",
+      "path": "/auth/logout-all",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "own",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "own sessions"
+    },
+    {
+      "id": "self.notification.markAllRead",
+      "resource": "self",
+      "action": "notification.markAllRead",
+      "method": "POST",
+      "path": "/notifications/read-all",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "own",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "own inbox"
+    },
+    {
+      "id": "self.notification.markRead",
+      "resource": "self",
+      "action": "notification.markRead",
+      "method": "PATCH",
+      "path": "/notifications/{id}/read",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "own",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "own inbox"
+    },
+    {
+      "id": "student.assignTransport",
+      "resource": "student",
+      "action": "assignTransport",
+      "method": "POST",
+      "path": "/students/{id}/assign-transport",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "student.read",
+      "resource": "student",
+      "action": "read",
+      "method": "GET",
+      "path": "/students/{id}",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "StudentPolicy::view"
+    },
+    {
+      "id": "student.setStatus",
+      "resource": "student",
+      "action": "setStatus",
+      "method": "PATCH",
+      "path": "/students/{id}/status",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "student.update",
+      "resource": "student",
+      "action": "update",
+      "method": "PUT",
+      "path": "/students/{id}",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "subject",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "StudentPolicy::update — G3-2"
+    },
+    {
+      "id": "students.read",
+      "resource": "students",
+      "action": "read",
+      "method": "GET",
+      "path": "/students",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "RoleAuthorize:ADMIN"
+    },
+    {
+      "id": "trip.cancel",
+      "resource": "trip",
+      "action": "cancel",
+      "method": "POST",
+      "path": "/trips/{id}/cancel",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "trip.correct",
+      "resource": "trip",
+      "action": "correct",
+      "method": "POST",
+      "path": "/trips/{id}/corrections",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS — G3-1"
+    },
+    {
+      "id": "trip.corrections.read",
+      "resource": "trip",
+      "action": "corrections.read",
+      "method": "GET",
+      "path": "/trips/{id}/corrections",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "TripPolicy::view"
+    },
+    {
+      "id": "trip.create",
+      "resource": "trip",
+      "action": "create",
+      "method": "POST",
+      "path": "/trips",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "trip.generate",
+      "resource": "trip",
+      "action": "generate",
+      "method": "POST",
+      "path": "/trips/generate",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "trip.operate.alight",
+      "resource": "trip",
+      "action": "operate.alight",
+      "method": "POST",
+      "path": "/trips/{id}/alight",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "assignedDriver",
+      "mutates": true,
+      "driverAllowed": true,
+      "middlewareAccess": null,
+      "provenance": "TripPolicy::operate — G3-3"
+    },
+    {
+      "id": "trip.operate.arrive",
+      "resource": "trip",
+      "action": "operate.arrive",
+      "method": "POST",
+      "path": "/trips/{id}/stops/{stopId}/arrive",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "assignedDriver",
+      "mutates": true,
+      "driverAllowed": true,
+      "middlewareAccess": null,
+      "provenance": "TripPolicy::operate — G3-3"
+    },
+    {
+      "id": "trip.operate.board",
+      "resource": "trip",
+      "action": "operate.board",
+      "method": "POST",
+      "path": "/trips/{id}/board",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "assignedDriver",
+      "mutates": true,
+      "driverAllowed": true,
+      "middlewareAccess": null,
+      "provenance": "TripPolicy::operate — G3-3"
+    },
+    {
+      "id": "trip.operate.complete",
+      "resource": "trip",
+      "action": "operate.complete",
+      "method": "POST",
+      "path": "/trips/{id}/complete",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "assignedDriver",
+      "mutates": true,
+      "driverAllowed": true,
+      "middlewareAccess": null,
+      "provenance": "TripPolicy::operate — G3-3"
+    },
+    {
+      "id": "trip.operate.leftBehind",
+      "resource": "trip",
+      "action": "operate.leftBehind",
+      "method": "POST",
+      "path": "/trips/{id}/left-behind",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "assignedDriver",
+      "mutates": true,
+      "driverAllowed": true,
+      "middlewareAccess": null,
+      "provenance": "TripPolicy::operate — G3-3"
+    },
+    {
+      "id": "trip.operate.position",
+      "resource": "trip",
+      "action": "operate.position",
+      "method": "POST",
+      "path": "/trips/{id}/positions",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "assignedDriver",
+      "mutates": true,
+      "driverAllowed": true,
+      "middlewareAccess": null,
+      "provenance": "TripPolicy::operate — G3-3"
+    },
+    {
+      "id": "trip.operate.skip",
+      "resource": "trip",
+      "action": "operate.skip",
+      "method": "POST",
+      "path": "/trips/{id}/stops/{stopId}/skip",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "assignedDriver",
+      "mutates": true,
+      "driverAllowed": true,
+      "middlewareAccess": null,
+      "provenance": "TripPolicy::operate — G3-3"
+    },
+    {
+      "id": "trip.operate.start",
+      "resource": "trip",
+      "action": "operate.start",
+      "method": "POST",
+      "path": "/trips/{id}/start",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "assignedDriver",
+      "mutates": true,
+      "driverAllowed": true,
+      "middlewareAccess": null,
+      "provenance": "TripPolicy::operate — G3-3"
+    },
+    {
+      "id": "trip.read",
+      "resource": "trip",
+      "action": "read",
+      "method": "GET",
+      "path": "/trips/{id}",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "TripPolicy::view"
+    },
+    {
+      "id": "trip.reassign",
+      "resource": "trip",
+      "action": "reassign",
+      "method": "POST",
+      "path": "/trips/{id}/reassign",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "tier",
+      "mutates": true,
+      "driverAllowed": false,
+      "middlewareAccess": "OPERATIONS",
+      "provenance": "RequireAccessLevel:OPERATIONS"
+    },
+    {
+      "id": "trips.read",
+      "resource": "trips",
+      "action": "read",
+      "method": "GET",
+      "path": "/trips",
+      "minimumAccessLevel": "VIEWER",
+      "scope": "tier",
+      "mutates": false,
+      "driverAllowed": false,
+      "middlewareAccess": null,
+      "provenance": "TripPolicy::viewAny"
+    }
+  ],
+  "routes": [
+    {
+      "method": "DELETE",
+      "path": "/buses/{busId}/documents/{documentId}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "BusDocumentController@destroy"
+    },
+    {
+      "method": "DELETE",
+      "path": "/buses/{id}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "BusController@destroy"
+    },
+    {
+      "method": "DELETE",
+      "path": "/drivers/{id}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "DriverController@destroy"
+    },
+    {
+      "method": "DELETE",
+      "path": "/drivers/{id}/assign-bus",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "DriverController@unassignBus"
+    },
+    {
+      "method": "DELETE",
+      "path": "/notification-devices/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "NotificationDeviceController@destroy"
+    },
+    {
+      "method": "DELETE",
+      "path": "/notifications/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "NotificationController@destroy"
+    },
+    {
+      "method": "DELETE",
+      "path": "/preventive-maintenance/{id}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "PreventiveMaintenanceController@destroy"
+    },
+    {
+      "method": "DELETE",
+      "path": "/routes/{id}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "RouteController@destroy"
+    },
+    {
+      "method": "DELETE",
+      "path": "/routes/{routeId}/stops/{stopId}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "RouteController@deleteStop"
+    },
+    {
+      "method": "DELETE",
+      "path": "/schedules/{id}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "ScheduleController@destroy"
+    },
+    {
+      "method": "DELETE",
+      "path": "/service-calendar/{id}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "ServiceCalendarController@destroy"
+    },
+    {
+      "method": "DELETE",
+      "path": "/students/{id}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "StudentController@destroy"
+    },
+    {
+      "method": "DELETE",
+      "path": "/students/{id}/assign-transport",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "StudentController@clearTransport"
+    },
+    {
+      "method": "GET",
+      "path": "/announcements",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "AnnouncementController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/announcements/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "AnnouncementController@show"
+    },
+    {
+      "method": "GET",
+      "path": "/attendance-discrepancies",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "TripRecoveryController@discrepancies"
+    },
+    {
+      "method": "GET",
+      "path": "/audit-logs",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPER_ADMIN",
+      "authenticated": true,
+      "action": "AuditController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/audit-logs/{id}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPER_ADMIN",
+      "authenticated": true,
+      "action": "AuditController@show"
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "AuthController@me"
+    },
+    {
+      "method": "GET",
+      "path": "/buses",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "BusController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/buses/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "BusController@show"
+    },
+    {
+      "method": "GET",
+      "path": "/buses/{id}/documents",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "BusDocumentController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/buses/{id}/inspections",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "VehicleInspectionController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/buses/{id}/service-readiness",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "VehicleInspectionController@readiness"
+    },
+    {
+      "method": "GET",
+      "path": "/consolidations",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "ConsolidationController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/consolidations/candidates",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "ConsolidationController@candidates"
+    },
+    {
+      "method": "GET",
+      "path": "/consolidations/{id}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "ConsolidationController@show"
+    },
+    {
+      "method": "GET",
+      "path": "/data-access-logs",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPER_ADMIN",
+      "authenticated": true,
+      "action": "AuditController@accessLogs"
+    },
+    {
+      "method": "GET",
+      "path": "/drivers",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "DriverController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/drivers/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "DriverController@show"
+    },
+    {
+      "method": "GET",
+      "path": "/evidence/categories",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "EvidenceController@categories"
+    },
+    {
+      "method": "GET",
+      "path": "/evidence/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "EvidenceController@show"
+    },
+    {
+      "method": "GET",
+      "path": "/fleet/documents/expiring",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "BusDocumentController@expiring"
+    },
+    {
+      "method": "GET",
+      "path": "/geo/geocode",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "GeoController@geocode"
+    },
+    {
+      "method": "GET",
+      "path": "/geo/places",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "GeoController@places"
+    },
+    {
+      "method": "GET",
+      "path": "/geo/reverse",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "GeoController@reverse"
+    },
+    {
+      "method": "GET",
+      "path": "/geo/status",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "GeoController@status"
+    },
+    {
+      "method": "GET",
+      "path": "/incidents",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "IncidentController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/incidents/types",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "IncidentController@types"
+    },
+    {
+      "method": "GET",
+      "path": "/incidents/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "IncidentController@show"
+    },
+    {
+      "method": "GET",
+      "path": "/inspections/checklist",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "VehicleInspectionController@checklist"
+    },
+    {
+      "method": "GET",
+      "path": "/inspections/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "VehicleInspectionController@show"
+    },
+    {
+      "method": "GET",
+      "path": "/maintenance-tickets",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "MaintenanceController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/maintenance-tickets/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "MaintenanceController@show"
+    },
+    {
+      "method": "GET",
+      "path": "/notification-devices",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "NotificationDeviceController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/notification-log",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "NotificationLogController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/notification-log/health",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "NotificationLogController@health"
+    },
+    {
+      "method": "GET",
+      "path": "/notification-preferences",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "NotificationPreferenceController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/notifications",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "NotificationController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "NotificationController@unreadCount"
+    },
+    {
+      "method": "GET",
+      "path": "/notifications/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "NotificationController@show"
+    },
+    {
+      "method": "GET",
+      "path": "/preventive-maintenance",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "PreventiveMaintenanceController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/replacements",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "ReplacementController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/replacements/{id}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "ReplacementController@show"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/attendance",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "ReportController@attendance"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/fleet",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "ReportController@fleet"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/incidents",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "ReportController@incidents"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/maintenance",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "ReportController@maintenance"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/occupancy",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "ReportController@occupancy"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/trips",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "ReportController@trips"
+    },
+    {
+      "method": "GET",
+      "path": "/retention-runs",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPER_ADMIN",
+      "authenticated": true,
+      "action": "AuditController@retentionRuns"
+    },
+    {
+      "method": "GET",
+      "path": "/routes",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "RouteController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/routes/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "RouteController@show"
+    },
+    {
+      "method": "GET",
+      "path": "/routes/{id}/stops",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "RouteController@listStops"
+    },
+    {
+      "method": "GET",
+      "path": "/schedules",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "ScheduleController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/schedules/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "ScheduleController@show"
+    },
+    {
+      "method": "GET",
+      "path": "/service-calendar",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "ServiceCalendarController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/students",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "StudentController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/students/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "StudentController@show"
+    },
+    {
+      "method": "GET",
+      "path": "/trips",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "TripController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/trips/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "TripController@show"
+    },
+    {
+      "method": "GET",
+      "path": "/trips/{id}/corrections",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "TripRecoveryController@corrections"
+    },
+    {
+      "method": "GET",
+      "path": "/trips/{id}/eta",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "TrackingController@eta"
+    },
+    {
+      "method": "GET",
+      "path": "/trips/{id}/live",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "TrackingController@live"
+    },
+    {
+      "method": "GET",
+      "path": "/trips/{id}/stops/{stopId}/manifest",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "TrackingController@manifest"
+    },
+    {
+      "method": "GET",
+      "path": "/users",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "UserController@index"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "UserController@show"
+    },
+    {
+      "method": "PATCH",
+      "path": "/buses/{id}/status",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "BusController@updateStatus"
+    },
+    {
+      "method": "PATCH",
+      "path": "/drivers/{id}/status",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "DriverController@updateStatus"
+    },
+    {
+      "method": "PATCH",
+      "path": "/notifications/{id}/read",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "NotificationController@markRead"
+    },
+    {
+      "method": "PATCH",
+      "path": "/notifications/{id}/unread",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "NotificationController@markUnread"
+    },
+    {
+      "method": "PATCH",
+      "path": "/routes/{id}/status",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "RouteController@updateStatus"
+    },
+    {
+      "method": "PATCH",
+      "path": "/schedules/{id}/status",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "ScheduleController@setActive"
+    },
+    {
+      "method": "PATCH",
+      "path": "/students/{id}/status",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "StudentController@updateStatus"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{id}/status",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPER_ADMIN",
+      "authenticated": true,
+      "action": "UserController@setActiveState"
+    },
+    {
+      "method": "POST",
+      "path": "/announcements",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "AnnouncementController@store"
+    },
+    {
+      "method": "POST",
+      "path": "/announcements/{id}/publish",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "AnnouncementController@publish"
+    },
+    {
+      "method": "POST",
+      "path": "/announcements/{id}/withdraw",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "AnnouncementController@withdraw"
+    },
+    {
+      "method": "POST",
+      "path": "/attendance-discrepancies/{id}/review",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPPORT",
+      "authenticated": true,
+      "action": "TripRecoveryController@review"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/change-password",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "PasswordController@change"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": false,
+      "action": "AuthController@login"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/logout",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "AuthController@logout"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/logout-all",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "AuthController@logoutAll"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/refresh",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": false,
+      "action": "AuthController@refresh"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/register",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": false,
+      "action": "AuthController@register"
+    },
+    {
+      "method": "POST",
+      "path": "/buses",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "BusController@store"
+    },
+    {
+      "method": "POST",
+      "path": "/buses/{id}/documents",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "BusDocumentController@store"
+    },
+    {
+      "method": "POST",
+      "path": "/buses/{id}/inspections",
+      "roles": [
+        "DRIVER",
+        "ADMIN"
+      ],
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "VehicleInspectionController@store"
+    },
+    {
+      "method": "POST",
+      "path": "/consolidations",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "ConsolidationController@store"
+    },
+    {
+      "method": "POST",
+      "path": "/consolidations/{id}/approve",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "ConsolidationController@approve"
+    },
+    {
+      "method": "POST",
+      "path": "/consolidations/{id}/execute",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "ConsolidationController@execute"
+    },
+    {
+      "method": "POST",
+      "path": "/consolidations/{id}/notify",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "ConsolidationController@notify"
+    },
+    {
+      "method": "POST",
+      "path": "/consolidations/{id}/reject",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "ConsolidationController@reject"
+    },
+    {
+      "method": "POST",
+      "path": "/drivers",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "DriverController@store"
+    },
+    {
+      "method": "POST",
+      "path": "/drivers/{id}/assign-bus",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "DriverController@assignBus"
+    },
+    {
+      "method": "POST",
+      "path": "/evidence",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "EvidenceController@store"
+    },
+    {
+      "method": "POST",
+      "path": "/incidents",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "IncidentController@store"
+    },
+    {
+      "method": "POST",
+      "path": "/incidents/{id}/acknowledge",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPPORT",
+      "authenticated": true,
+      "action": "IncidentController@acknowledge"
+    },
+    {
+      "method": "POST",
+      "path": "/incidents/{id}/cancel",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "IncidentController@cancel"
+    },
+    {
+      "method": "POST",
+      "path": "/incidents/{id}/close",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "IncidentController@close"
+    },
+    {
+      "method": "POST",
+      "path": "/incidents/{id}/notes",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "IncidentController@addNote"
+    },
+    {
+      "method": "POST",
+      "path": "/incidents/{id}/resolve",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPPORT",
+      "authenticated": true,
+      "action": "IncidentController@resolve"
+    },
+    {
+      "method": "POST",
+      "path": "/maintenance-tickets",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPPORT",
+      "authenticated": true,
+      "action": "MaintenanceController@store"
+    },
+    {
+      "method": "POST",
+      "path": "/maintenance-tickets/{id}/assign",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPPORT",
+      "authenticated": true,
+      "action": "MaintenanceController@assign"
+    },
+    {
+      "method": "POST",
+      "path": "/maintenance-tickets/{id}/cancel",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "MaintenanceController@cancel"
+    },
+    {
+      "method": "POST",
+      "path": "/maintenance-tickets/{id}/complete",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "MaintenanceController@complete"
+    },
+    {
+      "method": "POST",
+      "path": "/maintenance-tickets/{id}/schedule",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPPORT",
+      "authenticated": true,
+      "action": "MaintenanceController@schedule"
+    },
+    {
+      "method": "POST",
+      "path": "/maintenance-tickets/{id}/start",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPPORT",
+      "authenticated": true,
+      "action": "MaintenanceController@start"
+    },
+    {
+      "method": "POST",
+      "path": "/notification-devices",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "NotificationDeviceController@store"
+    },
+    {
+      "method": "POST",
+      "path": "/notification-devices/revoke-all",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "NotificationDeviceController@revokeAll"
+    },
+    {
+      "method": "POST",
+      "path": "/notification-log/{id}/resend",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPPORT",
+      "authenticated": true,
+      "action": "NotificationLogController@resend"
+    },
+    {
+      "method": "POST",
+      "path": "/notifications/read-all",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "NotificationController@markAllRead"
+    },
+    {
+      "method": "POST",
+      "path": "/preventive-maintenance",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "PreventiveMaintenanceController@store"
+    },
+    {
+      "method": "POST",
+      "path": "/replacements/{id}/approve",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "ReplacementController@approve"
+    },
+    {
+      "method": "POST",
+      "path": "/replacements/{id}/arrived",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPPORT",
+      "authenticated": true,
+      "action": "ReplacementController@markArrived"
+    },
+    {
+      "method": "POST",
+      "path": "/replacements/{id}/dispatch",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPPORT",
+      "authenticated": true,
+      "action": "ReplacementController@dispatchReplacement"
+    },
+    {
+      "method": "POST",
+      "path": "/replacements/{id}/reject",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "ReplacementController@reject"
+    },
+    {
+      "method": "POST",
+      "path": "/routes",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "RouteController@store"
+    },
+    {
+      "method": "POST",
+      "path": "/routes/{id}/stops",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "RouteController@addStop"
+    },
+    {
+      "method": "POST",
+      "path": "/schedules",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "ScheduleController@store"
+    },
+    {
+      "method": "POST",
+      "path": "/service-calendar",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "ServiceCalendarController@store"
+    },
+    {
+      "method": "POST",
+      "path": "/students",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "StudentController@store"
+    },
+    {
+      "method": "POST",
+      "path": "/students/{id}/assign-transport",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "StudentController@assignTransport"
+    },
+    {
+      "method": "POST",
+      "path": "/trips",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "TripController@store"
+    },
+    {
+      "method": "POST",
+      "path": "/trips/generate",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "TripController@generate"
+    },
+    {
+      "method": "POST",
+      "path": "/trips/{id}/alight",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "TrackingController@alight"
+    },
+    {
+      "method": "POST",
+      "path": "/trips/{id}/board",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "TrackingController@board"
+    },
+    {
+      "method": "POST",
+      "path": "/trips/{id}/cancel",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "TripController@cancel"
+    },
+    {
+      "method": "POST",
+      "path": "/trips/{id}/complete",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "TripController@complete"
+    },
+    {
+      "method": "POST",
+      "path": "/trips/{id}/corrections",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "TripRecoveryController@correct"
+    },
+    {
+      "method": "POST",
+      "path": "/trips/{id}/left-behind",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "TrackingController@leftBehind"
+    },
+    {
+      "method": "POST",
+      "path": "/trips/{id}/positions",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "TrackingController@recordPosition"
+    },
+    {
+      "method": "POST",
+      "path": "/trips/{id}/reassign",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "TripController@reassign"
+    },
+    {
+      "method": "POST",
+      "path": "/trips/{id}/start",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "TripController@start"
+    },
+    {
+      "method": "POST",
+      "path": "/trips/{id}/stops/{stopId}/arrive",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "TrackingController@markArrived"
+    },
+    {
+      "method": "POST",
+      "path": "/trips/{id}/stops/{stopId}/skip",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "TrackingController@skipStop"
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPER_ADMIN",
+      "authenticated": true,
+      "action": "AuthController@register"
+    },
+    {
+      "method": "POST",
+      "path": "/users/{id}/subject-access-export",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "SUPER_ADMIN",
+      "authenticated": true,
+      "action": "AuditController@subjectAccessExport"
+    },
+    {
+      "method": "PUT",
+      "path": "/announcements/{id}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "AnnouncementController@update"
+    },
+    {
+      "method": "PUT",
+      "path": "/buses/{busId}/documents/{documentId}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "BusDocumentController@update"
+    },
+    {
+      "method": "PUT",
+      "path": "/buses/{id}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "BusController@update"
+    },
+    {
+      "method": "PUT",
+      "path": "/drivers/{id}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "DriverController@update"
+    },
+    {
+      "method": "PUT",
+      "path": "/notification-preferences",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "NotificationPreferenceController@update"
+    },
+    {
+      "method": "PUT",
+      "path": "/routes/{id}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "RouteController@update"
+    },
+    {
+      "method": "PUT",
+      "path": "/routes/{routeId}/stops/{stopId}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "RouteController@updateStop"
+    },
+    {
+      "method": "PUT",
+      "path": "/schedules/{id}",
+      "roles": [
+        "ADMIN"
+      ],
+      "middlewareAccess": "OPERATIONS",
+      "authenticated": true,
+      "action": "ScheduleController@update"
+    },
+    {
+      "method": "PUT",
+      "path": "/students/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "StudentController@update"
+    },
+    {
+      "method": "PUT",
+      "path": "/users/{id}",
+      "roles": null,
+      "middlewareAccess": null,
+      "authenticated": true,
+      "action": "UserController@update"
+    }
+  ]
+}

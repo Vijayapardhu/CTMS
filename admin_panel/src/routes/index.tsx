@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { Placeholder } from '@/components/Placeholder'
 import type { AppIconName } from '@/icons/registry'
-import { AccessLevel } from '@/auth/accessLevel'
+import type { CapabilityId } from '@/auth/capabilities'
 import { DashboardScreen } from '@/features/dashboard/DashboardScreen'
 import { TripsScreen } from '@/features/trips/TripsScreen'
 import { TripDetailScreen } from '@/features/trips/TripDetailScreen'
@@ -14,8 +14,8 @@ type ScreenSpec = {
   title: string
   icon: AppIconName
   slice: string
-  /** The least privileged level that may reach this screen. */
-  requires: AccessLevel
+  /** The capability that makes this screen reachable. */
+  capability: CapabilityId
   /** Built. Absent means the placeholder still stands. */
   element?: ReactNode
 }
@@ -33,7 +33,7 @@ export const screens: ScreenSpec[] = [
     title: 'Dashboard',
     icon: 'dashboard',
     slice: 'slice 2',
-    requires: AccessLevel.VIEWER,
+    capability: 'dashboard.read',
     element: <DashboardScreen />,
   },
   {
@@ -41,7 +41,7 @@ export const screens: ScreenSpec[] = [
     title: 'Live Operations',
     icon: 'live',
     slice: 'slice 4',
-    requires: AccessLevel.VIEWER,
+    capability: 'live.read',
     element: <LiveOperationsScreen />,
   },
   {
@@ -49,7 +49,7 @@ export const screens: ScreenSpec[] = [
     title: 'Trips',
     icon: 'trips',
     slice: 'slice 3',
-    requires: AccessLevel.VIEWER,
+    capability: 'trips.read',
     element: <TripsScreen />,
   },
   {
@@ -57,16 +57,16 @@ export const screens: ScreenSpec[] = [
     title: 'Trip',
     icon: 'trips',
     slice: 'slice 3',
-    requires: AccessLevel.VIEWER,
+    capability: 'trip.read',
     element: <TripDetailScreen />,
   },
-  { path: '/routes', title: 'Routes', icon: 'routes', slice: 'slice 5', requires: AccessLevel.VIEWER },
+  { path: '/routes', title: 'Routes', icon: 'routes', slice: 'slice 5', capability: 'routes.read' },
   {
     path: '/buses',
     title: 'Buses',
     icon: 'buses',
     slice: 'slice 5',
-    requires: AccessLevel.VIEWER,
+    capability: 'fleet.read',
     element: <FleetScreen />,
   },
   {
@@ -74,20 +74,22 @@ export const screens: ScreenSpec[] = [
     title: 'Bus',
     icon: 'buses',
     slice: 'slice 5',
-    requires: AccessLevel.VIEWER,
+    capability: 'bus.read',
     element: <BusDetailScreen />,
   },
-  { path: '/drivers', title: 'Drivers', icon: 'drivers', slice: 'slice 7', requires: AccessLevel.VIEWER },
-  { path: '/inspections', title: 'Inspections', icon: 'inspections', slice: 'slice 7', requires: AccessLevel.VIEWER },
-  { path: '/maintenance', title: 'Maintenance', icon: 'maintenance', slice: 'slice 6', requires: AccessLevel.VIEWER },
-  { path: '/incidents', title: 'Incidents', icon: 'incidents', slice: 'slice 6', requires: AccessLevel.VIEWER },
-  { path: '/incidents/:id', title: 'Incident', icon: 'incidents', slice: 'slice 6', requires: AccessLevel.VIEWER },
-  { path: '/students', title: 'Students', icon: 'students', slice: 'slice 7', requires: AccessLevel.VIEWER },
-  { path: '/alerts', title: 'Alerts', icon: 'alerts', slice: 'slice 8', requires: AccessLevel.VIEWER },
-  { path: '/announcements', title: 'Announcements', icon: 'announcements', slice: 'slice 8', requires: AccessLevel.VIEWER },
-  { path: '/reports', title: 'Reports', icon: 'reports', slice: 'slice 8', requires: AccessLevel.VIEWER },
-  { path: '/admin/audit', title: 'Audit', icon: 'audit', slice: 'slice 8', requires: AccessLevel.SUPER_ADMIN },
-  { path: '/admin/accounts', title: 'Accounts', icon: 'accounts', slice: 'slice 8', requires: AccessLevel.SUPER_ADMIN },
+  { path: '/drivers', title: 'Drivers', icon: 'drivers', slice: 'slice 7', capability: 'drivers.read' },
+  { path: '/inspections', title: 'Inspections', icon: 'inspections', slice: 'slice 7', capability: 'bus.readiness.read' },
+  { path: '/maintenance', title: 'Maintenance', icon: 'maintenance', slice: 'slice 6', capability: 'maintenance.read' },
+  { path: '/incidents', title: 'Incidents', icon: 'incidents', slice: 'slice 6', capability: 'incidents.read' },
+  { path: '/incidents/:id', title: 'Incident', icon: 'incidents', slice: 'slice 6', capability: 'incident.read' },
+  { path: '/replacements', title: 'Replacements', icon: 'swap', slice: 'slice 5 of the RBAC plan', capability: 'replacements.read' },
+  { path: '/students', title: 'Students', icon: 'students', slice: 'slice 7', capability: 'students.read' },
+  { path: '/alerts', title: 'Alerts', icon: 'alerts', slice: 'slice 8', capability: 'notifications.read' },
+  { path: '/announcements', title: 'Announcements', icon: 'announcements', slice: 'slice 8', capability: 'announcements.read' },
+  { path: '/reports', title: 'Reports', icon: 'reports', slice: 'slice 8', capability: 'reports.read' },
+  { path: '/admin/audit', title: 'Audit', icon: 'audit', slice: 'slice 8', capability: 'audit.read' },
+  { path: '/admin/access-log', title: 'Data Access', icon: 'accessLog', slice: 'phase 15', capability: 'audit.accessLog.read' },
+  { path: '/admin/accounts', title: 'Accounts', icon: 'accounts', slice: 'slice 8', capability: 'account.create' },
 ]
 
 export function screenElement(screen: ScreenSpec) {

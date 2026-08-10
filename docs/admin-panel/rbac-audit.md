@@ -348,3 +348,34 @@ and is not reported as such.
 The probes mutated the development database: one running trip is now
 `COMPLETED`, and two incidents were created. `admin_panel/docs/development.md`
 recreates that environment from scratch in three commands.
+
+---
+
+## 11. Phase 1 — the capability registry, **DONE**
+
+The §9 test strategy above is built. The hand-maintained frontend permission
+model is gone; the panel now derives its capabilities from the router. See
+**`capability-registry.md`** for the whole design.
+
+What changed against this audit's plan:
+
+- Layer 1 exists as `admin_panel/tests/capabilities.test.ts` — integrity against
+  the committed `capability-map.json`, plus the generated four-tier matrix this
+  section asked for.
+- Layer 3 exists as a live probe of the running backend. **Every mutating
+  capability except the five `own` ones** was called for real at every tier
+  below its declared minimum: **111 denial cases, 111 refused with 403, zero
+  inconclusive, zero admitted.** `evidence.create` was probed separately as a
+  multipart upload — VIEWER 403, SUPPORT 201.
+- Every probe used a valid payload. A 422 is reported as *inconclusive*, never
+  counted as a refusal — the mistake that made the first G3-3 pass read some
+  endpoints as safe when they were only unvalidated.
+- `RequireLevel` is deleted. No feature component performs a raw access-level
+  check; navigation, route guards and action guards all ask the same registry.
+
+The map is the authority, and it disagreeing with the server is now a build
+failure rather than a discovery.
+
+**Browser verification is still unavailable** — the Chrome extension has been
+disconnected since Slice 2. Everything above is API-level and is not reported as
+visual verification.

@@ -11,7 +11,8 @@
     "lint": "eslint src",
     "test": "vitest run",
     "test:watch": "vitest",
-    "api:types": "openapi-typescript ../docs/driver-app/openapi-full.json -o src/api/schema.d.ts"
+    "api:types": "openapi-typescript ../docs/driver-app/openapi-full.json -o src/api/schema.d.ts",
+    "capabilities": "python ../backend/tools/derive-capability-map.py"
   },
   "dependencies": {
     "@hugeicons/core-free-icons": "^1.0.13",

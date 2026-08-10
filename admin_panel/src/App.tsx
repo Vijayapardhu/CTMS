@@ -5,7 +5,7 @@ import { AppShell } from './app/shell/AppShell'
 import { screenElement, screens } from './routes'
 import { ACCESS_LEVEL_LABEL } from './auth/accessLevel'
 import { LoginScreen } from './auth/LoginScreen'
-import { RequireLevel } from './auth/RequireLevel'
+import { RequireCapability } from './auth/RequireCapability'
 import { SessionProvider, useSession } from './auth/SessionProvider'
 import { Icon } from './icons/Icon'
 
@@ -67,7 +67,6 @@ function Panel() {
 
   return (
     <AppShell
-      level={level}
       user={
         user
           ? {
@@ -83,7 +82,7 @@ function Panel() {
           <Route
             key={screen.path}
             path={screen.path}
-            element={<RequireLevel level={screen.requires}>{screenElement(screen)}</RequireLevel>}
+            element={<RequireCapability capability={screen.capability}>{screenElement(screen)}</RequireCapability>}
           />
         ))}
       </Routes>

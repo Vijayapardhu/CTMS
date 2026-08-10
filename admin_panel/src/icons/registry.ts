@@ -2,6 +2,7 @@ import {
   Alert01Icon,
   Alert02Icon,
   AlertCircleIcon,
+  ArrowDataTransferHorizontalIcon,
   ArrowDown01Icon,
   ArrowLeft01Icon,
   ArrowRight01Icon,
@@ -96,6 +97,8 @@ export const AppIcon = {
   document: File01Icon,
   history: Clock01Icon,
   assign: UserAdd01Icon,
+  /** A replacement vehicle taking over from another. */
+  swap: ArrowDataTransferHorizontalIcon,
   send: SentIcon,
   accessLog: EyeIcon,
 
