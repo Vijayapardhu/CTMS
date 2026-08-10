@@ -81,11 +81,32 @@ if ($SeedOnly) {
 
 Step 'Checking the map credential'
 
+# Order of preference:
+#   1. A browser key of the panel's own, in admin_panel/.env.local
+#   2. Failing that, the backend's key, handed to Vite for this run only
+#
+# The second is a convenience for demonstrating on one laptop. It hands the
+# process the key rather than writing a copy of it anywhere, so there is still
+# exactly one place the credential lives and one place to rotate it.
+#
+# It is NOT how this should be deployed: the backend's key has no referrer
+# restriction, and a key in a browser bundle is readable by anybody who opens
+# the page. Restricting that key by referrer would break the backend's own
+# server-side calls, which send no referrer -- so a real deployment needs a
+# second, referrer-restricted key. See docs/admin-panel/google-maps-setup.md.
+
 $envLocal = Join-Path $panel '.env.local'
+$backendEnv = Join-Path $backend '.env'
+
 if ((Test-Path $envLocal) -and (Select-String -Path $envLocal -Pattern '^VITE_GOOGLE_MAPS_API_KEY=.+' -Quiet)) {
-    Note 'Browser key found. Live Operations will render a map.'
+    Note 'Browser key found in admin_panel/.env.local.'
+} elseif ((Test-Path $backendEnv) -and (Select-String -Path $backendEnv -Pattern '^GOOGLE_MAPS_API_KEY=.+' -Quiet)) {
+    $line = (Select-String -Path $backendEnv -Pattern '^GOOGLE_MAPS_API_KEY=(.+)$').Matches[0].Groups[1].Value
+    $env:VITE_GOOGLE_MAPS_API_KEY = $line.Trim().Trim('"')
+    Note 'Using the backend key for this run. Demonstration only -- it is unrestricted.'
+    Warn 'Issue a referrer-restricted browser key before serving this anywhere else.'
 } else {
-    Warn 'No VITE_GOOGLE_MAPS_API_KEY in admin_panel/.env.local.'
+    Warn 'No map key found in either place.'
     Warn 'Live Operations will show its map-unavailable state; everything else works.'
     Warn 'See docs/admin-panel/google-maps-setup.md.'
 }

@@ -66,10 +66,29 @@ if [ "$seed_only" -eq 1 ]; then
 fi
 
 step 'Checking the map credential'
+
+# Order of preference:
+#   1. A browser key of the panel's own, in admin_panel/.env.local
+#   2. Failing that, the backend's key, handed to Vite for this run only
+#
+# The second is a convenience for demonstrating on one laptop. It hands the
+# process the key rather than writing a copy of it anywhere, so there is still
+# exactly one place the credential lives and one place to rotate it.
+#
+# It is NOT how this should be deployed: the backend's key has no referrer
+# restriction, and a key in a browser bundle is readable by anybody who opens
+# the page. Restricting that key by referrer would break the backend's own
+# server-side calls, which send no referrer — so a real deployment needs a
+# second, referrer-restricted key. See docs/admin-panel/google-maps-setup.md.
 if [ -f "$panel/.env.local" ] && grep -q '^VITE_GOOGLE_MAPS_API_KEY=.\+' "$panel/.env.local"; then
-  note 'Browser key found. Live Operations will render a map.'
+  note 'Browser key found in admin_panel/.env.local.'
+elif [ -f "$backend/.env" ] && grep -q '^GOOGLE_MAPS_API_KEY=.\+' "$backend/.env"; then
+  VITE_GOOGLE_MAPS_API_KEY="$(grep '^GOOGLE_MAPS_API_KEY=' "$backend/.env" | head -1 | cut -d= -f2- | tr -d '\"')"
+  export VITE_GOOGLE_MAPS_API_KEY
+  note 'Using the backend key for this run. Demonstration only — it is unrestricted.'
+  note 'Issue a referrer-restricted browser key before serving this anywhere else.'
 else
-  note 'No VITE_GOOGLE_MAPS_API_KEY in admin_panel/.env.local.'
+  note 'No map key found in either place.'
   note 'Live Operations will show its map-unavailable state; everything else works.'
   note 'See docs/admin-panel/google-maps-setup.md.'
 fi

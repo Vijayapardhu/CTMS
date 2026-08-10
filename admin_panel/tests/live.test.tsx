@@ -8,6 +8,7 @@ import { server } from '@/mocks/server'
 import { errorResponse, pageResponse } from '@/mocks/fixtures'
 import { configureClient } from '@/api/client'
 import { LiveOperationsScreen } from '@/features/live/LiveOperationsScreen'
+import { MapUnavailable } from '@/features/live/LiveMap'
 import { TRACKED_LIMIT, readableDistance, trackedSet } from '@/features/live/api'
 
 const API = 'http://localhost:8000/api/v1'
@@ -260,5 +261,27 @@ describe('live operations', () => {
     expect(await screen.findByText('Map unavailable')).toBeInTheDocument()
     expect(screen.getByText(/Google Maps configuration is missing/)).toBeInTheDocument()
     expect(screen.getByText('Route 1')).toBeInTheDocument()
+  })
+})
+
+describe('when Google refuses the map credential', () => {
+  it('says so, instead of leaving a grey rectangle', async () => {
+    render(<MapUnavailable reason="rejected" />)
+
+    // Google's own failure is a grey box and a console line, which in a
+    // control room is indistinguishable from a map that is merely slow.
+    expect(screen.getByText('Map unavailable')).toBeInTheDocument()
+    expect(screen.getByText(/refused the map credential/i)).toBeInTheDocument()
+    // The rest of the screen is still worth reading, and the notice says so.
+    expect(screen.getByText(/still shown beside this panel/i)).toBeInTheDocument()
+  })
+
+  it('distinguishes a refused credential from a missing one', () => {
+    const { rerender } = render(<MapUnavailable />)
+    expect(screen.getByText(/configuration is missing/i)).toBeInTheDocument()
+
+    rerender(<MapUnavailable reason="rejected" />)
+    expect(screen.queryByText(/configuration is missing/i)).not.toBeInTheDocument()
+    expect(screen.getByText(/refused the map credential/i)).toBeInTheDocument()
   })
 })

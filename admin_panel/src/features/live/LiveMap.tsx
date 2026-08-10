@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { APIProvider, Map, AdvancedMarker, useMap } from '@vis.gl/react-google-maps'
 import { config } from '@/config/env'
 import { Icon } from '@/icons/Icon'
@@ -24,7 +24,16 @@ type Props = {
  * keeps working and this says why the map does not.
  */
 export function LiveMap({ tracked, selectedId, onSelect }: Props) {
+  const rejected = useAuthFailure()
+
   if (!config.hasMap) return <MapUnavailable />
+
+  // A key that is present but refused — not activated for the Maps JavaScript
+  // API, restricted to another site, or over quota. Google's own failure is a
+  // grey rectangle and a line in the browser console, which in a control room
+  // is indistinguishable from a map that is simply slow. This says what
+  // happened instead.
+  if (rejected) return <MapUnavailable reason="rejected" />
 
   return (
     <APIProvider apiKey={config.mapsApiKey}>
@@ -134,15 +143,42 @@ function FitOnce({ tracked }: { tracked: TrackedTrip[] }) {
 }
 
 /** The key is absent. Everything else on the screen still works. */
-export function MapUnavailable() {
+/**
+ * `gm_authFailure` is the documented hook the Maps JavaScript API calls when it
+ * refuses a key. It is a global, so it is installed once and removed on
+ * unmount rather than left behind for whatever renders next.
+ */
+function useAuthFailure(): boolean {
+  const [rejected, setRejected] = useState(false)
+
+  useEffect(() => {
+    const holder = window as typeof window & { gm_authFailure?: () => void }
+    const previous = holder.gm_authFailure
+
+    holder.gm_authFailure = () => {
+      setRejected(true)
+      previous?.()
+    }
+
+    return () => {
+      holder.gm_authFailure = previous
+    }
+  }, [])
+
+  return rejected
+}
+
+export function MapUnavailable({ reason = 'missing' }: { reason?: 'missing' | 'rejected' }) {
   return (
     <div className="grid size-full place-items-center bg-surface-sunken p-xl text-center">
       <div>
         <Icon name="offline" size="lg" className="text-on-surface-muted" />
         <p className="mt-md text-title-md">Map unavailable</p>
         <p className="mt-xs max-w-prose text-body text-on-surface-muted">
-          Google Maps configuration is missing. Trip positions, stop progress and estimates are all still shown
-          beside this panel.
+          {reason === 'rejected'
+            ? 'Google refused the map credential — it may not be enabled for this site, or for maps at all.'
+            : 'Google Maps configuration is missing.'}{' '}
+          Trip positions, stop progress and estimates are all still shown beside this panel.
         </p>
       </div>
     </div>

@@ -17,6 +17,56 @@ Neither key is in this repository, and neither should ever be committed.
 
 ---
 
+## 0. What this project's existing key actually is
+
+Checked against Google on 11 August 2026, so that the advice below is about the
+real situation rather than a hypothetical.
+
+`backend/.env` holds **one** key, under `GOOGLE_MAPS_API_KEY`. Probing it:
+
+| Test | Result | What it tells us |
+|---|---|---|
+| Geocoding with **no** referrer | `OK` | Not referrer-restricted — a referrer-restricted key rejects this |
+| Geocoding with an arbitrary referrer | `OK` | Confirms the same |
+| Static Maps | `This API is not activated` | The key has a curated set of APIs, and Static Maps is not in it |
+
+So: **the key has no application restriction.** Anybody who obtains it can spend
+against this project.
+
+Two consequences that decide the shape of the solution:
+
+1. **Putting it in the panel exposes it.** A browser key is readable by anybody
+   who opens the page — unavoidable for the Maps JavaScript API, and the reason
+   Google protects browser keys with a referrer restriction instead of secrecy.
+   An unrestricted key in a bundle has no protection at all.
+
+2. **You cannot simply restrict this key to fix that.** Adding a referrer
+   restriction would break the backend's own calls, because a server sends no
+   referrer. The two uses need genuinely different restrictions, so they need
+   two keys. There is no configuration of one key that is correct for both.
+
+### What the demonstration scripts do about it
+
+`demo.ps1` and `demo.sh` prefer a browser key in `admin_panel/.env.local`. If
+there is not one, they pass the backend's key to Vite **for that run only** —
+handed to the process, never copied to a second file. That is a deliberate
+convenience for demonstrating on one laptop, and it is logged on screen when it
+happens.
+
+It is not a deployment strategy. Before the panel is served anywhere but a
+laptop, do §1 below and put a referrer-restricted key in `.env.local`, where it
+takes precedence automatically.
+
+### If the map is grey during the demonstration
+
+The Maps JavaScript API may not be among the APIs enabled on that key — Static
+Maps is not, which suggests a curated set. The panel now detects Google's
+`gm_authFailure` and says *"Google refused the map credential"* rather than
+showing a grey rectangle. If you see that, enable **Maps JavaScript API** on
+the key, or follow §1 and issue a proper browser key.
+
+---
+
 ## 1. The browser key — for Live Operations
 
 In the [Google Cloud console](https://console.cloud.google.com/):
@@ -64,11 +114,14 @@ Optional, and CTMS is deliberately usable without it.
 1. Enable **Routes API**.
 2. Create a second key, restricted by **IP address** to the server, and by API
    to Routes API only.
-3. Put it in `backend/.env` (never `.env.demo`, never the panel):
+3. Put it in `backend/.env` (never the panel):
 
    ```dotenv
-   GOOGLE_MAPS_SERVER_KEY=AIza...
+   GOOGLE_MAPS_API_KEY=AIza...
    ```
+
+   That is the variable the backend actually reads — `config/ctms.php` binds
+   it. There is no `GOOGLE_MAPS_SERVER_KEY`.
 
 ### Without it
 
@@ -89,8 +142,10 @@ A non-zero count is correct for the browser key. If it is zero, the env var was
 not set when Vite built.
 
 ```bash
-# The server key: it must NOT be in the panel bundle. This must print 0.
-grep -c "$(grep GOOGLE_MAPS_SERVER_KEY backend/.env | cut -d= -f2)" admin_panel/dist/assets/*.js
+# If the two keys are different, the server's must NOT be in the panel bundle.
+# This must print 0. While one key is used for both, it will print 1 — which is
+# the exposure §0 describes, not a passing check.
+grep -c "$(grep '^GOOGLE_MAPS_API_KEY=' backend/.env | cut -d= -f2)" admin_panel/dist/assets/*.js
 ```
 
 For road distance, ask the API for a running trip's ETA and look at the flag:
