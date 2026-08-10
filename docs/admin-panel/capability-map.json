@@ -1,0 +1,1607 @@
+[
+ {
+  "method": "GET",
+  "path": "/announcements",
+  "action": "AnnouncementController@index",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/announcements",
+  "action": "AnnouncementController@store",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/announcements/{id}",
+  "action": "AnnouncementController@show",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "PUT",
+  "path": "/announcements/{id}",
+  "action": "AnnouncementController@update",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/announcements/{id}/publish",
+  "action": "AnnouncementController@publish",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/announcements/{id}/withdraw",
+  "action": "AnnouncementController@withdraw",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/attendance-discrepancies",
+  "action": "TripRecoveryController@discrepancies",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/attendance-discrepancies/{id}/review",
+  "action": "TripRecoveryController@review",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPPORT",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/audit-logs",
+  "action": "AuditController@index",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPER_ADMIN",
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/audit-logs/{id}",
+  "action": "AuditController@show",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPER_ADMIN",
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/auth/change-password",
+  "action": "PasswordController@change",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/auth/login",
+  "action": "AuthController@login",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": false,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/auth/logout",
+  "action": "AuthController@logout",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/auth/logout-all",
+  "action": "AuthController@logoutAll",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/auth/me",
+  "action": "AuthController@me",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/auth/refresh",
+  "action": "AuthController@refresh",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": false,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/auth/register",
+  "action": "AuthController@register",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": false,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/buses",
+  "action": "BusController@index",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/buses",
+  "action": "BusController@store",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "DELETE",
+  "path": "/buses/{busId}/documents/{documentId}",
+  "action": "BusDocumentController@destroy",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "PUT",
+  "path": "/buses/{busId}/documents/{documentId}",
+  "action": "BusDocumentController@update",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "DELETE",
+  "path": "/buses/{id}",
+  "action": "BusController@destroy",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/buses/{id}",
+  "action": "BusController@show",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "PUT",
+  "path": "/buses/{id}",
+  "action": "BusController@update",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/buses/{id}/documents",
+  "action": "BusDocumentController@index",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/buses/{id}/documents",
+  "action": "BusDocumentController@store",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/buses/{id}/inspections",
+  "action": "VehicleInspectionController@index",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/buses/{id}/inspections",
+  "action": "VehicleInspectionController@store",
+  "roles": [
+   "DRIVER",
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/buses/{id}/service-readiness",
+  "action": "VehicleInspectionController@readiness",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "PATCH",
+  "path": "/buses/{id}/status",
+  "action": "BusController@updateStatus",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/consolidations",
+  "action": "ConsolidationController@index",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/consolidations",
+  "action": "ConsolidationController@store",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/consolidations/candidates",
+  "action": "ConsolidationController@candidates",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/consolidations/{id}",
+  "action": "ConsolidationController@show",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/consolidations/{id}/approve",
+  "action": "ConsolidationController@approve",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/consolidations/{id}/execute",
+  "action": "ConsolidationController@execute",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/consolidations/{id}/notify",
+  "action": "ConsolidationController@notify",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/consolidations/{id}/reject",
+  "action": "ConsolidationController@reject",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/data-access-logs",
+  "action": "AuditController@accessLogs",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPER_ADMIN",
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/drivers",
+  "action": "DriverController@index",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/drivers",
+  "action": "DriverController@store",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "DELETE",
+  "path": "/drivers/{id}",
+  "action": "DriverController@destroy",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/drivers/{id}",
+  "action": "DriverController@show",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "PUT",
+  "path": "/drivers/{id}",
+  "action": "DriverController@update",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "DELETE",
+  "path": "/drivers/{id}/assign-bus",
+  "action": "DriverController@unassignBus",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/drivers/{id}/assign-bus",
+  "action": "DriverController@assignBus",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "PATCH",
+  "path": "/drivers/{id}/status",
+  "action": "DriverController@updateStatus",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/evidence",
+  "action": "EvidenceController@store",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/evidence/categories",
+  "action": "EvidenceController@categories",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/evidence/{id}",
+  "action": "EvidenceController@show",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/fleet/documents/expiring",
+  "action": "BusDocumentController@expiring",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/geo/geocode",
+  "action": "GeoController@geocode",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/geo/places",
+  "action": "GeoController@places",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/geo/reverse",
+  "action": "GeoController@reverse",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/geo/status",
+  "action": "GeoController@status",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/incidents",
+  "action": "IncidentController@index",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/incidents",
+  "action": "IncidentController@store",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/incidents/types",
+  "action": "IncidentController@types",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/incidents/{id}",
+  "action": "IncidentController@show",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/incidents/{id}/acknowledge",
+  "action": "IncidentController@acknowledge",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPPORT",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/incidents/{id}/cancel",
+  "action": "IncidentController@cancel",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/incidents/{id}/close",
+  "action": "IncidentController@close",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/incidents/{id}/notes",
+  "action": "IncidentController@addNote",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/incidents/{id}/resolve",
+  "action": "IncidentController@resolve",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPPORT",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/inspections/checklist",
+  "action": "VehicleInspectionController@checklist",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/inspections/{id}",
+  "action": "VehicleInspectionController@show",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/maintenance-tickets",
+  "action": "MaintenanceController@index",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/maintenance-tickets",
+  "action": "MaintenanceController@store",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPPORT",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/maintenance-tickets/{id}",
+  "action": "MaintenanceController@show",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/maintenance-tickets/{id}/assign",
+  "action": "MaintenanceController@assign",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPPORT",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/maintenance-tickets/{id}/cancel",
+  "action": "MaintenanceController@cancel",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/maintenance-tickets/{id}/complete",
+  "action": "MaintenanceController@complete",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/maintenance-tickets/{id}/schedule",
+  "action": "MaintenanceController@schedule",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPPORT",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/maintenance-tickets/{id}/start",
+  "action": "MaintenanceController@start",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPPORT",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/notification-devices",
+  "action": "NotificationDeviceController@index",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/notification-devices",
+  "action": "NotificationDeviceController@store",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/notification-devices/revoke-all",
+  "action": "NotificationDeviceController@revokeAll",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "DELETE",
+  "path": "/notification-devices/{id}",
+  "action": "NotificationDeviceController@destroy",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/notification-log",
+  "action": "NotificationLogController@index",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/notification-log/health",
+  "action": "NotificationLogController@health",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/notification-log/{id}/resend",
+  "action": "NotificationLogController@resend",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPPORT",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/notification-preferences",
+  "action": "NotificationPreferenceController@index",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "PUT",
+  "path": "/notification-preferences",
+  "action": "NotificationPreferenceController@update",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/notifications",
+  "action": "NotificationController@index",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/notifications/read-all",
+  "action": "NotificationController@markAllRead",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/notifications/unread-count",
+  "action": "NotificationController@unreadCount",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "DELETE",
+  "path": "/notifications/{id}",
+  "action": "NotificationController@destroy",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/notifications/{id}",
+  "action": "NotificationController@show",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "PATCH",
+  "path": "/notifications/{id}/read",
+  "action": "NotificationController@markRead",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "PATCH",
+  "path": "/notifications/{id}/unread",
+  "action": "NotificationController@markUnread",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/preventive-maintenance",
+  "action": "PreventiveMaintenanceController@index",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/preventive-maintenance",
+  "action": "PreventiveMaintenanceController@store",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "DELETE",
+  "path": "/preventive-maintenance/{id}",
+  "action": "PreventiveMaintenanceController@destroy",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/replacements",
+  "action": "ReplacementController@index",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/replacements/{id}",
+  "action": "ReplacementController@show",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/replacements/{id}/approve",
+  "action": "ReplacementController@approve",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/replacements/{id}/arrived",
+  "action": "ReplacementController@markArrived",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPPORT",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/replacements/{id}/dispatch",
+  "action": "ReplacementController@dispatchReplacement",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPPORT",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/replacements/{id}/reject",
+  "action": "ReplacementController@reject",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/reports/attendance",
+  "action": "ReportController@attendance",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/reports/fleet",
+  "action": "ReportController@fleet",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/reports/incidents",
+  "action": "ReportController@incidents",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/reports/maintenance",
+  "action": "ReportController@maintenance",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/reports/occupancy",
+  "action": "ReportController@occupancy",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/reports/trips",
+  "action": "ReportController@trips",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/retention-runs",
+  "action": "AuditController@retentionRuns",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPER_ADMIN",
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "GET",
+  "path": "/routes",
+  "action": "RouteController@index",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/routes",
+  "action": "RouteController@store",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "DELETE",
+  "path": "/routes/{id}",
+  "action": "RouteController@destroy",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/routes/{id}",
+  "action": "RouteController@show",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "PUT",
+  "path": "/routes/{id}",
+  "action": "RouteController@update",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "PATCH",
+  "path": "/routes/{id}/status",
+  "action": "RouteController@updateStatus",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/routes/{id}/stops",
+  "action": "RouteController@listStops",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/routes/{id}/stops",
+  "action": "RouteController@addStop",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "DELETE",
+  "path": "/routes/{routeId}/stops/{stopId}",
+  "action": "RouteController@deleteStop",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "PUT",
+  "path": "/routes/{routeId}/stops/{stopId}",
+  "action": "RouteController@updateStop",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/schedules",
+  "action": "ScheduleController@index",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/schedules",
+  "action": "ScheduleController@store",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "DELETE",
+  "path": "/schedules/{id}",
+  "action": "ScheduleController@destroy",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/schedules/{id}",
+  "action": "ScheduleController@show",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "PUT",
+  "path": "/schedules/{id}",
+  "action": "ScheduleController@update",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "PATCH",
+  "path": "/schedules/{id}/status",
+  "action": "ScheduleController@setActive",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/service-calendar",
+  "action": "ServiceCalendarController@index",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/service-calendar",
+  "action": "ServiceCalendarController@store",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "DELETE",
+  "path": "/service-calendar/{id}",
+  "action": "ServiceCalendarController@destroy",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/students",
+  "action": "StudentController@index",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/students",
+  "action": "StudentController@store",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "DELETE",
+  "path": "/students/{id}",
+  "action": "StudentController@destroy",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/students/{id}",
+  "action": "StudentController@show",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "PUT",
+  "path": "/students/{id}",
+  "action": "StudentController@update",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "DELETE",
+  "path": "/students/{id}/assign-transport",
+  "action": "StudentController@clearTransport",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/students/{id}/assign-transport",
+  "action": "StudentController@assignTransport",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "PATCH",
+  "path": "/students/{id}/status",
+  "action": "StudentController@updateStatus",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/trips",
+  "action": "TripController@index",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/trips",
+  "action": "TripController@store",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/trips/generate",
+  "action": "TripController@generate",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/trips/{id}",
+  "action": "TripController@show",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/trips/{id}/alight",
+  "action": "TrackingController@alight",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/trips/{id}/board",
+  "action": "TrackingController@board",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/trips/{id}/cancel",
+  "action": "TripController@cancel",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/trips/{id}/complete",
+  "action": "TripController@complete",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/trips/{id}/corrections",
+  "action": "TripRecoveryController@corrections",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/trips/{id}/corrections",
+  "action": "TripRecoveryController@correct",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/trips/{id}/eta",
+  "action": "TrackingController@eta",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/trips/{id}/left-behind",
+  "action": "TrackingController@leftBehind",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/trips/{id}/live",
+  "action": "TrackingController@live",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/trips/{id}/positions",
+  "action": "TrackingController@recordPosition",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/trips/{id}/reassign",
+  "action": "TripController@reassign",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "OPERATIONS",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/trips/{id}/start",
+  "action": "TripController@start",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/trips/{id}/stops/{stopId}/arrive",
+  "action": "TrackingController@markArrived",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/trips/{id}/stops/{stopId}/manifest",
+  "action": "TrackingController@manifest",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/trips/{id}/stops/{stopId}/skip",
+  "action": "TrackingController@skipStop",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/users",
+  "action": "UserController@index",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "POST",
+  "path": "/users",
+  "action": "AuthController@register",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPER_ADMIN",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "GET",
+  "path": "/users/{id}",
+  "action": "UserController@show",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": false
+ },
+ {
+  "method": "PUT",
+  "path": "/users/{id}",
+  "action": "UserController@update",
+  "roles": null,
+  "minimumAccess": null,
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "PATCH",
+  "path": "/users/{id}/status",
+  "action": "UserController@setActiveState",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPER_ADMIN",
+  "authenticated": true,
+  "mutates": true
+ },
+ {
+  "method": "POST",
+  "path": "/users/{id}/subject-access-export",
+  "action": "AuditController@subjectAccessExport",
+  "roles": [
+   "ADMIN"
+  ],
+  "minimumAccess": "SUPER_ADMIN",
+  "authenticated": true,
+  "mutates": true
+ }
+]

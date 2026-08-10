@@ -29,6 +29,21 @@ endpoints in these documents.
 | 11 | `11-implementation-guide.md` | Stack, architecture, build slices |
 | 12 | `12-access-control-matrix.md` | Capability × access level, generated from the router |
 
+## Operational RBAC — phase 0
+
+Added when the panel stopped being a prototype and became the operational
+control surface. Read `rbac-audit.md` first: it contains a proven backend
+defect (G3-3) that the workflow phases depend on.
+
+| Document | What it settles |
+|---|---|
+| `rbac-audit.md` | The audit, the capability map, the gaps, the phases |
+| `rbac-model.md` | How authorisation works and what the panel may do about it |
+| `capability-matrix.md` | Every capability id, endpoint and enforced tier |
+| `operational-workflows.md` | The ten workflows, their real states and transitions |
+| `authorization-states.md` | Screen and action states, and what each one says |
+| `capability-map.json` | Generated from the router. Never edited |
+
 ## What this panel is
 
 A desktop-first operations console for the college transport office, run by
