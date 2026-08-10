@@ -70,6 +70,22 @@ Login failures never reveal whether the email exists. Do not write UI copy that 
 
 `is_stale` is computed server-side. **Render it.** A driver seeing a confident marker over a position eight minutes old will trust it.
 
+`/eta` response — `?stop_id=` is required for a driver, who has no pickup stop of their own:
+
+```jsonc
+{
+  "eta_at": "…", "minutes": 12,
+  "basis": "live",             // live | stale | scheduled | arrived | unknown
+  "stops_away": 3,
+  "distance_metres": 36964,    // road distance from the bus's last position
+  "distance_is_estimate": false
+}
+```
+
+`distance_metres` is the **road** distance the ETA was computed from, never the straight line between the two points — on the Velangi run those differ by 12 km. Both distance fields are `null` when no position has been reported: `basis` is then `scheduled`, and the timetable knows when, not where.
+
+`distance_is_estimate` is `true` when the routing provider could not answer and the figure is straight-line arithmetic with a road factor applied. **Show that difference** — an estimate rendered as an exact distance is the same class of lie as stale rendered as live.
+
 ### 3 · Trip lifecycle
 
 | Method | Path | Notes |

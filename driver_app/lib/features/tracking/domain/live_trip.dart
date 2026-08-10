@@ -209,6 +209,8 @@ class Eta extends Equatable {
     this.etaAt,
     this.minutes,
     this.stopsAway,
+    this.distanceMetres,
+    this.distanceIsEstimate,
   });
 
   final EtaBasis basis;
@@ -216,8 +218,42 @@ class Eta extends Equatable {
   final int? minutes;
   final int? stopsAway;
 
+  /// Road distance still to drive, from the server. Null until a position has
+  /// been reported — the timetable knows when, not where.
+  ///
+  /// Emphatically **not** the straight line to the stop. The two differ by a
+  /// third on the Velangi run, and the smaller of them is the one a driver
+  /// would plan the wrong afternoon around. Straight-line distance still
+  /// exists in this app, in `StopProximity`, and answers a different question:
+  /// whether the bus is physically inside the stop's radius.
+  final int? distanceMetres;
+
+  /// True when the server produced the distance without the routing provider —
+  /// straight-line arithmetic with a road factor. Rendered as `~`, because an
+  /// estimate shown as exact is the same lie as stale shown as live.
+  final bool? distanceIsEstimate;
+
   /// Whether this is worth showing as a time at all.
   bool get isUsable => minutes != null && basis != EtaBasis.unknown;
+
+  /// The distance as a driver should read it at a glance.
+  ///
+  /// Precision is dropped as the number grows: a metre matters when pulling
+  /// in, and nothing below a kilometre matters at thirty-seven of them.
+  String? get readableDistance {
+    final metres = distanceMetres;
+    if (metres == null) return null;
+
+    final prefix = distanceIsEstimate == true ? '~' : '';
+
+    if (metres < 1000) return '$prefix$metres m';
+
+    final km = metres / 1000;
+
+    return km < 10
+        ? '$prefix${km.toStringAsFixed(1)} km'
+        : '$prefix${km.round()} km';
+  }
 
   static Eta fromJson(Map<String, dynamic> json) {
     return Eta(
@@ -227,11 +263,15 @@ class Eta extends Equatable {
           : null,
       minutes: _int(json['minutes']),
       stopsAway: _int(json['stops_away']),
+      distanceMetres: _int(json['distance_metres']),
+      distanceIsEstimate:
+          json['distance_is_estimate'] is bool ? json['distance_is_estimate'] as bool : null,
     );
   }
 
   @override
-  List<Object?> get props => [basis, etaAt, minutes, stopsAway];
+  List<Object?> get props =>
+      [basis, etaAt, minutes, stopsAway, distanceMetres, distanceIsEstimate];
 }
 
 /// A stop's geography, from `GET /routes/{id}/stops`.

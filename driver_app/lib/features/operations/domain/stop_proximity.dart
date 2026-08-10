@@ -55,7 +55,8 @@ class StopProximity {
 
   static double _radians(double degrees) => degrees * math.pi / 180;
 
-  /// A distance a driver can read at a glance.
-  String get readable =>
-      metres < 1000 ? '${metres.round()} m' : '${(metres / 1000).toStringAsFixed(1)} km';
+  // Deliberately no formatter here. This number is never shown to a driver:
+  // it is 24.9 km where the road is 37 km, and the moment it has a `readable`
+  // getter somebody puts it on screen next to a stop name. Road distance is
+  // formatted by `Eta.readableDistance`, from the server's figure.
 }

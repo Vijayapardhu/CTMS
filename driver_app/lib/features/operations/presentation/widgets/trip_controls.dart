@@ -62,7 +62,7 @@ class TripControls extends StatelessWidget {
                 if (trip != null) ...[
                   const SizedBox(height: Spacing.md),
                   if (atStop == null && next != null)
-                    _ApproachingControls(stop: next, ops: ops)
+                    _ApproachingControls(stop: next, ops: ops, eta: tracking.eta)
                   else if (atStop == null && next == null)
                     _CompleteControl(ops: ops),
                 ],
@@ -172,10 +172,17 @@ class _Occupancy extends StatelessWidget {
 
 /// The bus is on its way to a stop: arrive, or say why not.
 class _ApproachingControls extends StatelessWidget {
-  const _ApproachingControls({required this.stop, required this.ops});
+  const _ApproachingControls({
+    required this.stop,
+    required this.ops,
+    required this.eta,
+  });
 
   final LiveStop stop;
   final OperationsState ops;
+
+  /// The server's estimate for this stop, which carries the road distance.
+  final Eta? eta;
 
   @override
   Widget build(BuildContext context) {
@@ -185,26 +192,31 @@ class _ApproachingControls extends StatelessWidget {
 
     return BlocBuilder<GpsCubit, GpsState>(
       builder: (context, gps) {
+        // Two different questions, deliberately answered by two different
+        // things. `near` is straight-line and decides only whether the driver
+        // is standing at the stop — the right measure for a 100 m radius, and
+        // the wrong one for a journey. The road distance comes from the
+        // server, which computed it from the same route the ETA came from.
         final near = _proximity(context, gps.lastFix);
         final atStop = near != null && near.withinRadius;
+        final road = eta?.readableDistance;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // How far there is still to go, from the device's own fix. Says why
-            // the button looks the way it does rather than leaving the driver
-            // to guess.
-            if (near != null)
+            // At the stop: the device's own fix said so, and that is why the
+            // Arrived button is lit. Short of it: the road still to drive,
+            // which only the server can know. Nothing is shown when the
+            // server has not said — a straight line across the fields is not
+            // a lesser version of a road distance, it is a different number.
+            if (atStop || road != null)
               Padding(
                 padding: const EdgeInsets.only(bottom: Spacing.sm),
                 child: Text(
                   atStop
                       ? strings.opsAtStopNow(stop.name ?? '')
-                      : strings.opsDistanceToStop(
-                          near.readable,
-                          stop.name ?? '',
-                        ),
+                      : strings.opsDistanceToStop(road!, stop.name ?? ''),
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: atStop
                         ? colors.positive

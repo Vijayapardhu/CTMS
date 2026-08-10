@@ -81,6 +81,12 @@ class EtaService
 
             $progress->forceFill([
                 'eta_at' => now()->addSeconds($travelSeconds + $dwellSeconds),
+                // The distance behind this ETA, kept so the two always agree.
+                // Null when the provider gave no leg at all: the handset then
+                // shows a time and no distance, rather than a distance the
+                // ETA does not match.
+                'distance_metres' => $leg?->distanceMetres,
+                'distance_is_estimate' => $leg?->isEstimate,
             ])->save();
 
             $dwellSeconds += ($progress->stop->waiting_time_minutes ?? 0) * 60;
@@ -94,7 +100,14 @@ class EtaService
     /**
      * The ETA for one student's stop, with its provenance.
      *
-     * @return array{eta_at: string|null, minutes: int|null, basis: string, stops_away: int|null}
+     * `distance_metres` is road distance from the bus's last reported position
+     * to this stop — the same figure the ETA was computed from, never the
+     * straight line between them. `distance_is_estimate` says whether it came
+     * from the routing provider or from the offline arithmetic that stands in
+     * when the provider cannot answer; a client showing the second as though
+     * it were the first is the bug this pair exists to prevent.
+     *
+     * @return array{eta_at: string|null, minutes: int|null, basis: string, stops_away: int|null, distance_metres: int|null, distance_is_estimate: bool|null}
      */
     public function forStop(Trip $trip, string $routeStopId): array
     {
@@ -103,7 +116,14 @@ class EtaService
             ->first();
 
         if ($progress === null) {
-            return ['eta_at' => null, 'minutes' => null, 'basis' => 'unknown', 'stops_away' => null];
+            return [
+                'eta_at' => null,
+                'minutes' => null,
+                'basis' => 'unknown',
+                'stops_away' => null,
+                'distance_metres' => null,
+                'distance_is_estimate' => null,
+            ];
         }
 
         if ($progress->state->isTerminal() || $progress->state === StopProgressState::ARRIVED) {
@@ -112,6 +132,10 @@ class EtaService
                 'minutes' => 0,
                 'basis' => 'arrived',
                 'stops_away' => 0,
+                // The bus is there. Nothing left to drive, and nothing
+                // estimated about that.
+                'distance_metres' => 0,
+                'distance_is_estimate' => false,
             ];
         }
 
@@ -127,6 +151,10 @@ class EtaService
                 'minutes' => null,
                 'basis' => 'scheduled',
                 'stops_away' => $stopsAway,
+                // No position reported means no measurable distance. The
+                // timetable knows when, not where.
+                'distance_metres' => null,
+                'distance_is_estimate' => null,
             ];
         }
 
@@ -139,6 +167,12 @@ class EtaService
             // A stale estimate is labelled as such rather than presented live.
             'basis' => $isStale ? 'stale' : 'live',
             'stops_away' => $stopsAway,
+            'distance_metres' => $progress->distance_metres,
+            // Absent means unknown, and unknown is treated as estimated. The
+            // safe direction to be wrong in is the one that under-claims.
+            'distance_is_estimate' => $progress->distance_metres === null
+                ? null
+                : ($progress->distance_is_estimate ?? true),
         ];
     }
 

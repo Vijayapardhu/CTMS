@@ -47,6 +47,8 @@ class TripStopProgress extends Model
             'arrived_at' => 'datetime',
             'departed_at' => 'datetime',
             'eta_at' => 'datetime',
+            'distance_metres' => 'integer',
+            'distance_is_estimate' => 'boolean',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];

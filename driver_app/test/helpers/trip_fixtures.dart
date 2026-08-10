@@ -259,6 +259,8 @@ Map<String, dynamic> etaResponse({
   String basis = 'live',
   int? minutes = 4,
   int? stopsAway = 1,
+  int? distanceMetres = 36964,
+  bool? distanceIsEstimate = false,
 }) {
   return {
     'success': true,
@@ -277,6 +279,12 @@ Map<String, dynamic> etaResponse({
       'minutes': minutes,
       'basis': basis,
       'stops_away': stopsAway,
+      // Road distance, not the straight line. 36,964 m is what Google returns
+      // for Velangi → Aditya University; the great-circle figure between the
+      // same two points is 24,934 m, and the gap between them is the whole
+      // reason this field exists.
+      'distance_metres': distanceMetres,
+      'distance_is_estimate': distanceIsEstimate,
     },
   };
 }
