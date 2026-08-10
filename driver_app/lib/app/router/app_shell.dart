@@ -7,6 +7,7 @@ import '../../core/connectivity/connectivity_service.dart';
 import '../../core/icons/app_icons.dart';
 import '../../core/widgets/persistent_banner.dart';
 import '../../core/widgets/sync_banner.dart';
+import '../../features/alerts/presentation/bloc/alerts_cubit.dart';
 import '../../l10n/app_localizations.dart';
 
 /// The persistent chrome around the four tabs.
@@ -55,7 +56,15 @@ class AppShell extends StatelessWidget {
             label: strings.tabMap,
           ),
           NavigationDestination(
-            icon: const AppIconView(AppIcon.alerts, excludeSemantics: true),
+            // The badge is the server's own count, so it agrees with what the
+            // office believes it has sent.
+            icon: BlocBuilder<AlertsCubit, AlertsState>(
+              builder: (context, state) => Badge(
+                isLabelVisible: state.unread > 0,
+                label: Text('${state.unread}'),
+                child: const AppIconView(AppIcon.alerts, excludeSemantics: true),
+              ),
+            ),
             label: strings.tabAlerts,
           ),
           NavigationDestination(

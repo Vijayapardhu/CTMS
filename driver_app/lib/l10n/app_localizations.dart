@@ -640,6 +640,36 @@ abstract class AppStrings {
   /// **'Route could not be loaded — the bus position is still live.'**
   String get mapRouteUnavailable;
 
+  /// R3 empty state — calm, not an error
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing from the office'**
+  String get alertsEmptyTitle;
+
+  /// R3 empty body
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts from the transport office appear here.'**
+  String get alertsEmptyBody;
+
+  /// Marks an unread alert
+  ///
+  /// In en, this message translates to:
+  /// **'NEW'**
+  String get alertsNew;
+
+  /// R3 action, shown only when something is unread
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all read'**
+  String get alertsMarkAllRead;
+
+  /// R3 — the refresh failed; the list held is not current
+  ///
+  /// In en, this message translates to:
+  /// **'Showing the last alerts received — this could not be refreshed'**
+  String get alertsStale;
+
   /// P17 title
   ///
   /// In en, this message translates to:

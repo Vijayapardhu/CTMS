@@ -25,6 +25,8 @@ import '../../features/auth/data/session_store.dart';
 import '../../features/auth/presentation/bloc/session_bloc.dart';
 import '../../features/evidence/data/photo_capture.dart';
 import '../../core/sos/sos_service.dart';
+import '../../features/alerts/data/alerts_api.dart';
+import '../../features/alerts/presentation/bloc/alerts_cubit.dart';
 import '../../features/gps/data/location_source.dart';
 import '../../features/incidents/data/incident_api.dart';
 import '../../features/operations/data/operations_api.dart';
@@ -255,6 +257,10 @@ Future<void> configureDependencies(
     sync: sl<SyncCubit>(),
   ));
 
+  // R3. App-scoped so the unread badge survives a tab switch.
+  sl.registerSingleton<AlertsCubit>(
+      AlertsCubit(api: AlertsApi(sl<ApiClient>())));
+
   // R2. App-scoped so the poll survives a tab switch, and so the map does
   // not re-fetch the route every time the driver glances at it.
   sl.registerSingleton<TrackingBloc>(TrackingBloc(
@@ -270,6 +276,7 @@ Future<void> configureDependencies(
 
 /// Clears every registration. Used between tests and on a full restart.
 Future<void> resetDependencies() async {
+  if (sl.isRegistered<AlertsCubit>()) await sl<AlertsCubit>().close();
   if (sl.isRegistered<SosService>()) await sl<SosService>().close();
   if (sl.isRegistered<OperationsCubit>()) await sl<OperationsCubit>().close();
   if (sl.isRegistered<TrackingBloc>()) await sl<TrackingBloc>().close();

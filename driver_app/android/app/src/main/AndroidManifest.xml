@@ -25,7 +25,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:label="ctms_driver"
+        android:label="CTMS Driver"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <!-- Substituted from android/local.properties by app/build.gradle.kts.

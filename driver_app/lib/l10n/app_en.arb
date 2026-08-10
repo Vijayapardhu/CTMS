@@ -265,6 +265,21 @@
   "mapRouteUnavailable": "Route could not be loaded — the bus position is still live.",
   "@mapRouteUnavailable": { "description": "R2 — stops failed to load; distinct from the map failing" },
 
+  "alertsEmptyTitle": "Nothing from the office",
+  "@alertsEmptyTitle": { "description": "R3 empty state — calm, not an error" },
+
+  "alertsEmptyBody": "Alerts from the transport office appear here.",
+  "@alertsEmptyBody": { "description": "R3 empty body" },
+
+  "alertsNew": "NEW",
+  "@alertsNew": { "description": "Marks an unread alert" },
+
+  "alertsMarkAllRead": "Mark all read",
+  "@alertsMarkAllRead": { "description": "R3 action, shown only when something is unread" },
+
+  "alertsStale": "Showing the last alerts received — this could not be refreshed",
+  "@alertsStale": { "description": "R3 — the refresh failed; the list held is not current" },
+
   "sosTitle": "Emergency",
   "@sosTitle": { "description": "P17 title" },
 

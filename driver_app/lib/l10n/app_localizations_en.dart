@@ -348,6 +348,22 @@ class AppStringsEn extends AppStrings {
       'Route could not be loaded — the bus position is still live.';
 
   @override
+  String get alertsEmptyTitle => 'Nothing from the office';
+
+  @override
+  String get alertsEmptyBody => 'Alerts from the transport office appear here.';
+
+  @override
+  String get alertsNew => 'NEW';
+
+  @override
+  String get alertsMarkAllRead => 'Mark all read';
+
+  @override
+  String get alertsStale =>
+      'Showing the last alerts received — this could not be refreshed';
+
+  @override
   String get sosTitle => 'Emergency';
 
   @override
