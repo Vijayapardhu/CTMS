@@ -1,0 +1,147 @@
+@import 'tailwindcss';
+
+/* CTMS design tokens — docs/admin-panel/07-design-system.md.
+ *
+ * Inherited from the driver app so the two products look like one system.
+ * Semantic colours are PAIRED: a fill and the foreground that is legible on
+ * it. The driver app shipped white text on a light pastel in dark mode and it
+ * was unreadable; the pairs exist so that cannot happen twice. Never use a
+ * fill without its `on` partner. */
+
+@theme {
+  /* ---- Brand ---------------------------------------------------------- */
+  --color-primary: #0b57d0;
+  --color-primary-container: #d3e3fd;
+  --color-on-primary: #ffffff;
+
+  /* ---- Surfaces ------------------------------------------------------- */
+  --color-surface: #ffffff;
+  --color-surface-sunken: #f7f8fa;
+  --color-surface-raised: #ffffff;
+  --color-on-surface: #1f2124;
+  --color-on-surface-muted: #5f6368;
+  --color-outline: #dadce0;
+
+  /* ---- Semantic, paired ----------------------------------------------- */
+  --color-positive: #146c2e;
+  --color-on-positive: #ffffff;
+  --color-caution: #8a5000;
+  --color-on-caution: #ffffff;
+  --color-critical: #b3261e;
+  --color-on-critical: #ffffff;
+  --color-neutral: #5f6368;
+  --color-on-neutral: #ffffff;
+  --color-info: #00639b;
+  --color-on-info: #ffffff;
+  --color-emergency: #8c1d18;
+  --color-on-emergency: #ffffff;
+
+  /* ---- Map ------------------------------------------------------------ */
+  --color-live-accent: #00a63e;
+  --color-stale-accent: #9aa0a6;
+  --color-map-route: #b30b57d0;
+  --color-map-route-done: #665f6368;
+
+  /* ---- Typography ----------------------------------------------------- */
+  --font-sans: ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Mono', 'Consolas', monospace;
+
+  --text-display: 1.75rem;
+  --text-display--line-height: 2.25rem;
+  --text-title-lg: 1.25rem;
+  --text-title-lg--line-height: 1.75rem;
+  --text-title-md: 1rem;
+  --text-title-md--line-height: 1.5rem;
+  --text-body: 0.875rem;
+  --text-body--line-height: 1.25rem;
+  --text-label: 0.75rem;
+  --text-label--line-height: 1rem;
+
+  /* ---- Spacing, on a 4px unit ----------------------------------------- */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 0.75rem;
+  --spacing-lg: 1rem;
+  --spacing-xl: 1.5rem;
+  --spacing-xxl: 2rem;
+
+  /* ---- Radius --------------------------------------------------------- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* ---- Density -------------------------------------------------------- */
+  --size-row: 44px;
+  --size-row-header: 40px;
+  --size-toolbar: 52px;
+  --size-topbar: 56px;
+  --size-sidebar: 240px;
+  --size-sidebar-collapsed: 64px;
+  --size-drawer: 480px;
+  --size-control: 36px;
+
+  /* ---- Motion. An operations console that animates lies about how fresh
+   * its data is. Three durations, nothing else. -------------------------- */
+  --motion-instant: 0ms;
+  --motion-fast: 120ms;
+  --motion-standard: 200ms;
+
+  /* ---- Breakpoints ---------------------------------------------------- */
+  --breakpoint-laptop: 1280px;
+  --breakpoint-desktop: 1440px;
+}
+
+/* Dark theme. Every token above that carries meaning is redefined here — a
+ * colour defined in only one theme is a colour that breaks in the other. */
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-primary: #a8c7fa;
+    --color-primary-container: #0842a0;
+    --color-on-primary: #062e6f;
+
+    --color-surface: #131314;
+    --color-surface-sunken: #0e0e0f;
+    --color-surface-raised: #1f2124;
+    --color-on-surface: #e3e3e3;
+    --color-on-surface-muted: #9aa0a6;
+    --color-outline: #3c4043;
+
+    --color-positive: #7fd98f;
+    --color-on-positive: #00390f;
+    --color-caution: #ffb868;
+    --color-on-caution: #4a2800;
+    --color-critical: #ffb4ab;
+    --color-on-critical: #690005;
+    --color-neutral: #9aa0a6;
+    --color-on-neutral: #1f2124;
+    --color-info: #8ecff8;
+    --color-on-info: #003353;
+    --color-emergency: #f2b8b5;
+    --color-on-emergency: #601410;
+
+    --color-live-accent: #5ce07a;
+    --color-stale-accent: #6f7378;
+    --color-map-route: #b3a8c7fa;
+    --color-map-route-done: #669aa0a6;
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--color-surface-sunken);
+  color: var(--color-on-surface);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+}
+
+/* Focus is never removed. An operations console is used by keyboard. */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
