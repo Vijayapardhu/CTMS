@@ -54,7 +54,10 @@ export const navigation: NavSection[] = [
   },
   {
     title: 'People',
-    items: [{ label: 'Students', path: '/students', icon: 'students', capability: 'students.read' }],
+    items: [
+      { label: 'Students', path: '/students', icon: 'students', capability: 'students.read' },
+      { label: 'Attendance', path: '/attendance', icon: 'capacity', capability: 'attendance.read' },
+    ],
   },
   {
     title: 'Communication',

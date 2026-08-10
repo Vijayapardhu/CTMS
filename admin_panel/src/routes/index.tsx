@@ -13,6 +13,7 @@ import { IncidentDetailScreen } from '@/features/incidents/IncidentDetailScreen'
 import { MaintenanceScreen } from '@/features/maintenance/MaintenanceScreen'
 import { MaintenanceDetailScreen } from '@/features/maintenance/MaintenanceDetailScreen'
 import { RecoveryScreen } from '@/features/recovery/RecoveryScreen'
+import { AttendanceScreen } from '@/features/attendance/AttendanceScreen'
 
 type ScreenSpec = {
   path: string
@@ -123,6 +124,14 @@ export const screens: ScreenSpec[] = [
     slice: 'phase 8',
     capability: 'replacements.read',
     element: <RecoveryScreen />,
+  },
+  {
+    path: '/attendance',
+    title: 'Attendance',
+    icon: 'capacity',
+    slice: 'phase 9',
+    capability: 'attendance.read',
+    element: <AttendanceScreen />,
   },
   { path: '/students', title: 'Students', icon: 'students', slice: 'slice 7', capability: 'students.read' },
   { path: '/alerts', title: 'Alerts', icon: 'alerts', slice: 'slice 8', capability: 'notifications.read' },

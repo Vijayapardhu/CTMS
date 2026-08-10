@@ -59,7 +59,13 @@ CAPABILITIES = [
     ('trip.read', 'GET', '/trips/{id}', VIEWER, TIER, 'TripPolicy::view'),
     ('live.read', 'GET', '/trips/{id}/live', VIEWER, TIER, 'TripPolicy::view'),
     ('eta.read', 'GET', '/trips/{id}/eta', VIEWER, TIER, 'TripPolicy::view'),
-    ('manifest.read', 'GET', '/trips/{id}/stops/{stopId}/manifest', VIEWER, TIER, 'TripPolicy::view'),
+    # Not `view`. TrackingController::manifest authorizes **operate**, so the
+    # list of named students at a stop is the assigned driver's or OPERATIONS' —
+    # read-only oversight does not get a passenger roster. Declared VIEWER until
+    # a live four-tier read probe caught it (VIEWER 403, SUPPORT 403,
+    # OPERATIONS 200); the server was stricter than the panel claimed.
+    ('manifest.read', 'GET', '/trips/{id}/stops/{stopId}/manifest', OPERATIONS, ASSIGNED_DRIVER,
+     'TripPolicy::operate — verified by probe, not by reading the route'),
     ('trip.corrections.read', 'GET', '/trips/{id}/corrections', VIEWER, TIER, 'TripPolicy::view'),
     ('fleet.read', 'GET', '/buses', VIEWER, TIER, 'BusPolicy::viewAny'),
     ('bus.read', 'GET', '/buses/{id}', VIEWER, TIER, 'BusPolicy::view'),

@@ -5,6 +5,11 @@ import { PageHeader } from '@/components/PageHeader'
 import { StopStateChip, TripStatusChip } from '@/components/StatusChip'
 import { Icon } from '@/icons/Icon'
 import { useSession } from '@/auth/SessionProvider'
+import { Can } from '@/auth/Can'
+import { ActionButton, ConfirmDialog, OperationResult, useOperation } from '@/components/operations'
+import { StopManifestPanel } from '@/features/attendance/StopManifestPanel'
+import { cancelTrip, reassignTrip } from '@/features/attendance/api'
+import { fetchBuses } from '@/features/fleet/api'
 import type { ApiFailure } from '@/api/failure'
 import {
   CORRECTABLE_FIELDS,
@@ -95,6 +100,8 @@ export function TripDetailScreen() {
         actions={<TripStatusChip status={value.status} />}
       />
 
+      <TripOperations trip={value} />
+
       <div className="grid grid-cols-1 gap-lg xl:grid-cols-[1.1fr_1fr]">
         <Summary trip={value} live={live.data ?? null} />
 
@@ -125,6 +132,12 @@ export function TripDetailScreen() {
                     }) : '—'}
                   </span>
                   <StopStateChip state={stop.state} />
+                  {/* The named roster is OPERATIONS or the assigned driver —
+                      `TripPolicy::operate`, not `view`. Read-only oversight
+                      sees the counts, not who was on the bus. */}
+                  <Can capability="manifest.read">
+                    <StopManifestPanel tripId={id} stopId={stop.stop_id} stopName={stop.stop_name} />
+                  </Can>
                 </li>
               ))}
             </ol>
@@ -146,6 +159,156 @@ export function TripDetailScreen() {
         pending={corrections.isPending}
         canCorrect={can('trip.correct')}
       />
+    </>
+  )
+}
+
+/**
+ * What can still be done to a trip.
+ *
+ * Both are OPERATIONS — BR-258 puts amending the record of what a driver did
+ * out of reach of read-only oversight, and cancelling or reassigning a service
+ * changes the timetable people are standing at stops for.
+ */
+function TripOperations({ trip }: { trip: Trip }) {
+  const invalidate = [tripKeys.detail(trip.id), ['trips', 'list'], ['live']]
+  const [dialog, setDialog] = useState<'cancel' | 'reassign' | null>(null)
+  const [busId, setBusId] = useState('')
+
+  const cancel = useOperation<string>({ run: (reason) => cancelTrip(trip.id, reason), invalidate })
+  const reassign = useOperation<string>({
+    run: (reason) => reassignTrip(trip.id, { bus_id: busId || undefined, reason }),
+    invalidate,
+  })
+
+  const buses = useQuery({
+    queryKey: ['fleet', 'picker'],
+    queryFn: () => fetchBuses({ page: 1, per_page: 100 }),
+    enabled: dialog === 'reassign',
+  })
+
+  const settled = trip.status === 'COMPLETED' || trip.status === 'CANCELLED'
+
+  const closeDialog = () => {
+    setDialog(null)
+    cancel.reset()
+    reassign.reset()
+  }
+
+  return (
+    <div className="mb-lg flex flex-wrap gap-sm">
+      <Can capability="trip.reassign">
+        <ActionButton
+          label="Reassign"
+          icon="swap"
+          disabled={settled}
+          title={settled ? `A trip that is ${trip.status.toLowerCase()} cannot be reassigned.` : undefined}
+          onClick={() => setDialog('reassign')}
+        />
+      </Can>
+
+      <Can capability="trip.cancel">
+        <ActionButton
+          label="Cancel trip"
+          tone="destructive"
+          icon="close"
+          disabled={settled}
+          title={settled ? `A trip that is ${trip.status.toLowerCase()} cannot be cancelled.` : undefined}
+          onClick={() => setDialog('cancel')}
+        />
+      </Can>
+
+      <ConfirmDialog
+        open={dialog === 'cancel'}
+        title="Cancel this trip?"
+        body="Everybody expecting this service is affected. Say why — the reason is kept with the trip."
+        confirmLabel="Cancel trip"
+        tone="destructive"
+        reason={{ label: 'Reason', field: 'reason', minLength: 10, hint: 'At least 10 characters.' }}
+        operation={cancel}
+        onClose={closeDialog}
+        onConfirm={(reason) => void cancel.run(reason).then((ok) => ok && closeDialog())}
+      />
+
+      {dialog === 'reassign' && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-lg">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Reassign this trip"
+            className="w-full max-w-lg rounded-md border border-outline bg-surface p-xl"
+          >
+            <h2 className="text-title-lg font-semibold">Reassign this trip</h2>
+            <p className="mt-md text-body text-on-surface-muted">
+              Put a different bus on this service. Leaving the bus unchanged reassigns nothing.
+            </p>
+
+            <label className="mt-lg block">
+              <span className="text-label font-medium text-on-surface-muted uppercase">Bus</span>
+              <select
+                value={busId}
+                onChange={(event) => setBusId(event.target.value)}
+                className="mt-xs h-[var(--size-control)] w-full rounded-sm border border-outline bg-surface px-md text-body"
+              >
+                <option value="">Keep {trip.bus?.registration_number ?? 'the current bus'}</option>
+                {buses.data?.rows.map((bus) => (
+                  <option key={bus.id} value={bus.id}>
+                    {bus.registration_number} · {bus.status.toLowerCase()}
+                  </option>
+                ))}
+              </select>
+              {reassign.fieldError('bus_id') && (
+                <span className="mt-xs block text-label text-critical">{reassign.fieldError('bus_id')}</span>
+              )}
+            </label>
+
+            <ReassignReason operation={reassign} onClose={closeDialog} />
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ReassignReason({
+  operation,
+  onClose,
+}: {
+  operation: ReturnType<typeof useOperation<string>>
+  onClose: () => void
+}) {
+  const [reason, setReason] = useState('')
+
+  return (
+    <>
+      <label className="mt-lg block">
+        <span className="text-label font-medium text-on-surface-muted uppercase">Reason</span>
+        <textarea
+          value={reason}
+          onChange={(event) => setReason(event.target.value)}
+          rows={3}
+          className="mt-xs w-full rounded-sm border border-outline bg-surface p-md text-body"
+        />
+        {operation.fieldError('reason') && (
+          <span className="mt-xs block text-label text-critical">{operation.fieldError('reason')}</span>
+        )}
+      </label>
+
+      <div className="mt-lg">
+        <OperationResult operation={operation} />
+      </div>
+
+      <div className="mt-lg flex justify-end gap-sm">
+        <ActionButton label="Cancel" onClick={onClose} />
+        <ActionButton
+          label="Reassign"
+          tone="primary"
+          busy={operation.isPending}
+          disabled={reason.trim().length < 5}
+          title={reason.trim().length < 5 ? 'Give a reason of at least 5 characters.' : undefined}
+          onClick={() => void operation.run(reason.trim()).then((ok) => ok && onClose())}
+        />
+      </div>
     </>
   )
 }

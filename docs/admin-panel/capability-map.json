@@ -816,12 +816,12 @@
       "action": "read",
       "method": "GET",
       "path": "/trips/{id}/stops/{stopId}/manifest",
-      "minimumAccessLevel": "VIEWER",
-      "scope": "tier",
+      "minimumAccessLevel": "OPERATIONS",
+      "scope": "assignedDriver",
       "mutates": false,
-      "driverAllowed": false,
+      "driverAllowed": true,
       "middlewareAccess": null,
-      "provenance": "TripPolicy::view"
+      "provenance": "TripPolicy::operate — verified by probe, not by reading the route"
     },
     {
       "id": "notification.log.read",
