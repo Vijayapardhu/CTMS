@@ -14,6 +14,8 @@ import { MaintenanceScreen } from '@/features/maintenance/MaintenanceScreen'
 import { MaintenanceDetailScreen } from '@/features/maintenance/MaintenanceDetailScreen'
 import { RecoveryScreen } from '@/features/recovery/RecoveryScreen'
 import { AttendanceScreen } from '@/features/attendance/AttendanceScreen'
+import { AnnouncementsScreen } from '@/features/comms/AnnouncementsScreen'
+import { AlertsScreen } from '@/features/comms/AlertsScreen'
 
 type ScreenSpec = {
   path: string
@@ -134,8 +136,22 @@ export const screens: ScreenSpec[] = [
     element: <AttendanceScreen />,
   },
   { path: '/students', title: 'Students', icon: 'students', slice: 'slice 7', capability: 'students.read' },
-  { path: '/alerts', title: 'Alerts', icon: 'alerts', slice: 'slice 8', capability: 'notifications.read' },
-  { path: '/announcements', title: 'Announcements', icon: 'announcements', slice: 'slice 8', capability: 'announcements.read' },
+  {
+    path: '/alerts',
+    title: 'Alerts',
+    icon: 'alerts',
+    slice: 'phase 10',
+    capability: 'notifications.read',
+    element: <AlertsScreen />,
+  },
+  {
+    path: '/announcements',
+    title: 'Announcements',
+    icon: 'announcements',
+    slice: 'phase 10',
+    capability: 'announcements.read',
+    element: <AnnouncementsScreen />,
+  },
   { path: '/reports', title: 'Reports', icon: 'reports', slice: 'slice 8', capability: 'reports.read' },
   { path: '/admin/audit', title: 'Audit', icon: 'audit', slice: 'slice 8', capability: 'audit.read' },
   { path: '/admin/access-log', title: 'Data Access', icon: 'accessLog', slice: 'phase 15', capability: 'audit.accessLog.read' },
