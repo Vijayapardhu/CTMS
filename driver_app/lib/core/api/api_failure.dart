@@ -15,7 +15,7 @@ sealed class ApiFailure implements Exception {
 /// No connectivity, or the server could not be reached. The action should be
 /// queued rather than reported as an error.
 final class NetworkFailure extends ApiFailure {
-  const NetworkFailure([super.message = 'No connection.']);
+  const NetworkFailure([super.message = 'The CTMS server could not be reached.']);
 }
 
 /// 401. Not authenticated — or the account has been deactivated, which is

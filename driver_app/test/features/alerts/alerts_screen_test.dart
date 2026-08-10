@@ -1,4 +1,5 @@
 import 'package:ctms_driver/core/widgets/empty_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/test_harness.dart';
@@ -110,5 +111,47 @@ void main() {
     expect(find.text('Trip started'), findsOneWidget);
     expect(find.text('NEW'), findsNothing);
     expect(find.text('Mark all read'), findsNothing);
+  });
+
+  testWidgets('a first read that fails is not dressed up as an empty inbox',
+      (tester) async {
+    app = await registerTestDependencies(signedIn: true);
+    // Nothing scripted for either notifications endpoint, so both fail at the
+    // transport layer — what no signal looks like to the client.
+
+    await openAlerts(tester);
+
+    expect(
+      find.byType(EmptyState),
+      findsNothing,
+      reason: '"Nothing from the office" would say the office sent nothing, '
+          'when in truth the app could not ask',
+    );
+    expect(find.text('Request failed'), findsOneWidget);
+    expect(find.text('Try again'), findsOneWidget);
+  });
+
+  testWidgets('a failed refresh keeps what was already delivered',
+      (tester) async {
+    app = await registerTestDependencies(signedIn: true);
+    app.backend
+      ..on('/notifications/unread-count', status: 200, body: unreadResponse(1))
+      ..on('/notifications', status: 200, body: alertsResponse());
+
+    await openAlerts(tester);
+
+    expect(find.text('Emergency (SOS) — KA-80-IB-1764'), findsOneWidget);
+
+    // The next poll finds nothing at the far end.
+    await tester.drag(find.byType(RefreshIndicator), const Offset(0, 300));
+    await settle(tester);
+
+    expect(
+      find.text('Emergency (SOS) — KA-80-IB-1764'),
+      findsOneWidget,
+      reason: 'an alert already delivered does not stop being true because '
+          'the next read failed',
+    );
+    expect(find.textContaining('could not be refreshed'), findsOneWidget);
   });
 }

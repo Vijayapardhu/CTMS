@@ -45,7 +45,8 @@ Future<void> bootstrap({
         // worse failure than one that says exactly what is wrong.
         logger.error(
           'Production build is pointing at the development API. Pass '
-          '--dart-define=API_BASE_URL=<server> when building for release.',
+          '--dart-define=CTMS_API_BASE_URL=<server> when building for '
+          'release.',
         );
       }
 

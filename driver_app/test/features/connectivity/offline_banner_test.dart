@@ -105,12 +105,14 @@ void main() {
     app = await registerTestDependencies();
     await pumpApp(tester);
 
-    expect(find.textContaining('No connection'), findsNothing);
+    expect(find.textContaining('Offline'), findsNothing);
 
     app.connectivity.emit(Reachability.offline);
     await settle(tester);
 
-    expect(find.textContaining('No connection'), findsOneWidget);
+    // One word across the whole app, and it means the CTMS API is unreachable
+    // by the three-failure rule — not that the radio is off.
+    expect(find.textContaining('Offline'), findsWidgets);
   });
 
   testWidgets('the app makes no request of its own while it sits idle',

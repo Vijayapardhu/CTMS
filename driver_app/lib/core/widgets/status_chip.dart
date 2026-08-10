@@ -40,7 +40,7 @@ class StatusChip extends StatelessWidget {
       StatusTone.caution => (colors.caution, colors.onCaution),
       StatusTone.critical => (colors.critical, colors.onCritical),
       StatusTone.info => (colors.info, colors.onInfo),
-      StatusTone.neutral => (colors.neutral, Colors.white),
+      StatusTone.neutral => (colors.neutral, colors.onNeutral),
     };
 
     return Semantics(

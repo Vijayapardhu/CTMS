@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ColorScheme.surface, dark. -->
+    <color name="launch_background">#131314</color>
+</resources>

@@ -103,6 +103,33 @@ void main() {
     );
 
     blocTest<SessionBloc, SessionState>(
+      'initialising → authenticated when a stale access token is refreshed',
+      build: build,
+      wait: const Duration(milliseconds: 100),
+      setUp: () async {
+        // An access token that lapsed overnight. The refresh token has not,
+        // so a driver opening the app before the first run must not be made
+        // to type a password in a depot yard at six in the morning.
+        backend.on('/auth/login',
+            status: 200,
+            body: tokenResponseBody(
+              accessTtl: const Duration(seconds: 1),
+              now: DateTime.utc(2026, 1, 1, 6),
+            ));
+        await manager.login(email: 'ravi@ctms.example', password: 'ok');
+        backend
+          ..on('/auth/refresh',
+              status: 200, body: tokenResponseBody(accessToken: 'access-2'))
+          ..on('/auth/me', status: 200, body: meResponseBody());
+      },
+      act: (bloc) => bloc.add(const SessionStarted()),
+      expect: () => [
+        isA<SessionInitialising>(),
+        isA<SessionAuthenticated>(),
+      ],
+    );
+
+    blocTest<SessionBloc, SessionState>(
       'initialising → expired when the stored tokens are refused',
       build: build,
       // The handlers await real async work through the fake adapter; without

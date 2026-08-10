@@ -39,7 +39,7 @@
              The literal value is never committed. -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY}" />
+            android:value="${GOOGLE_MAPS_ANDROID_API_KEY}" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

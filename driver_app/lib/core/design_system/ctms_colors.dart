@@ -26,6 +26,7 @@ class CtmsColors extends ThemeExtension<CtmsColors> {
     required this.critical,
     required this.onCritical,
     required this.neutral,
+    required this.onNeutral,
     required this.info,
     required this.onInfo,
     required this.liveAccent,
@@ -50,7 +51,11 @@ class CtmsColors extends ThemeExtension<CtmsColors> {
   final Color onCritical;
 
   /// Offline, disabled, skipped, unknown. Paired with minus-circle.
+  ///
+  /// Paired like every other tone. In dark the fill is a light grey, and text
+  /// that assumed white would sit at under two to one against it.
   final Color neutral;
+  final Color onNeutral;
 
   /// Completed, informational. Paired with information-circle.
   final Color info;
@@ -83,6 +88,7 @@ class CtmsColors extends ThemeExtension<CtmsColors> {
     critical: Color(0xFFB3261E),
     onCritical: Color(0xFFFFFFFF),
     neutral: Color(0xFF5F6368),
+    onNeutral: Color(0xFFFFFFFF),
     info: Color(0xFF00639B),
     onInfo: Color(0xFFFFFFFF),
     liveAccent: Color(0xFF00A63E),
@@ -102,6 +108,7 @@ class CtmsColors extends ThemeExtension<CtmsColors> {
     critical: Color(0xFFFFB4AB),
     onCritical: Color(0xFF690005),
     neutral: Color(0xFF9AA0A6),
+    onNeutral: Color(0xFF1F2124),
     info: Color(0xFF8ECFF8),
     onInfo: Color(0xFF003353),
     liveAccent: Color(0xFF5CE07A),
@@ -122,6 +129,7 @@ class CtmsColors extends ThemeExtension<CtmsColors> {
     Color? critical,
     Color? onCritical,
     Color? neutral,
+    Color? onNeutral,
     Color? info,
     Color? onInfo,
     Color? liveAccent,
@@ -140,6 +148,7 @@ class CtmsColors extends ThemeExtension<CtmsColors> {
       critical: critical ?? this.critical,
       onCritical: onCritical ?? this.onCritical,
       neutral: neutral ?? this.neutral,
+      onNeutral: onNeutral ?? this.onNeutral,
       info: info ?? this.info,
       onInfo: onInfo ?? this.onInfo,
       liveAccent: liveAccent ?? this.liveAccent,
@@ -164,6 +173,7 @@ class CtmsColors extends ThemeExtension<CtmsColors> {
       critical: Color.lerp(critical, other.critical, t)!,
       onCritical: Color.lerp(onCritical, other.onCritical, t)!,
       neutral: Color.lerp(neutral, other.neutral, t)!,
+      onNeutral: Color.lerp(onNeutral, other.onNeutral, t)!,
       info: Color.lerp(info, other.info, t)!,
       onInfo: Color.lerp(onInfo, other.onInfo, t)!,
       liveAccent: Color.lerp(liveAccent, other.liveAccent, t)!,

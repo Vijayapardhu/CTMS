@@ -74,7 +74,12 @@ void main() {
       await cubit.capture();
 
       expect(cubit.state, isA<EvidenceBlocked>());
-      expect((cubit.state as EvidenceBlocked).permanently, isFalse);
+      expect((cubit.state as EvidenceBlocked).reason, CameraBlock.denied);
+      expect(
+        (cubit.state as EvidenceBlocked).settingsCanFix,
+        isFalse,
+        reason: 'a refusal this time can simply be asked again',
+      );
       expect(camera.takes, 0);
     });
 
@@ -86,7 +91,31 @@ void main() {
 
       await cubit.capture();
 
-      expect((cubit.state as EvidenceBlocked).permanently, isTrue);
+      expect(
+        (cubit.state as EvidenceBlocked).reason,
+        CameraBlock.permanentlyDenied,
+      );
+      expect((cubit.state as EvidenceBlocked).settingsCanFix, isTrue);
+    });
+
+    test('a handset that forbids the camera is not a driver who refused it',
+        () async {
+      permissions.answer = PermissionStatus.restricted;
+      final cubit = build();
+      addTearDown(cubit.close);
+
+      await cubit.capture();
+
+      expect(
+        (cubit.state as EvidenceBlocked).reason,
+        CameraBlock.unavailable,
+      );
+      expect(
+        (cubit.state as EvidenceBlocked).settingsCanFix,
+        isFalse,
+        reason: 'sending a driver to Settings for something Settings cannot '
+            'change is an errand, not help',
+      );
     });
 
     test('opening settings is offered, not faked', () async {

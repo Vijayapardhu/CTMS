@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/api/api_failure.dart';
 import '../../../core/design_system/ctms_colors.dart';
 import '../../../core/design_system/tokens.dart';
 import '../../../core/icons/app_icons.dart';
+import '../../../core/widgets/consequence_panel.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/skeleton_loader.dart';
 import '../../../core/widgets/status_chip.dart';
@@ -54,6 +56,14 @@ class _AlertsScreenState extends State<AlertsScreen> {
               padding: EdgeInsets.all(Spacing.md),
               child: SkeletonLoader(shape: SkeletonShape.list, count: 5),
             );
+          }
+
+          // Nothing held and nothing arrived. "Showing the last alerts
+          // received" would be false — there are none — and the calm empty
+          // state would be worse still, because it says the office has sent
+          // nothing when in truth the app could not ask.
+          if (state.alerts.isEmpty && state.failure != null) {
+            return _CouldNotRead(state.failure!);
           }
 
           return RefreshIndicator(
@@ -188,6 +198,43 @@ class _AlertTile extends StatelessWidget {
         ? time
         : '${local.day.toString().padLeft(2, '0')}/'
             '${local.month.toString().padLeft(2, '0')} $time';
+  }
+}
+
+/// The first read failed and there is nothing to fall back on.
+class _CouldNotRead extends StatelessWidget {
+  const _CouldNotRead(this.failure);
+
+  final ApiFailure failure;
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = AppStrings.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.all(Spacing.md),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ConsequencePanel(
+            severity: ConsequenceSeverity.warning,
+            title: strings.errorTitle,
+            // The server's own words where it gave any, the network's
+            // otherwise. Neither is improved by paraphrasing.
+            body: failure.message,
+          ),
+          const SizedBox(height: Spacing.md),
+          SizedBox(
+            height: Sizes.buttonHeight,
+            child: OutlinedButton(
+              onPressed: () => context.read<AlertsCubit>().load(),
+              child: Text(strings.errorRetry),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

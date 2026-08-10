@@ -36,6 +36,17 @@ In Google Cloud Console → **APIs & Services → Credentials → Create credent
    | `com.ctms.ctms_driver` | debug SHA-1 |
    | `com.ctms.ctms_driver` | release SHA-1 |
 
+   The debug fingerprint on the machine this was built on is:
+
+   ```text
+   2B:C5:4B:2F:DC:17:E0:D7:1C:63:61:1B:36:EA:9E:A6:89:B0:3F:C9
+   ```
+
+   It is per-machine, not per-project — a second developer's debug keystore has
+   a different one and needs its own entry on the key. Not a secret: a
+   fingerprint identifies a certificate, it does not authorise anything on its
+   own.
+
 Get the debug fingerprint with:
 
 ```bash
@@ -52,7 +63,7 @@ For the release fingerprint, run the same command against the keystore named in
 Put it in `android/local.properties`, which is gitignored:
 
 ```properties
-MAPS_API_KEY=AIza...
+GOOGLE_MAPS_ANDROID_API_KEY=AIza...
 ```
 
 `android/app/build.gradle.kts` reads that file and substitutes the value into

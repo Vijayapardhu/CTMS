@@ -20,8 +20,11 @@ val keystoreProperties = Properties().apply {
 }
 val hasReleaseKeystore = keystoreProperties.getProperty("storeFile") != null
 
-// The Maps SDK key, read from android/local.properties — which is gitignored,
-// so the key reaches the manifest without ever reaching the repository.
+// The Android-restricted Maps SDK key, read from android/local.properties —
+// which is gitignored, so the key reaches the manifest without ever reaching
+// the repository. This is NOT the server key: the backend's Routes API
+// credential stays in backend/.env and never enters an APK, where it could be
+// extracted from the binary.
 //
 // Absent on a machine that has not been given one: the build still succeeds and
 // the map surface renders blank with an authorisation failure in logcat, which
@@ -32,7 +35,7 @@ val mapsApiKey: String = Properties().apply {
     if (file.exists()) {
         file.inputStream().use { load(it) }
     }
-}.getProperty("MAPS_API_KEY") ?: ""
+}.getProperty("GOOGLE_MAPS_ANDROID_API_KEY") ?: ""
 
 
 android {
@@ -69,7 +72,7 @@ android {
 
         // Substituted into the `com.google.android.geo.API_KEY` meta-data at
         // merge time, so no committed file ever holds the value.
-        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
+        manifestPlaceholders["GOOGLE_MAPS_ANDROID_API_KEY"] = mapsApiKey
     }
 
     signingConfigs {

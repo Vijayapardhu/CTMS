@@ -7,7 +7,11 @@ enum Flavor { development, staging, production }
 /// cannot ship pointing at staging and no secret ever enters the repository.
 ///
 ///     flutter run --dart-define=FLAVOR=development \
-///                 --dart-define=API_BASE_URL=http://10.0.2.2:8000/api/v1
+///                 --dart-define=CTMS_API_BASE_URL=http://10.0.2.2:8000/api/v1
+///
+///     flutter build apk --release \
+///                 --dart-define=FLAVOR=production \
+///                 --dart-define=CTMS_API_BASE_URL=https://<server>/api/v1
 class AppConfig {
   const AppConfig({
     required this.flavor,
@@ -45,14 +49,16 @@ class AppConfig {
 
     final flavor = switch (flavorName) {
       'production' => Flavor.production,
-      'staging' => Flavor.staging,
+      // `demo` is the same build as staging under the name the people asking
+      // for it use. One fewer thing to remember on the morning of a demo.
+      'staging' || 'demo' => Flavor.staging,
       _ => Flavor.development,
     };
 
     return AppConfig(
       flavor: flavor,
       apiBaseUrl: const String.fromEnvironment(
-        'API_BASE_URL',
+        'CTMS_API_BASE_URL',
         defaultValue: developmentApiBaseUrl,
       ),
       enableVerboseLogging: flavor != Flavor.production,

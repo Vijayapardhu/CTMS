@@ -133,7 +133,7 @@ abstract class AppStrings {
   /// Title of the error boundary screen
   ///
   /// In en, this message translates to:
-  /// **'Something went wrong'**
+  /// **'Request failed'**
   String get errorTitle;
 
   /// Body of the error boundary screen
@@ -295,7 +295,7 @@ abstract class AppStrings {
   /// Explains that sign-in cannot be queued
   ///
   /// In en, this message translates to:
-  /// **'No connection. Sign-in needs a network.'**
+  /// **'Offline — signing in needs the CTMS server.'**
   String get loginOffline;
 
   /// Title of the session-expired screen
@@ -403,7 +403,7 @@ abstract class AppStrings {
   /// Explains that unavailable is not the same as none
   ///
   /// In en, this message translates to:
-  /// **'This is not the same as having no trip. Check your connection and try again.'**
+  /// **'This is not the same as having no trip. The request failed — try again.'**
   String get tripUnavailableBody;
 
   /// Retry action on the trip error card
@@ -1063,7 +1063,7 @@ abstract class AppStrings {
   /// A caution beside START TRIP, never a gate. The attempt is what proves reachability
   ///
   /// In en, this message translates to:
-  /// **'No connection right now — starting may not get through.'**
+  /// **'Offline — starting may not get through.'**
   String get tripStartOffline;
 
   /// S2 title
@@ -1342,11 +1342,23 @@ abstract class AppStrings {
   /// **'The camera is switched off for this app'**
   String get evidenceBlocked;
 
-  /// States plainly what cannot happen without the camera
+  /// Camera refused this time — says why it is needed, and what cannot happen
   ///
   /// In en, this message translates to:
-  /// **'A failing safety check cannot be completed without a photograph.'**
+  /// **'Camera access is needed to attach photographs to inspections and incident reports. Without one, a failing safety check cannot be completed.'**
   String get evidenceBlockedDetail;
+
+  /// Camera permanently denied — only Settings can undo it
+  ///
+  /// In en, this message translates to:
+  /// **'Photographs are needed to evidence a failing check, and a failing safety check cannot be completed without one. Turn the camera on in Settings.'**
+  String get evidenceBlockedPermanently;
+
+  /// Camera restricted by the device — no action the driver can take
+  ///
+  /// In en, this message translates to:
+  /// **'This phone cannot use its camera for CTMS. Report the fault to the office instead.'**
+  String get evidenceBlockedUnavailable;
 
   /// EvidenceCard capture action
   ///

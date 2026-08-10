@@ -39,11 +39,28 @@ final class EvidenceIdle extends EvidenceState {
 /// completed without a photograph, and the screen has to say so plainly rather
 /// than leave the driver tapping a button that does nothing.
 final class EvidenceBlocked extends EvidenceState {
-  const EvidenceBlocked({required this.permanently});
+  const EvidenceBlocked({required this.reason});
 
-  /// The driver chose "don't ask again". Only Settings can undo it, so the
-  /// screen offers Settings rather than a retry that cannot succeed.
-  final bool permanently;
+  final CameraBlock reason;
+
+  /// Only "don't ask again" is fixable from Settings. Offering that button for
+  /// the other two would send a driver on an errand that cannot succeed.
+  bool get settingsCanFix => reason == CameraBlock.permanentlyDenied;
+}
+
+/// Why the camera is not available, kept apart because the three cases need
+/// three different things said and two of them need no button at all.
+enum CameraBlock {
+  /// Refused this time. Asking again is allowed, and tapping the button again
+  /// is the driver doing exactly that.
+  denied,
+
+  /// "Don't ask again". The OS will not show the dialog any more.
+  permanentlyDenied,
+
+  /// No camera, or a work profile that forbids it. Nothing the driver can do
+  /// on this handset, so nothing is offered.
+  unavailable,
 }
 
 /// The camera is open.

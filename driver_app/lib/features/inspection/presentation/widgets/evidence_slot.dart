@@ -105,7 +105,13 @@ class _EvidenceSlotState extends State<EvidenceSlot> {
                   // The server's own wording on a refusal.
                   EvidenceRejected(:final reason) => reason.message,
                   EvidenceQueued() => strings.evidenceQueuedDetail,
-                  EvidenceBlocked() => strings.evidenceBlockedDetail,
+                  EvidenceBlocked(:final reason) => switch (reason) {
+                      CameraBlock.denied => strings.evidenceBlockedDetail,
+                      CameraBlock.permanentlyDenied =>
+                        strings.evidenceBlockedPermanently,
+                      CameraBlock.unavailable =>
+                        strings.evidenceBlockedUnavailable,
+                    },
                   _ => attached
                       ? null
                       : strings.inspectionEvidenceRequired(widget.itemLabel),
@@ -115,7 +121,7 @@ class _EvidenceSlotState extends State<EvidenceSlot> {
                 onConfirm: () => _cubit.confirm(),
                 onRetake: () => _cubit.retake(),
               ),
-              if (state is EvidenceBlocked && state.permanently)
+              if (state is EvidenceBlocked && state.settingsCanFix)
                 Padding(
                   padding: const EdgeInsets.only(top: Spacing.xs),
                   child: TextButton(

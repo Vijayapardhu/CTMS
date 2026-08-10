@@ -49,6 +49,7 @@ class DualActionSelector<T> extends StatelessWidget {
             selected: value == leftValue,
             enabled: enabled,
             tone: context.ctms.positive,
+            onTone: context.ctms.onPositive,
             onTap: () => _choose(leftValue),
           ),
         ),
@@ -59,6 +60,8 @@ class DualActionSelector<T> extends StatelessWidget {
             selected: value == rightValue,
             enabled: enabled,
             tone: danger ? context.ctms.critical : context.ctms.caution,
+            onTone:
+                danger ? context.ctms.onCritical : context.ctms.onCaution,
             onTap: () => _choose(rightValue),
           ),
         ),
@@ -82,6 +85,7 @@ class _Option extends StatelessWidget {
     required this.selected,
     required this.enabled,
     required this.tone,
+    required this.onTone,
     required this.onTap,
   });
 
@@ -89,12 +93,18 @@ class _Option extends StatelessWidget {
   final bool selected;
   final bool enabled;
   final Color tone;
+
+  /// The tone's paired foreground. In dark theme the tones are light pastels,
+  /// and white on those is unreadable — which is the whole reason the design
+  /// system ships them in pairs.
+  final Color onTone;
+
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final foreground = selected ? Colors.white : theme.colorScheme.onSurface;
+    final foreground = selected ? onTone : theme.colorScheme.onSurface;
 
     return Semantics(
       button: true,

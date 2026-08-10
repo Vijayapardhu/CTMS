@@ -28,7 +28,7 @@ class AppStringsEn extends AppStrings {
       'Offline — actions will be sent when you reconnect';
 
   @override
-  String get errorTitle => 'Something went wrong';
+  String get errorTitle => 'Request failed';
 
   @override
   String get errorBody =>
@@ -116,7 +116,7 @@ class AppStringsEn extends AppStrings {
   String get loginPasswordRequired => 'Enter your password';
 
   @override
-  String get loginOffline => 'No connection. Sign-in needs a network.';
+  String get loginOffline => 'Offline — signing in needs the CTMS server.';
 
   @override
   String get expiredTitle => 'Signed out';
@@ -179,7 +179,7 @@ class AppStringsEn extends AppStrings {
 
   @override
   String get tripUnavailableBody =>
-      'This is not the same as having no trip. Check your connection and try again.';
+      'This is not the same as having no trip. The request failed — try again.';
 
   @override
   String get tripRetry => 'Try again';
@@ -633,8 +633,7 @@ class AppStringsEn extends AppStrings {
   String get tripStart => 'START TRIP';
 
   @override
-  String get tripStartOffline =>
-      'No connection right now — starting may not get through.';
+  String get tripStartOffline => 'Offline — starting may not get through.';
 
   @override
   String get tripStartConfirmTitle => 'Start this trip?';
@@ -801,7 +800,15 @@ class AppStringsEn extends AppStrings {
 
   @override
   String get evidenceBlockedDetail =>
-      'A failing safety check cannot be completed without a photograph.';
+      'Camera access is needed to attach photographs to inspections and incident reports. Without one, a failing safety check cannot be completed.';
+
+  @override
+  String get evidenceBlockedPermanently =>
+      'Photographs are needed to evidence a failing check, and a failing safety check cannot be completed without one. Turn the camera on in Settings.';
+
+  @override
+  String get evidenceBlockedUnavailable =>
+      'This phone cannot use its camera for CTMS. Report the fault to the office instead.';
 
   @override
   String get evidenceTake => 'Take photograph';

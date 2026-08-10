@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ColorScheme.primary from lib/app/theme/app_theme.dart. The launcher
+         icon and the launch window are the only two places the Flutter theme
+         cannot reach, so the value is repeated here and nowhere else. -->
+    <color name="ic_launcher_background">#0B57D0</color>
+
+    <!-- The launch window, matched to the app's own surface so the handover
+         to the first Flutter frame is not a flash of a different colour. -->
+    <color name="launch_background">#FFFFFF</color>
+</resources>

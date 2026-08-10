@@ -16,7 +16,7 @@
   "offlineBanner": "Offline — actions will be sent when you reconnect",
   "@offlineBanner": { "description": "Persistent banner shown while the API is unreachable" },
 
-  "errorTitle": "Something went wrong",
+  "errorTitle": "Request failed",
   "@errorTitle": { "description": "Title of the error boundary screen" },
   "errorBody": "The screen could not be displayed. Your trip is not affected.",
   "@errorBody": { "description": "Body of the error boundary screen" },
@@ -85,7 +85,7 @@
   "@loginEmailInvalid": { "description": "Shown when the email is malformed" },
   "loginPasswordRequired": "Enter your password",
   "@loginPasswordRequired": { "description": "Shown when the password field is empty" },
-  "loginOffline": "No connection. Sign-in needs a network.",
+  "loginOffline": "Offline — signing in needs the CTMS server.",
   "@loginOffline": { "description": "Explains that sign-in cannot be queued" },
 
   "expiredTitle": "Signed out",
@@ -129,7 +129,7 @@
 
   "tripUnavailableTitle": "Could not load today's trip",
   "@tripUnavailableTitle": { "description": "R1 unavailable — the read failed and nothing is cached" },
-  "tripUnavailableBody": "This is not the same as having no trip. Check your connection and try again.",
+  "tripUnavailableBody": "This is not the same as having no trip. The request failed — try again.",
   "@tripUnavailableBody": { "description": "Explains that unavailable is not the same as none" },
   "tripRetry": "Try again",
   "@tripRetry": { "description": "Retry action on the trip error card" },
@@ -522,7 +522,7 @@
   "tripStart": "START TRIP",
   "@tripStart": { "description": "R1 ready — the primary action, 64dp" },
 
-  "tripStartOffline": "No connection right now — starting may not get through.",
+  "tripStartOffline": "Offline — starting may not get through.",
   "@tripStartOffline": { "description": "A caution beside START TRIP, never a gate. The attempt is what proves reachability" },
 
   "tripStartConfirmTitle": "Start this trip?",
@@ -640,8 +640,14 @@
   "@evidenceRejected": { "description": "EvidenceCard, server refused the file" },
   "evidenceBlocked": "The camera is switched off for this app",
   "@evidenceBlocked": { "description": "EvidenceCard, camera permission denied" },
-  "evidenceBlockedDetail": "A failing safety check cannot be completed without a photograph.",
-  "@evidenceBlockedDetail": { "description": "States plainly what cannot happen without the camera" },
+  "evidenceBlockedDetail": "Camera access is needed to attach photographs to inspections and incident reports. Without one, a failing safety check cannot be completed.",
+  "@evidenceBlockedDetail": { "description": "Camera refused this time — says why it is needed, and what cannot happen" },
+
+  "evidenceBlockedPermanently": "Photographs are needed to evidence a failing check, and a failing safety check cannot be completed without one. Turn the camera on in Settings.",
+  "@evidenceBlockedPermanently": { "description": "Camera permanently denied — only Settings can undo it" },
+
+  "evidenceBlockedUnavailable": "This phone cannot use its camera for CTMS. Report the fault to the office instead.",
+  "@evidenceBlockedUnavailable": { "description": "Camera restricted by the device — no action the driver can take" },
   "evidenceTake": "Take photograph",
   "@evidenceTake": { "description": "EvidenceCard capture action" },
   "evidenceRetake": "Retake",

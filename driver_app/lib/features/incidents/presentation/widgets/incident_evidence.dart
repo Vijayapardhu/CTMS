@@ -95,7 +95,13 @@ class _IncidentEvidenceState extends State<IncidentEvidence> {
                 message: switch (state) {
                   EvidenceRejected(:final reason) => reason.message,
                   EvidenceQueued() => strings.evidenceQueuedDetail,
-                  EvidenceBlocked() => strings.evidenceBlockedDetail,
+                  EvidenceBlocked(:final reason) => switch (reason) {
+                      CameraBlock.denied => strings.evidenceBlockedDetail,
+                      CameraBlock.permanentlyDenied =>
+                        strings.evidenceBlockedPermanently,
+                      CameraBlock.unavailable =>
+                        strings.evidenceBlockedUnavailable,
+                    },
                   _ => attached
                       ? null
                       : strings.incidentEvidenceRequired(widget.label),
@@ -105,7 +111,7 @@ class _IncidentEvidenceState extends State<IncidentEvidence> {
                 onConfirm: () => _cubit.confirm(),
                 onRetake: () => _cubit.retake(),
               ),
-              if (state is EvidenceBlocked && state.permanently)
+              if (state is EvidenceBlocked && state.settingsCanFix)
                 Padding(
                   padding: const EdgeInsets.only(top: Spacing.xs),
                   child: TextButton(

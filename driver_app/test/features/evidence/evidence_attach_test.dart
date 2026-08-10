@@ -191,10 +191,23 @@ void main() {
     await tapEvidence(tester, 'Take photograph');
 
     expect(find.textContaining('camera is switched off'), findsOneWidget);
-    expect(
-      find.textContaining('cannot be completed without a photograph'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('cannot be completed'), findsOneWidget);
     expect(find.text('Open settings'), findsOneWidget);
+  });
+
+  testWidgets('a handset that forbids the camera is not sent to Settings',
+      (tester) async {
+    await failTheBrakes(tester);
+    app.permissions.answer = PermissionStatus.restricted;
+
+    await tapEvidence(tester, 'Take photograph');
+
+    expect(find.textContaining('cannot use its camera'), findsOneWidget);
+    expect(
+      find.text('Open settings'),
+      findsNothing,
+      reason: 'Settings cannot grant what the device itself forbids, and the '
+          'errand would only waste a driver standing at a broken bus',
+    );
   });
 }

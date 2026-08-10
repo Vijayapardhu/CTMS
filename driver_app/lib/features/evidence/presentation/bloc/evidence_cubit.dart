@@ -47,8 +47,13 @@ class EvidenceCubit extends Cubit<EvidenceState> {
 
     if (granted != PermissionStatus.granted) {
       emit(EvidenceBlocked(
-        permanently: granted == PermissionStatus.permanentlyDenied ||
-            granted == PermissionStatus.restricted,
+        reason: switch (granted) {
+          PermissionStatus.permanentlyDenied => CameraBlock.permanentlyDenied,
+          // Restricted is not a refusal the driver made and cannot be undone
+          // from Settings — it is a handset that will not do this at all.
+          PermissionStatus.restricted => CameraBlock.unavailable,
+          _ => CameraBlock.denied,
+        },
       ));
       return;
     }
