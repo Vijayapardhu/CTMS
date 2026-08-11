@@ -114,29 +114,36 @@ class SeedDemo extends Command
         $this->timetable($schedules, $routes, $buses, $drivers, $head);
         $this->preventive($buses);
 
-        $today = Carbon::today();
-
         // ── 1. A normal operating day ──────────────────────────────────────
         //
         // Four services: one finished this morning, one out on the road now,
         // two still to go. That is what a transport office actually sees at
         // eleven o'clock.
-        $completed = $this->trip($trips, $geofences, $routes[0], $buses[0], $drivers[0], $head, $today, '07:30:00', '08:15:00');
-        $running = $this->trip($trips, $geofences, $routes[1], $buses[1], $drivers[1], $head, $today, '09:00:00', '09:50:00');
-        $stranded = $this->trip($trips, $geofences, $routes[2], $buses[2], $drivers[2], $head, $today, '10:00:00', '10:45:00');
-        $this->trip($trips, $geofences, $routes[3], $buses[3], $drivers[3], $head, $today, '16:30:00', '17:20:00');
-        $this->trip($trips, $geofences, $routes[4], $buses[4], $drivers[4], $head, $today, '17:30:00', '18:25:00');
+        //
+        // Times are offsets from *now*, never fixed clock hours. A trip cannot
+        // be started outside its check-in window, so a world seeded with a
+        // 09:00 departure simply refuses to build at seven in the morning —
+        // which is exactly when somebody rehearses for a nine o'clock meeting.
+        // driver1@ctms.edu is the account on the credentials card, so it owns
+        // the trip that is out on the road — not the one that already
+        // finished, which at some hours belongs to yesterday and would leave
+        // the headline driver account looking at an empty duty list.
+        $running = $this->trip($trips, $geofences, $routes[1], $buses[1], $drivers[0], $head, -45, 50);
+        $completed = $this->trip($trips, $geofences, $routes[0], $buses[0], $drivers[1], $head, -180, 45);
+        $stranded = $this->trip($trips, $geofences, $routes[2], $buses[2], $drivers[2], $head, -20, 45);
+        $this->trip($trips, $geofences, $routes[3], $buses[3], $drivers[3], $head, 120, 50);
+        $this->trip($trips, $geofences, $routes[4], $buses[4], $drivers[4], $head, 240, 55);
 
         // ── 2 and 3. A failed inspection, and the bus it holds off the road ─
         $this->failedInspection($inspections, $buses[5], $drivers[5]);
         $this->components->twoColumnDetail('Failed inspection', $buses[5]->registration_number);
 
         // ── 7. A bus out on the road, with a position to show on the map ────
-        $this->operate($trips, $gps, $passengers, $running, $drivers[1], $head);
+        $this->operate($trips, $gps, $passengers, $running, $drivers[0], $head);
         $this->components->twoColumnDetail('Running now', $buses[1]->registration_number);
 
         // ── 1 (cont). A service that finished, with people counted onto it ──
-        $this->operate($trips, $gps, $passengers, $completed, $drivers[0], $head, finish: true);
+        $this->operate($trips, $gps, $passengers, $completed, $drivers[1], $head, finish: true);
 
         // ── 8. An attendance disagreement, produced by reconciliation ───────
         $this->discrepancy($recovery, $completed);
@@ -155,7 +162,7 @@ class SeedDemo extends Command
         );
 
         // ── 4. Incidents: one still open, one already dealt with ───────────
-        $this->incidents($incidents, $running, $drivers[1]->user, $supervisor);
+        $this->incidents($incidents, $running, $drivers[0]->user, $supervisor);
 
         // ── 6. A breakdown that strands a service, and its replacement ──────
         $this->replacement($trips, $incidents, $replacements, $stranded, $drivers[2], $head);
@@ -170,7 +177,7 @@ class SeedDemo extends Command
         // A merge waiting on a decision, so the consolidation tab is not
         // an empty state in front of an audience. Left undecided on
         // purpose: approving it live is the demonstration.
-        $this->consolidation($trips, $geofences, $consolidations, $routes, $buses, $drivers, $head, $today);
+        $this->consolidation($trips, $geofences, $consolidations, $routes, $buses, $drivers, $head);
 
         // A retention run in dry-run mode: it reports what it *would*
         // purge and deletes nothing. Governance needs a row to show; a
@@ -559,10 +566,9 @@ class SeedDemo extends Command
         array $buses,
         array $drivers,
         User $actor,
-        Carbon $today,
     ): void {
-        $source = $this->trip($trips, $geofences, $routes[3], $buses[6], $drivers[3], $actor, $today, '19:00:00', '19:40:00');
-        $target = $this->trip($trips, $geofences, $routes[3], $buses[7], $drivers[4], $actor, $today, '19:15:00', '19:55:00');
+        $source = $this->trip($trips, $geofences, $routes[3], $buses[6], $drivers[3], $actor, 300, 40);
+        $target = $this->trip($trips, $geofences, $routes[3], $buses[7], $drivers[4], $actor, 315, 40);
 
         foreach ([$source, $target] as $trip) {
             $trip->forceFill(['occupied_seat_count' => 4, 'booked_seat_count' => 6])->save();
@@ -578,6 +584,14 @@ class SeedDemo extends Command
 
     // ── the operating day ──────────────────────────────────────────────────
 
+    /**
+     * One service, placed relative to now.
+     *
+     * `$departsInMinutes` is signed: negative is already gone, positive is
+     * still to come. The date follows the departure rather than being assumed
+     * to be today, so a world built at half past midnight puts this morning's
+     * finished run on the day it actually ran.
+     */
     private function trip(
         TripService $trips,
         GeofenceService $geofences,
@@ -585,19 +599,20 @@ class SeedDemo extends Command
         Bus $bus,
         Driver $driver,
         User $actor,
-        Carbon $date,
-        string $departs,
-        string $arrives,
+        int $departsInMinutes,
+        int $durationMinutes,
     ): Trip {
+        $departure = now()->addMinutes($departsInMinutes);
+        $arrival = $departure->copy()->addMinutes($durationMinutes);
         $trip = $trips->createAdHoc([
             'route_id' => (string) $route->getKey(),
             'bus_id' => (string) $bus->getKey(),
             'driver_id' => (string) $driver->getKey(),
-            'trip_date' => $date->toDateString(),
-            'scheduled_departure_time' => $departs,
-            'scheduled_arrival_time' => $arrives,
+            'trip_date' => $departure->toDateString(),
+            'scheduled_departure_time' => $departure->format('H:i:s'),
+            'scheduled_arrival_time' => $arrival->format('H:i:s'),
             'booked_seat_count' => 32,
-        ], $actor);
+        ], $actor, 'Demonstration environment.');
 
         // Idempotent, and needed before a scheduled trip can show its planned
         // stops on A4.

@@ -30,12 +30,21 @@ val hasReleaseKeystore = keystoreProperties.getProperty("storeFile") != null
 // the map surface renders blank with an authorisation failure in logcat, which
 // is a far better failure than a build that cannot be run at all. CI checks a
 // debug build and has no key.
-val mapsApiKey: String = Properties().apply {
-    val file = rootProject.file("local.properties")
-    if (file.exists()) {
-        file.inputStream().use { load(it) }
-    }
-}.getProperty("GOOGLE_MAPS_ANDROID_API_KEY") ?: ""
+// Two sources, in order: `local.properties` for a machine that has been set up
+// permanently, then the environment for a one-off run. The second is how the
+// demonstration hands the build a key without writing a second copy of it to
+// disk — there stays exactly one place the credential lives.
+val mapsApiKey: String = (
+    Properties().apply {
+        val file = rootProject.file("local.properties")
+        if (file.exists()) {
+            file.inputStream().use { load(it) }
+        }
+    }.getProperty("GOOGLE_MAPS_ANDROID_API_KEY")
+        ?.takeIf { it.isNotBlank() }
+        ?: System.getenv("GOOGLE_MAPS_ANDROID_API_KEY")
+        ?: ""
+    )
 
 
 android {

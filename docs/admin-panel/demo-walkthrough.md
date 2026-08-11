@@ -25,6 +25,29 @@ administrators, one per access level. The verification runs use
 server key. Without it the map renders its unavailable state and everything
 else on the screen keeps working. Both paths are worth showing.
 
+### Running the driver app alongside it
+
+Verified on a physical handset (Motorola Edge 50 Fusion, Android 16) on
+11 August 2026, against this same demonstration backend.
+
+```bash
+# The handset cannot reach the laptop's localhost. Tunnel it over the cable:
+adb reverse tcp:8000 tcp:8000
+
+# The Android Maps SDK key comes from the environment when local.properties
+# has none, so the same key can drive it without a second copy on disk.
+export GOOGLE_MAPS_ANDROID_API_KEY=$(grep '^GOOGLE_MAPS_API_KEY=' backend/.env | cut -d= -f2-)
+
+cd driver_app
+flutter run -d <device-id> --dart-define=FLAVOR=demo --dart-define=CTMS_API_BASE_URL=http://127.0.0.1:8000/api/v1
+```
+
+Sign in as `driver1@ctms.edu`. That account deliberately holds the trip that is
+**out on the road**, so it has something live to show at any hour.
+
+**Turn on Do Not Disturb first.** Personal notifications land on top of the app
+and end up in any recording or screenshot.
+
 ---
 
 ## 1. Signing in — SUPER_ADMIN
